@@ -1,0 +1,147 @@
+{{ header }}
+<div class="pts-container container">
+	<ul class="pts-breadcrumb breadcrumb">
+		{% for breadcrumb in breadcrumbs %}
+		<li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+		{% endfor %}
+	</ul>
+	{% if success %}
+	<div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }}</div>
+	{% endif %}
+	{% if error_warning %}
+	<div class="alert pts-alert-warning"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
+	{% endif %}
+	<div class="pts-row d-flex row">{{ column_left }}
+		{% if column_left and column_right %}
+		{% set class = 'pts-col-sm-6 col-sm-6' %}
+		{% elseif column_left or column_right %}
+		{% set class = 'pts-col-sm-9 col-sm-9' %}
+		{% else %}
+		{% set class = 'pts-col-sm-12 col-sm-12' %}
+		{% endif %}
+		<div id="content" class="{{ class }}">{{ content_top }}
+			<h1>{{ heading_title }}</h1>
+			{% if helpcheck %}
+			<div class="float-end">
+				<a href="{{ helplink }}" rel=”nofollow”  target="_blank" id="button-pts-help" class="btn"><img src="{{ helpimage }}" alt="Help" width="85" height="43"></a>
+			</div>
+		{% endif %}
+			<div id="pts-contact">
+				{% if sellercontacts %}
+				<table class="table table-striped table-bordered">
+					{% for contact in sellercontacts %}
+					<tr>
+						<td><strong>{{ contact.customer_name }}</strong>
+							- {{ contact.customer_messages }}
+							{% if contact.attached_file %}
+									<br><strong>{{ text_files }}</strong>
+								{% for files in contact.attached_file %}
+								<br>&nbsp; &nbsp;<a href="{{ files.images }}" target="_blank" >{{ files.name }} </a>
+								{% endfor %}
+							{% endif %}
+						</td>
+						<td class="text-end">
+							{{ contact.date_added }}
+						</td>
+					</tr>
+					{% endfor %}
+				</table>
+				<div class="col-sm-6 text-start">{{ pagination }}</div>
+				<div class="col-sm-6 text-end">{{ results }}</div>
+				{% else %}
+				{% if contact_Mode %}
+				<div class="text-center">{{ text_empty_result }}</div>
+				{% endif %}
+				{% endif %}
+			</div>
+			<form action="" method="post" enctype="multipart/form-data" class="col-sm-12 form-horizontal">
+				<input type="hidden" name="seller_id" value="{{ seller_id }}">
+				<fieldset>
+					{% if loggedin == '0' and not contact_mode %}
+					<div class="form-group required row">
+						<label class="col-sm-2 control-label col-form-label" for="input-name">{{ entry_name }}</label>
+						<div class="col-sm-10">
+							<input type="text" name="customer_name" value="{{ customer_name }}" id="input-name" class="form-control" />
+							{% if error_name %} 
+							<div class="text-danger">{{ error_name }}</div>
+							{% endif %}
+						</div>
+					</div>
+					<div class="form-group required row py-2">
+						<label class="col-sm-2 control-label col-form-label" for="input-email">{{ entry_email }}</label>
+						<div class="col-sm-10">
+							<input type="text" name="customer_email" value="{{ customer_email }}" id="input-email" class="form-control" />
+							{% if error_email %}
+							<div class="text-danger">{{ error_email }}</div>
+							{% endif %}
+						</div>
+					</div>
+					
+					{% endif %}
+					<div class="form-group required row py-2">
+						<label class="col-sm-2 control-label col-form-label" for="input-enquiry">{{ entry_enquiry }}</label>
+						<div class="col-sm-10">
+							<textarea name="customer_message" rows="10"style="height:100%;" id="input-enquiry" class="form-control">{{ customer_message }}</textarea>
+							{% if error_enquiry %}
+							<div class="text-danger">{{ error_enquiry }}</div>
+							{% endif %}
+						</div>
+					</div>
+<!-- add attach file -->
+<div class="form-group row">
+<label class="col-sm-2 control-label col-form-label" for="input-enquiry">{{ text_attach_file }}</label>
+<div class="col-sm-10">
+	<div class="table-responsive">
+        <table id="attached-file" class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <td class="text-start">{{ text_upload_file }}</td>
+                    <td>{{ text_action }}</td>
+                </tr>
+            </thead>
+			<tbody>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="1" width="80%"></td>
+					<td class="text-start" width="20%"><button type="button" onclick="attachedFile();" data-bs-toggle="tooltip" title="{{ text_attach_file }}" class="btn btn-primary"><i class="fa fa-plus-circle"></i></button></td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+	</div>
+	</div>
+<!-- add attach file -->
+					{{ captcha }}
+				</fieldset>
+				<div class="pts-buttons">
+					<div class="float-end">
+						<input class="btn btn-primary pts-cus-reply" type="submit" value="{{ button_submit }}" />
+					</div>
+				</div>
+			</form>
+		{{ content_bottom }}</div>
+	{{ column_right }}</div>
+</div>
+<script>
+	$(window).load(function() {
+	
+			$('aside#column-right').addClass('pts-col-sm-3 col-sm-3');
+		
+		});
+
+var attach_file_row = 1;		
+function attachedFile() {	
+	html = '<tr id="attach_file_row' + attach_file_row + '">';
+	html += '<td class="pts-text-left">';
+	html += '<input type="file" name="attached_file[' + attach_file_row + ']" value="" placeholder="" id="attach_file_row' + attach_file_row + '"class="pts-form-control date" />';
+	html += '</td>';
+	html += '<td class="pts-text-left">';
+	html += '<button type="button" onclick="$(\'#attach_file_row' + attach_file_row + '\').remove();" data-bs-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button>';
+	html += '</td>';
+	html += '</tr>';
+	$('#attached-file tbody').append(html);
+	attach_file_row++;
+}
+</script>
+{{ footer }}

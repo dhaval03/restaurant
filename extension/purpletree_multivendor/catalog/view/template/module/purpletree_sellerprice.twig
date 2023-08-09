@@ -1,0 +1,135 @@
+<div class="template-product">
+{% if price_list_display %}
+<div class="main-compare ptsc-compare" style="width:100%">
+	<div class="pts-border-grey ptsc-border-grey">
+		<label class="seller-heading-compare">{{ text_seller_price }}</label>
+		{% for template_price in template_prices %}
+		<div class="pts-px-1 ptsc-px-1 bg-strip pts-bg-strip pts-seller-price">
+			<div class="pts-row">
+				<div class="col-md-12">
+					<div class="col-md-9">
+						<h5 class="m-0 {% if journal2 %}ptsc-sellerprice-marlef{% endif %} ptsc-sellerprice-margfsiz">
+							<a href="{{ template_price.href }}"><span>{{ template_price.store_name }}</span></a>
+						</h5>
+					</div>
+					<div class="col-md-3">
+						<a href="{{ template_price.href }}"><img src={{ template_price.store_logo }} class="img-fluid img-responsive {% if journal2 %}ptsc-sellerprice-marwid{% endif %}"></a>
+					</div>
+					<div class="col-md-12 text-left">
+						<div class="row pts-row-mobile">
+							<div class="price-new  ptsc-price-new compare-pts-star compare-ptsc-star">
+								<div class="">
+									<label><i class="fa fa-doller"></i>{{ template_price.price }}</label>
+								</div>
+								<div class="">				
+									{% for i in 1..5 %}
+									{% if template_price.rating < i %}
+									<i class="fa fa-star-o"></i>
+									{% else %}							 
+									<i class="fa fa-star"></i>
+									{% endif %}
+									{% endfor %}
+								</div>
+								<div class="">
+									<div class="btn btn-primary btn-block" onclick="addcartseller('{{ template_price.seller_id }}','{{ template_price.template_product_id }}');"><i class="fa fa-shopping-cart"></i> {{ button_add_cart }}</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div> 
+{% else %}
+<div class="main-compare ptsc-compare" style="width:100%">
+	<div class="pts-border-grey ptsc-border-grey">
+		<label class="seller-heading-compare">{{ text_seller_price }}</label>
+		<div class="pts-px-1 ptsc-px-1 bg-strip pts-bg-strip pts-seller-price">
+			<div class="pts-row">
+				<div class="col-md-12">
+					<div class="col-md-9" style="height:50px; padding:20px;">
+						<h5 class="m-0 {% if journal2 %}ptsc-sellerprice-marlef{% endif %} ptsc-sellerprice-margfsiz">
+							<span class="text-danger"> {{ option_name }}</span>
+						</h5>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div> 
+{% endif %}
+
+<style>
+	.pl-0{padding-left:0 !important}
+	.mt-2{margin-top:5px}
+	.compare-pts-star{padding:8px 0px;{% if not journal2 %}display: flex;{% endif %}justify-content: space-between;padding:10px 12px;line-height: 2;}	
+	.cart-btn-compare{background:transparent;border:none;color:#337ab7}
+	.cart-btn-compare .fa::before{font-size:18px;}
+	 .pts-seller-price {
+		padding: 10px;
+	 }
+</style>
+{% if module_purpletree_multivendor_seller_product_template %} 
+<script>
+	function addcartseller(sellerid,template_product_id){
+    $.ajax({
+	url: 'index.php?route=checkout/cart|add&seller_id='+sellerid+'&template_product_id='+template_product_id+'&language={{ language }}',
+        type: 'post',
+        data: $('#form-product').serialize(),
+        dataType: 'json',
+        contentType: 'application/x-www-form-urlencoded',
+        cache: false,
+        processData: false,
+        beforeSend: function () {
+            $('#button-cart').prop('disabled', true).addClass('loading');
+        },
+        complete: function () {
+            $('#button-cart').prop('disabled', false).removeClass('loading');
+        },
+        success: function (json) {
+            $('#form-product').find('.is-invalid').removeClass('is-invalid');
+            $('#form-product').find('.invalid-feedback').removeClass('d-block');
+
+            if (json['error']) {
+                for (key in json['error']) {
+                    $('#input-' + key.replaceAll('_', '-')).addClass('is-invalid').find('.form-control, .form-select, .form-check-input, .form-check-label').addClass('is-invalid');
+                    $('#error-' + key.replaceAll('_', '-')).html(json['error'][key]).addClass('d-block');
+                }
+            }
+
+            if (json['success']) {
+                $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fas fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+
+                $('#header-cart').load('index.php?route=common/cart|info');
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        }
+    });
+} 
+</script>
+<!--script>
+	$(window).load(function() {
+		if($('.main-compare').parent().attr('id') == 'column-right' || $('.main-compare').parent().hasClass('right_column')) {
+			$('.main-compare').parent().addClass('pts-col-sm-3');
+		}
+		if ($(window).width() < 768) {
+			$('.main-compare').parent().addClass('pts-column-right-sellerpprice');
+		}
+	});
+</script>
+<script>
+	$(window).load(function() {
+		if($('.main-compare').parent().attr('id') == 'column-right' || $('.main-compare').parent().hasClass('right_column')) {
+			$('.pts-list-group').parent().addClass('pts-col-sm-3');
+		}
+		if ($(window).width() < 768) {
+			$('.main-compare').parent().addClass('pts-column-right-sellerpprice');
+		}
+	});
+</script-->
+{% endif %}
+</div>

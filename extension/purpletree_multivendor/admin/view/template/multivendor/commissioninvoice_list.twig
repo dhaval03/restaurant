@@ -1,0 +1,187 @@
+{{ header }}
+{{ column_left }}
+<div id="content">
+	<div class="page-header">
+		<div class="container-fluid">
+		{% if helpcheck %}
+			<div class="pull-right float-end">
+				<a href="{{ helplink }}" rel=”nofollow”  target="_blank" id="button-pts-help" class="btn"><img src="{{ helpimage }}" alt="Help" width="85" height="43"></a>
+			</div>
+		{% endif %}
+			<h1>{{ heading_title }}</h1>
+			<ul class="breadcrumb">
+				{% for breadcrumb in breadcrumbs %}
+				<li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+	<div class="container-fluid">
+		 {% if error_warning %}
+			<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+			  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+			</div>
+		{% endif %}
+	   {% if success %}
+		<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+		  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+		</div>
+      {% endif %}
+		<div class="panel panel-default card">
+			<div class="panel-heading">
+				<h3 class="panel-title card-header"><i class="fa fa-list"></i> {{ text_list }}</h3>
+			</div>
+			<div class="panel-body card-body">
+				<div class="well card mb-3 p-3">
+					<div class="row">
+						<!-- seller filter -->
+						<div class="col-sm-4">
+							<div class="form-group">
+								<label class="control-label col-form-label" for="input-store">{{ entry_store }}</label>         
+								
+								<select name="seller_store" id="input-store" class="form-select">
+									<option value="">{{ entry_select_store }}</option>
+									{% for seller_store in seller_stores  %}
+									{% if seller_store.seller_id == seller_id %}
+									<option value="{{ seller_store.seller_id }}"  selected="selected"
+									>{{ seller_store.store_name }}</option>	
+									{% else %}	
+									<option value="{{ seller_store.seller_id }}">{{ seller_store.store_name }}</option>
+									{% endif %}							
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<!-- seller filter -->
+						<div class="col-sm-3">
+							<div class="form-group">
+								<label class="control-label col-form-label" for="input-date-added">{{ entry_date_from }}</label>
+								<input type="hidden" name="seller_id" value="{{ seller_id }}">
+								<div class="input-group date">
+									<input type="text" name="filter_date_from" value="" placeholder="{{ entry_date_from }}" id="input-date-from" class="form-control" />
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-default btn-light"><i class="fa fa-calendar"></i></button>
+									</span></div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group">
+								<label class="control-label col-form-label" for="input-date-modified">{{ entry_date_to }}</label>
+								<div class="input-group date">
+									<input type="text" name="filter_date_to" value="" placeholder="{{ entry_date_to }}" data-date-format="YYYY-MM-DD" id="input-date-to" class="form-control" />
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-default btn-light"><i class="fa fa-calendar"></i></button>
+									</span></div>
+							</div>        
+						</div>
+						<div class="col-sm-2 align-self-center">
+							<label></label>
+							<div class="form-group py-3">
+								<button type="button" id="button-filter" class="btn btn-primary pull-right float-end"><i class="fa fa-filter"></i> {{ button_filter }}</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<form method="post" action="" enctype="multipart/form-data" id="form-order">
+					<div class="table-responsive">
+						<table class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<td class="text-start">{{ text_invoice_id }}</td>
+									<td class="text-start">{{ column_store }}</td>
+									<td class="text-start">{{ text_created_at }}</td>
+									<td class="text-start">{{ text_action }}</td>
+								</tr>
+							</thead>
+							<tbody>
+								{% if seller_commissions %}
+								{% for seller_commission in seller_commissions %}
+								<tr>
+									<td class="text-start">#{{ seller_commission.id }}</td> 
+									<td class="text-start">{{ seller_commission.store_name }}</td>
+									<td class="text-start">{{ seller_commission.created_at }}</td>
+									<td class="text-start"><a href="{{ seller_commission.view }}" data-toggle="tooltip" title="{{ button_view }}" class="btn btn-info"><i class="fa fa-eye"></i></a></td>
+								</tr>
+								{% endfor %}
+								{% else %}
+								<tr>
+									<td class="text-center" colspan="8">{{ text_no_results }}</td>
+								</tr>
+								{% endif %}
+							</tbody>
+						</table>
+					</div>
+				</form>
+				<div class="row">
+					<div class="col-sm-6 text-start">{{ pagination }}</div>
+					<div class="col-sm-6 text-end">{{ results }}</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript"><!--
+		$('#button-filter').on('click', function() {
+			url = 'index.php?route=extension/purpletree_multivendor/multivendor/commissioninvoice&user_token={{ user_token }}';
+			
+			var seller_id = $('select[name=\'seller_store\']').val();
+			
+			if (seller_id) {
+				url += '&seller_id=' + encodeURIComponent(seller_id);
+			}
+			
+			var filter_date_from = $('input[name=\'filter_date_from\']').val();
+			
+			if (filter_date_from) {
+				url += '&filter_date_from=' + encodeURIComponent(filter_date_from);
+			}
+			
+			var filter_date_to = $('input[name=\'filter_date_to\']').val();
+			
+			if (filter_date_to) {
+				url += '&filter_date_to=' + encodeURIComponent(filter_date_to);
+			}
+			
+			location = url;
+		});
+	//--></script> 
+</div>
+<script type="text/javascript">
+$(function() {
+
+  $('input[name="filter_date_from"]').daterangepicker({
+      autoUpdateInput: false,
+	  singleDatePicker: true,
+	  showDropdowns: true,
+      locale: {
+          cancelLabel: 'Clear'
+      }
+  });
+
+  $('input[name="filter_date_from"]').on('apply.daterangepicker', function(ev, picker) {
+      $(this).val(picker.startDate.format('YYYY-MM-DD'));
+  });
+
+  $('input[name="filter_date_from"]').on('cancel.daterangepicker', function(ev, picker) {
+      $(this).val('');
+  });
+  
+    $('input[name="filter_date_to"]').daterangepicker({
+      autoUpdateInput: false,
+	  singleDatePicker: true,
+	  showDropdowns: true,
+      locale: {
+          cancelLabel: 'Clear'
+      }
+  });
+
+  $('input[name="filter_date_to"]').on('apply.daterangepicker', function(ev, picker) {
+      $(this).val(picker.startDate.format('YYYY-MM-DD'));
+  });
+
+  $('input[name="filter_date_to"]').on('cancel.daterangepicker', function(ev, picker) {
+      $(this).val('');
+  });
+
+});
+</script>
+	{{ footer }}	

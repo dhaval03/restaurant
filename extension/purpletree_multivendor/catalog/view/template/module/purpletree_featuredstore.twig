@@ -1,0 +1,19 @@
+{% if store %}
+<h3>{{ heading_title }}</h3>
+<div class="row{% if axis == 'horizontal' %} row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4{% endif %}">
+  {% for stores in store %}
+    <div class="col">
+		<div class="product-thumb">
+				<div class="image">
+					<a href="{{ stores.href }}">
+						<img src="{{ stores.store_logo }}" alt="{{ stores.store_name }}" title="{{ stores.store_name }}" class="img-fluid" />
+					</a>
+				</div>
+				<div class="description">
+					<h4><a href="{{ stores.href }}">{{ stores.store_name }}</a></h4>       
+				</div>
+		</div>
+	</div>
+  {% endfor %}
+</div>
+{% endif %}

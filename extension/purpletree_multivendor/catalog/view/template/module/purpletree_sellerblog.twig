@@ -1,0 +1,28 @@
+<h3 class="h3">{{ heading_title }}
+	<div class="float-end">
+		<a class="btn btn-default btn-light" href="{{ all_blog }}">{{ view_all }}</a>
+	</div>
+</h3>
+<div class="row">
+		{% for pts_blog in pts_blogs %}
+		<div class="col">
+			<div class="product-thumb">
+				<div>
+					<div>
+						{{ pts_blog.date }}
+					</div>		
+					<div class="image"> <a href="{{ pts_blog.href }}"><img src="{{ pts_blog.thumb }}" alt="{{ pts_blog.title }}" title="{{ pts_blog.title }}" class="img-responsive"  /></a>
+					</div>
+					<div>
+						<h4><a href="{{ pts_blog.href }}">{{ pts_blog.title }}</a></h4>
+						<p>{{ pts_blog.description }}</p>
+					</div>
+				</div>
+				<div>
+					<a href="{{ pts_blog.href }}">{{ text_readmore }}</a>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	
+</div>

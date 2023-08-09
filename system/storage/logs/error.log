@@ -1,0 +1,36 @@
+2023-08-04 06:03:49 - Error:  Unknown named parameter $menus
+File: C:\wamp\www\tutor\system\engine\action.php
+Line: 74
+
+2023-08-04 06:06:17 - Error:  Unknown named parameter $menus
+File: C:\wamp\www\tutor\system\engine\action.php
+Line: 74
+
+2023-08-04 06:07:50 - Error:  Unknown named parameter $menus
+File: C:\wamp\www\tutor\system\engine\action.php
+Line: 74
+
+2023-08-04 06:08:02 - Error:  Unknown named parameter $menus
+File: C:\wamp\www\tutor\system\engine\action.php
+Line: 74
+
+2023-08-04 06:15:21 - Error:  Unknown named parameter $menus
+File: C:\wamp\www\tutor\system\engine\action.php
+Line: 74
+
+2023-08-04 06:40:30 - Twig\Error\LoaderError:  Unable to find template "extension/restapi/admin/view/template/module/shoppingcartrestapi.twig" (looked into: ).
+File: C:\wamp\www\tutor\system\storage\vendor\twig\twig\src\Loader\FilesystemLoader.php
+Line: 227
+
+2023-08-04 06:40:41 - Twig\Error\LoaderError:  Unable to find template "extension/restapi/admin/view/template/module/shoppingcartrestapi.twig" (looked into: ).
+File: C:\wamp\www\tutor\system\storage\vendor\twig\twig\src\Loader\FilesystemLoader.php
+Line: 227
+
+2023-08-04 06:44:31 - Twig\Error\LoaderError:  Unable to find template "extension/restapi/admin/view/template/module/shoppingcartrestapi.twig" (looked into: ).
+File: C:\wamp\www\tutor\system\storage\vendor\twig\twig\src\Loader\FilesystemLoader.php
+Line: 227
+
+2023-08-04 06:58:13 - Exception:  <b>Notice</b>:  Undefined property: Proxy::setOauthClient in <b>C:\wamp\www\tutor\extension\restapi\admin\controller\module\shopping_cart_rest_api.php</b> on line <b>28</b>
+File: C:\wamp\www\tutor\system\engine\proxy.php
+Line: 83
+

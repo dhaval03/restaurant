@@ -1,0 +1,270 @@
+{{ header }}{{ column_left }}
+<div id="content">
+	<div class="page-header">
+		<div class="container-fluid">
+			<div class="pull-right float-end">
+				<button type="button" data-bs-toggle="tooltip" title="{{ button_filter }}" onclick="$('#filter-product').toggleClass('hidden-sm hidden-xs');" class="btn btn-default btn-light d-md-none d-lg-none"><i class="fa fa-filter"></i></button>
+				<button type="button" form="form-product" formaction="{{ delete }}" data-bs-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" onclick="confirm('{{ text_confirm }}') ? $('#form-product').submit() : false;"><i class="fa fa-trash-alt"></i></button>
+				{% if helpcheck %}
+					<a href="{{ helplink }}" rel=”nofollow”  target="_blank" id="button-pts-help" class="btn"><img src="{{ helpimage }}" alt="Help" width="85" height="43"></a>
+				{% endif %}
+			</div>
+			<h1>{{ text_seller_template_product }}</h1>
+			<ul class="breadcrumb">
+				{% for breadcrumb in breadcrumbs %}
+				<li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+	<div class="container-fluid">
+		 {% if error_warning %}
+		<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+		  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+		</div>
+		{% endif %}
+	   {% if success %}
+		<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+		  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+		</div>
+		{% endif %}
+		<div class="row">
+			<div class="col-md-9 col-md-pull-3 col-sm-12">
+				<div class="panel panel-default card">
+					<div class="panel-heading">
+						<h3 class="panel-title card-header"><i class="fa fa-list"></i> {{ text_list }}</h3>
+					</div>
+					<div class="panel-body card-body">
+						<form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-product">
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover">
+									<thead>
+										<tr>
+											<td class="text-center ptsc-vendorlis-width"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" class="form-check-input"/></td>
+											<td class="text-center">{{ column_image }}</td>
+											<td class="text-start">{% if sort == 'pd.name' %} <a href="{{ sort_name }}" class="{{ order|lower }}">{{ column_name }}</a> {% else %} <a href="{{ sort_name }}">{{ column_name }}</a> {% endif %}</td>
+											<td class="text-start">{% if sort == 'pvs.store_name' %} <a href="{{ sort_name }}" class="{{ order|lower }}">{{ text_select_seller }}</a> {% else %} <a href="{{ sort_storename }}">{{ column_store_name }}</a> {% endif %}</td>
+											<td class="text-start">{% if sort == 'p.model' %} <a href="{{ sort_model }}" class="{{ order|lower }}">{{ column_model }}</a> {% else %} <a href="{{ sort_model }}">{{ column_model }}</a> {% endif %}</td>
+											<td class="text-end">{% if sort == 'p.price' %} <a href="{{ sort_price }}" class="{{ order|lower }}">{{ column_price }}</a> {% else %} <a href="{{ sort_price }}">{{ column_price }}</a> {% endif %}</td>
+											<td class="text-end">{% if sort == 'p.quantity' %} <a href="{{ sort_quantity }}" class="{{ order|lower }}">{{ column_quantity }}</a> {% else %} <a href="{{ sort_quantity }}">{{ column_quantity }}</a> {% endif %}</td>
+											<td class="text-start">{% if sort == 'p.status' %} <a href="{{ sort_status }}" class="{{ order|lower }}">{{ column_status }}</a> {% else %} <a href="{{ sort_status }}">{{ column_status }}</a> {% endif %}</td>
+											<td class="text-end">{{ column_action }}</td>
+										</tr>
+									</thead>
+									<tbody>
+										
+										{% if products %}
+										{% for product in products %}
+										<tr>
+											<td class="text-center">{% if product.id in selected %}
+												<input type="checkbox" name="selected[]" value="{{ product.id }}" checked="checked" class="form-check-input"/>
+												{% else %}
+												<input type="checkbox" name="selected[]" value="{{ product.id }}" class="form-check-input"/>
+											{% endif %}</td>
+											<td class="text-center">{% if product.image %} <img src="{{ product.image }}" alt="{{ product.name }}" class="img-thumbnail" /> {% else %} <span class="img-thumbnail list"><i class="fa fa-camera fa-2x"></i></span> {% endif %}</td>
+											<td class="text-start">{{ product.product_name }}</td>
+											<td class="text-start">{{ product.seller_name }}</td>
+											<td class="text-start">{{ product.model }}</td>
+											<td class="text-start">{{ product.template_price }}</td>
+											<td class="text-start">{{ product.template_quantity }}</td>
+											<td class="text-start">{{ product.template_status }}</td>
+											<td class="text-end"><a href="{{ product.editdetail }}" data-bs-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary"><i class="fa fa-pencil-alt"></i></a></td>
+										</tr>
+										{% endfor %}
+										{% else %}
+										<tr>
+											<td class="text-center" colspan="10">{{ text_no_results }}</td>
+										</tr>
+										{% endif %}
+									</tbody>
+									
+								</table>
+							</div>
+						</form>
+						<div class="row">
+							<div class="col-sm-6 text-start">{{ pagination }}</div>
+							<div class="col-sm-6 text-end">{{ results }}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div id="filter-product" class="col-md-3  col-sm-12 d-none d-lg-block">
+				<div class="panel panel-default card">
+					<div class="panel-heading">
+						<h3 class="panel-title card-header"><i class="fa fa-filter"></i> {{ text_filter }}</h3>
+					</div>
+					<div class="panel-body card-body">
+						<div class="form-group py-2">
+							<label class="control-label col-form-label" for="input-store">{{ text_select_seller }}</label>
+							<input type="text" name="filter_store" value="{{ filter_store }}" placeholder="{{ text_select_seller }}" list="filter-temp-store" id="input-store" class="form-control" />
+							<datalist id="filter-temp-store"></datalist>
+						</div>           
+						<div class="form-group py-2">
+							<label class="control-label col-form-label" for="input-name">{{ entry_name }}</label>
+							<input type="text" name="filter_name" value="{{ filter_name }}" placeholder="{{ entry_name }}" id="input-name" list="filter-temp-name" class="form-control" />
+							<datalist id="filter-temp-name"></datalist>
+						</div>
+						<div class="form-group py-2">
+							<label class="control-label col-form-label" for="input-model">{{ entry_model }}</label>
+							<input type="text" name="filter_model" value="{{ filter_model }}" placeholder="{{ entry_model }}" id="input-model" list="filter-temp-model" class="form-control" />
+							<datalist id="filter-temp-model"></datalist>
+						</div>        
+						<div class="form-group py-2">
+							<label class="control-label col-form-label" for="input-price">{{ entry_price }}</label>
+							<input type="text" name="filter_price" value="{{ filter_price }}" placeholder="{{ entry_price }}" id="input-price" class="form-control" />
+						</div>          
+						<div class="form-group py-2">
+							<label class="control-label col-form-label" for="input-quantity">{{ text_quantity }}</label>
+							<input type="text" name="filter_quantity" value="{{ filter_quantity }}" placeholder="{{ text_quantity }}" id="input-quantity" class="form-control" />
+						</div>
+						<div class="form-group py-2">
+							<label class="control-label col-form-label" for="input-status">{{ entry_status }}</label>
+							<select name="filter_status" id="input-status" class="form-select">
+								<option value="">{{ entry_status }}</option>
+								{% if filter_status == '1' %}
+								<option value="1" selected="selected">{{ text_enabled }}</option>
+								{% else %}
+								<option value="1">{{ text_enabled }}</option>
+								{% endif %}
+								{% if filter_status == '0' %}
+								<option value="0" selected="selected">{{ text_disabled }}</option>
+								{% else %}
+								<option value="0">{{ text_disabled }}</option>
+								{% endif %}
+							</select>
+						</div>
+						<div class="form-group text-end">
+							<button type="button" id="button-filter" class="btn btn-default btn-primary"><i class="fa fa-filter"></i> {{ button_filter }}</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+	<script type="text/javascript"><!--
+		$('#button-filter').on('click', function() {
+			var url = '';
+			
+			var filter_store = $('input[name=\'filter_store\']').val();
+			
+			if (filter_store) {
+				url += '&filter_store=' + encodeURIComponent(filter_store);
+			}	
+			var filter_name = $('input[name=\'filter_name\']').val();
+			
+			if (filter_name) {
+				url += '&filter_name=' + encodeURIComponent(filter_name);
+			}
+			
+			var filter_price = $('input[name=\'filter_price\']').val();
+			
+			if (filter_price) {
+				url += '&filter_price=' + encodeURIComponent(filter_price);
+			}	
+			var filter_quantity = $('input[name=\'filter_quantity\']').val();
+			
+			if (filter_quantity) {
+				url += '&filter_quantity=' + encodeURIComponent(filter_quantity);
+			}
+			var filter_model = $('input[name=\'filter_model\']').val();
+			
+			if (filter_model) {
+				url += '&filter_model=' + encodeURIComponent(filter_model);
+			}
+			
+			var filter_status = $('select[name=\'filter_status\']').val();
+			
+			if (filter_status !== '') {
+				url += '&filter_status=' + encodeURIComponent(filter_status);
+			}	
+			location = 'index.php?route=extension/purpletree_multivendor/multivendor/producttemplate&user_token={{ user_token }}' + url;
+		});
+	//--></script> 
+	<script type="text/javascript"><!--
+		// IE and Edge fix!
+		$('button[form=\'form-product\']').on('click', function(e) {
+			$('#form-product').attr('action', $(this).attr('formaction'));
+		});
+		
+		$('input[name=\'filter_store\']').autocomplete({
+			'source': function(request, response) {
+				$.ajax({
+					url: 'index.php?route=extension/purpletree_multivendor/multivendor/producttemplate|autocomplete&user_token={{ user_token }}&filter_store=' +  encodeURIComponent(request),
+					dataType: 'json',
+					success: function(json) {
+						response($.map(json, function(item,value) {
+							return {
+								label: item['store_name'],
+								value: item['product_id']
+							}
+						}));
+					}
+				});
+			},
+			'select': function(item) {
+				$('input[name=\'filter_store\']').val(item['label']);
+			}
+		});
+		$('input[name=\'filter_name\']').autocomplete({
+			'source': function(request, response) {
+				$.ajax({
+					url: 'index.php?route=extension/purpletree_multivendor/multivendor/producttemplate|autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+					dataType: 'json',
+					success: function(json) {
+						response($.map(json, function(item) {
+							return {
+								label: item['name'],
+								value: item['product_id']
+							}
+						}));
+					}
+				});
+			},
+			'select': function(item) {
+				$('input[name=\'filter_name\']').val(item['label']);
+			}
+		});
+		
+		$('input[name=\'filter_model\']').autocomplete({
+			'source': function(request, response) {
+				$.ajax({
+					url: 'index.php?route=extension/purpletree_multivendor/multivendor/producttemplate|autocomplete&user_token={{ user_token }}&filter_model=' +  encodeURIComponent(request),
+					dataType: 'json',
+					success: function(json) {
+						response($.map(json, function(item) {
+							return {
+								label: item['model'],
+								value: item['product_id']
+							}
+						}));
+					}
+				});
+			},
+			'select': function(item) {
+				$('input[name=\'filter_model\']').val(item['label']);
+			}
+		});
+		$('input[name=\'filter_status\']').autocomplete({
+			'source': function(request, response) {
+				$.ajax({
+					url: 'index.php?route=extension/purpletree_multivendor/multivendor/producttemplate|autocomplete&user_token={{ user_token }}&filter_status=' +  encodeURIComponent(request),
+					dataType: 'json',
+					success: function(json) {
+						response($.map(json, function(item) {
+							alert(item);
+							return {
+								label: item['status'],
+								value: item['product_id']
+							}
+						}));
+					}
+				});
+			},
+			'select': function(item) {
+				$('input[name=\'filter_status\']').val(item['label']);
+			}
+		});
+	//--></script></div>
+	{{ footer }} 	

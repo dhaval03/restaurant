@@ -1,0 +1,16 @@
+		<div class="form-text">{{ help_safe }}</div>
+	</div>
+</div>
+<div class="row mb-3">
+    <label class="col-sm-2 col-form-label">{{ text_seller }}</label>
+    <div class="col-sm-10">
+    <div class="form-check form-switch form-switch-lg">
+    <input type="checkbox" name="become_seller" value="1" id="input-become_seller" class="form-check-input"{% if become_seller %} checked{% endif %}/>
+    </div>
+    </div>
+</div>
+<div class="row mb-3 required">
+  <label for="input-seller_storename" class="col-sm-2 col-form-label">{{ text_store_name }}</label>
+  <div class="col-sm-10">
+	<input type="text" name="seller_storename" value="{{ seller_storename }}" placeholder="" id="input-seller_storename" class="form-control"/>
+	<div id="error-seller_storename" class="invalid-feedback"></div>

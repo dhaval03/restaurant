@@ -1,0 +1,120 @@
+        <div class="tab-pane" id="tab-vendor">
+			<div class="row mb-3">
+                  <label for="input-vendor" class="col-sm-2 col-form-label">{{ tab_vendor }}</label>
+                <div class="col-sm-10">
+                    <div class="input-group">
+                      <select name="vendor" id="input-vendor" class="form-select">
+					<option value="0">{{ text_none }}</option>
+					{% for vendr in vendors %}
+					{% if vendor == vendr.seller_id %}
+					<option value="{{ vendr.seller_id }}" selected="selected">{{ vendr.name }}</option>
+					{% else %}
+					<option value="{{ vendr.seller_id }}">{{ vendr.name }}</option>
+					{% endif %}
+					{% endfor %}
+				  </select>
+					</div>
+				</div>
+            </div>
+			{% if module_purpletree_multivendor_subscription_plans %}
+			  {% if module_purpletree_multivendor_multiple_subscription_plan_active %}
+			<div class="row mb-3 subscription" style="display:none">
+                  <label for="input-vendor" class="col-sm-2 col-form-label">{{ text_subscription_plan_product }}</label>
+                <div class="col-sm-10">
+                    <div class="input-group">
+                      <select name="product_plan_id" id="input-subscription_plan" class="form-select">
+					<option value="0">{{ text_none }}</option>
+					{% if product_plan_info %}
+					 {% for plans in product_plan_info %} 
+				      <option  value="{{ plans.plan_id }}" {% if plans.plan_id == product_plan_id %} selected="selected" {% endif %} >{{ plans.plan_name }}</option>
+					{% endfor %} 
+					{% endif %}
+				</select>
+					</div>
+				</div>
+            </div>
+			  {% endif %}
+			 {% endif %}	
+			{% if module_purpletree_multivendor_subscription_plans %}
+			{% if module_purpletree_multivendor_multiple_subscription_plan_active %}
+			<div class="row mb-3 subscription" style="display:none">
+                  <label for="input-vendor" class="col-sm-2 col-form-label">{{ text_featured_product_for_category }}</label>
+                <div class="col-sm-10">
+                    <div class="input-group">
+                     <select name="featured_product_plan_id" id="input-featured_product_plan_id" class="form-select">
+					<option value="0">{{ text_none }}</option>
+					{% if product_plan_info %}
+					 {% for plans in product_plan_info %} 
+				      <option  value="{{ plans.plan_id }}" {% if plans.plan_id == featured_product_plan_id %} selected="selected" {% endif %} >{{ plans.plan_name }}</option>
+					{% endfor %} 
+					{% endif %}
+				</select>
+					</div>
+				</div>
+            </div>
+			 {% endif %}
+			 {% endif %}	
+			 {% if module_purpletree_multivendor_subscription_plans %}
+			  {% if module_purpletree_multivendor_multiple_subscription_plan_active %}
+			  			<div class="row mb-3 subscription" style="display:none">
+                  <label for="input-vendor" class="col-sm-2 col-form-label">{{ text_featured_product_for_carousel }}</label>
+                <div class="col-sm-10">
+                    <div class="input-group">
+                   <select name="category_featured_product_plan_id" id="input-category_featured_product_plan_id" class="form-select">
+						<option value="0">{{ text_none }}</option>
+						{% if product_plan_info %}
+						 {% for plans in product_plan_info %} 
+						  <option  value="{{ plans.plan_id }}" {% if plans.plan_id == category_featured_product_plan_id %} selected="selected" {% endif %} >{{ plans.plan_name }}</option>
+						{% endfor %} 
+						{% endif %}
+					</select>
+					</div>
+				</div>
+            </div>
+			  {% endif %}
+			 {% endif %}
+
+            </div>
+			<script type="text/javascript"><!--
+  var seller_id = $('select[id=\'input-vendor\']').val();
+	  if(seller_id!=0){
+		$('.subscription').css('display','flex');   
+	  }
+		$('select[id="input-vendor"]').on('change', function(){
+			var seller_id = $(this).val();
+			alert(seller_id);
+			if(seller_id == "0") {
+				$('.subscription').css('display','none');
+			} else {
+				$('.subscription').css('display','flex');
+								$('#input-subscription_plan').empty();
+				$('#input-subscription_plan').append($('<option value="">---None---</option>'));
+				
+				$('#input-featured_product_plan_id').empty();
+				$('#input-featured_product_plan_id').append($('<option value="">---None---</option>'));
+				
+				$('#input-category_featured_product_plan_id').empty();
+				$('#input-category_featured_product_plan_id').append($('<option value="">---None---</option>'));
+		$.ajax({
+			url: 'index.php?route=extension/purpletree_multivendor/events/catalog/product|getSellerPlan&user_token={{ user_token }}&seller_id='+seller_id,
+			dataType: 'json',
+			success: function(json) {
+				
+				$.each(json,function(key,result){
+				 $('#input-subscription_plan').append($('<option></option>').val(result['plan_id']).html(result['plan_name']));
+				 
+				 $('#input-featured_product_plan_id').append($('<option></option>').val(result['plan_id']).html(result['plan_name']));
+				 
+				 $('#input-category_featured_product_plan_id').append($('<option></option>').val(result['plan_id']).html(result['plan_name']));
+				});
+
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
+	    }); 
+				
+    }
+})
+</script>
+<div id="tab-report" class="tab-pane">
