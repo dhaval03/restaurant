@@ -51,7 +51,7 @@ class ColumnLeft extends \Opencart\System\Engine\Controller {
 					$data['text_sellerenquiry'] 			= $this->language->get('text_sellerenquiry');
 					$data['text_shipping'] 					= $this->language->get('text_shipping');
 					$data['text_bulkproductupload'] 		= $this->language->get('text_bulkproductupload');
-					$data['text_tableseating'] 		= $this->language->get('text_tableseating');
+					$data['text_seatingmanagement'] 		= $this->language->get('text_seatingmanagement');
 					$data['text_dashboard'] 				= $this->language->get('text_dashboard');
 					$data['text_selleroption'] 				= $this->language->get('text_selleroption');
 					$data['text_subscription'] 				= $this->language->get('text_subscription');
@@ -93,7 +93,7 @@ class ColumnLeft extends \Opencart\System\Engine\Controller {
 					$data['sellerview'] = $this->url->link('extension/purpletree_multivendor/multivendor/sellerstore|storeview&seller_store_id='.$store_id, 'language=' . $this->config->get('config_language'), true);
 					$data['sellerreview'] = $this->url->link('extension/purpletree_multivendor/multivendor/sellerstore|sellerreview', 'language=' . $this->config->get('config_language'), true);
 					$data['bulkproductupload'] = $this->url->link('extension/purpletree_multivendor/multivendor/bulkproductupload', 'language=' . $this->config->get('config_language'), true);
-					$data['tableseating'] = $this->url->link('extension/purpletree_multivendor/multivendor/tableseating', 'language=' . $this->config->get('config_language'), true);
+					$data['seatingmanagement'] = $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement', 'language=' . $this->config->get('config_language'), true);
 					if($this->config->get('module_purpletree_multivendor_shippingtype')){
 						$data['shipping'] = $this->url->link('extension/purpletree_multivendor/multivendor/sellergeozone','language=' . $this->config->get('config_language'), true);
 						}else{

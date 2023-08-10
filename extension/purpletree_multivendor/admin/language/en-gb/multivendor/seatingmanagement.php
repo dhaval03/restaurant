@@ -15,6 +15,7 @@ $_['column_name1']        = 'Seating Management Name';
 $_['column_table_no'] = 'Table No';
 $_['column_action']      = 'Action';
 $_['column_seat']      = 'Seat';
+$_['column_status']      = 'Status';
 
 // Entry
 $_['entry_tableno']         = 'Table No';

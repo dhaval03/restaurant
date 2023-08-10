@@ -1,11 +1,8 @@
 <?php
 namespace Opencart\Admin\Controller\Extension\PurpletreeMultivendor\Multivendor;
 class Seatingmanagement extends \Opencart\System\Engine\Controller {
-		private $error = array();	
-		public function index() {	
-				$validateSeller = $this->load->controller('extension/purpletree_multivendor/multivendor/config');
-			
-			$this->load->language('extension/purpletree_multivendor/multivendor/vendor');
+	private $error = array();	
+	public function index() {	
 			$this->load->language('extension/purpletree_multivendor/multivendor/seatingmanagement');
 			
 			$this->document->setTitle($this->language->get('heading_title'));
@@ -13,9 +10,9 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 			$this->load->model('extension/purpletree_multivendor/multivendor/seatingmanagement');
 			
 			$this->getList();
-		}
+	}
 		
-		public function add() {
+	public function add() {
 			
 			$this->load->language('extension/purpletree_multivendor/multivendor/seatingmanagement');
 			$this->document->setTitle($this->language->get('heading_title'));
@@ -45,15 +42,10 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 				$this->response->redirect($this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement', 'user_token=' . $this->session->data['user_token'] . $url, true));
 			} 
 			$this->getForm();
-		}
+	}
 		
-		public function edit() {
-			$validateSeller = $this->load->controller('extension/purpletree_multivendor/multivendor/config');
-			if (!$validateSeller) {
-				$this->load->language('extension/purpletree_multivendor/multivendor/ptsmultivendor');
-				$this->session->data['error_warning'] = $this->language->get('error_license');
-				$this->response->redirect($this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement', 'user_token=' . $this->session->data['user_token'] . $url, true));
-			}
+	public function edit() {
+			
 			$this->load->language('extension/purpletree_multivendor/multivendor/seatingmanagement');
 			
 			$this->document->setTitle($this->language->get('heading_title'));
@@ -61,7 +53,7 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 			$this->load->model('extension/purpletree_multivendor/multivendor/seatingmanagement');
 			
 			if (($this->request->server['REQUEST_METHOD'] == 'POST')  && $this->validateForm() ) {				
-				$this->model_extension_purpletree_multivendor_multivendor_seatingmanagement->editSellerArea($this->request->get['area_id'], $this->request->post);
+				$this->model_extension_purpletree_multivendor_multivendor_seatingmanagement->editSeatingmanagement($this->request->get['table_id'], $this->request->post);
 				
 				$this->session->data['success'] = $this->language->get('text_success');
 				
@@ -83,15 +75,10 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 			}
 			
 			$this->getForm();
-		}
+	}
 		
-		public function delete() {
-			$validateSeller = $this->load->controller('extension/purpletree_multivendor/multivendor/config');
-			if (!$validateSeller) {
-				$this->load->language('extension/purpletree_multivendor/multivendor/ptsmultivendor');
-				$this->session->data['error_warning'] = $this->language->get('error_license');
-				$this->response->redirect($this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement', 'user_token=' . $this->session->data['user_token'] . $url, true));
-			}
+	public function delete() {
+			
 			$this->load->language('extension/purpletree_multivendor/multivendor/seatingmanagement');
 			
 			$this->document->setTitle($this->language->get('heading_title'));
@@ -102,24 +89,11 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 				
 				$url = '';
 				
-				foreach ($this->request->post['selected'] as $area_id) {
-					$check_area ='';
-					//$check_area = $this->model_extension_purpletree_multivendor_multivendor_seatingmanagement->checkSellerArea($area_id);
-					
-					if(!empty($check_area)){
-						$this->session->data['error_warning'] = $this->language->get('error_permission');
-						}else{
-						try {     
+				foreach ($this->request->post['selected'] as $table_id) {
+					$this->model_extension_purpletree_multivendor_multivendor_seatingmanagement->deleteSeatingManagement($table_id);		
 							
-							$this->model_extension_purpletree_multivendor_multivendor_seatingmanagement->deleteSellerArea($area_id);		
-							
-							$this->session->data['success'] = $this->language->get('text_success');
-						}
-						catch (Exception $e) {
-							$this->session->data['error_warning'] = $e->getMessage();
-						}
+					$this->session->data['success'] = $this->language->get('text_success');
 						
-					}
 					
 				}
 				
@@ -139,16 +113,23 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 			}
 			
 			$this->getList();
-		}
-		protected function getList() {
-			$this->document->addStyle('../extension/purpletree_multivendor/admin/view/javascript/purpletreecss/commonstylesheet.css');
+	}
+	protected function getList() {
+			
 			$url = '';
-			///Help code///
-			//$data['helplink'] = "https://www.purpletreesoftware.com/knowledgebase/tag/hyperlocal-in-complete-multivendor-marketplace-for-opencart-2";
-			$data['helplink'] = "https://cutt.ly/KCo9aEX";
-			if (defined ('DISABLED_PTS_HELP')){if(DISABLED_PTS_HELP == 0){$data['helpcheck'] = 1;}else{$data['helpcheck'] = 0;}}else{$data['helpcheck'] = 1;}
-			$data['helpimage'] = HTTP_CATALOG . '/extension/purpletree_multivendor/admin/view/image/help.png';
-			/// End Help code///
+			
+			if (isset($this->request->get['sort'])) {
+			$url .= '&sort=' . $this->request->get['sort'];
+			}
+
+			if (isset($this->request->get['order'])) {
+				$url .= '&order=' . $this->request->get['order'];
+			}
+
+			if (isset($this->request->get['page'])) {
+				$url .= '&page=' . $this->request->get['page'];
+			}
+			
 			$data['breadcrumbs'] = array();
 			
 			$data['breadcrumbs'][] = array(
@@ -167,19 +148,24 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 			
 			$data['seatingmanagements'] = array();
 			
+			$seatingmanagement_total = $this->model_extension_purpletree_multivendor_multivendor_seatingmanagement->getTotalSeatingManagements();
+			
 			$results = $this->model_extension_purpletree_multivendor_multivendor_seatingmanagement->getSeatingManagements();
 			$text_enabled =  $this->language->get('text_enabled');
 			$text_disabled =  $this->language->get('text_disabled');
-			foreach ($results as $result) {				
+			foreach ($results as $result) {	
 				$data['seatingmanagements'][] = array(
+				'table_id'        => $result['table_id'],
 				'seat_capacity' => $result['seat_capacity'],
-				'table_no'        => $result['area_name'],
+				'table_no'        => $result['table_no'],
 				'status'       	   => ($result['status'])? $text_enabled :$text_disabled,
 				'vendor_store_id'    => $result['vendor_store_id'],				
-				'edit'        => $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement|edit', 'user_token=' . $this->session->data['user_token'] . '&area_id=' . $result['area_id'] . $url, true),
-				'delete'      => $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement|delete', 'user_token=' . $this->session->data['user_token'] . '&area_id=' . $result['area_id'] . $url, true)
+				'edit'        => $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement|edit', 'user_token=' . $this->session->data['user_token'] . '&table_id=' . $result['table_id'] . $url, true),
+				'delete'      => $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement|delete', 'user_token=' . $this->session->data['user_token'] . '&table_id=' . $result['table_id'] . $url, true)
 				);
 			} 
+			
+			
 			
 			if (isset($this->error['warning'])) {
 				$data['error_warning'] = $this->error['warning'];
@@ -205,8 +191,6 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 				$data['selected'] = array();
 			}
 			
-			$url = '';
-			
 			$data['header'] = $this->load->controller('common/header');
 			$data['column_left'] = $this->load->controller('common/column_left');
 			$data['footer'] = $this->load->controller('common/footer');
@@ -215,7 +199,7 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 		}
 		
 		protected function getForm() {
-			$data['text_form'] = !isset($this->request->get['area_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
+			$data['text_form'] = !isset($this->request->get['table_id']) ? $this->language->get('text_add') : $this->language->get('text_edit');
 			
 			if (isset($this->error['warning'])) {
 				$data['error_warning'] = $this->error['warning'];
@@ -300,24 +284,40 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 			
 			
 			
-			if (isset($this->request->get['area_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-				$seller_area_info = $this->model_extension_purpletree_multivendor_multivendor_seatingmanagement->getArea($this->request->get['area_id']);		
+			if (isset($this->request->get['table_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+				$seating_management_info = $this->model_extension_purpletree_multivendor_multivendor_seatingmanagement->getSeatingManagement($this->request->get['table_id']);		
 			}
 			
 			if (isset($this->request->post['status'])) {
 				$data['status'] = $this->request->post['status'];
-				} elseif (!empty($seller_area_info)) {
-				$data['status'] = $seller_area_info['status'];
+				} elseif (!empty($seating_management_info)) {
+				$data['status'] = $seating_management_info['status'];
 				} else {
 				$data['status'] = '';
 			}
 			
-			if (isset($this->request->post['sort_order'])) {
-				$data['sort_order'] = $this->request->post['sort_order'];
-				} elseif (!empty($seller_area_info)) {
-				$data['sort_order'] = $seller_area_info['sort_order'];
+			if (isset($this->request->post['table_no'])) {
+				$data['table_no'] = $this->request->post['table_no'];
+				} elseif (!empty($seating_management_info)) {
+				$data['table_no'] = $seating_management_info['table_no'];
 				} else {
-				$data['sort_order'] = 0;
+				$data['table_no'] = '';
+			}
+			
+			if (isset($this->request->post['seat_capacity'])) {
+				$data['seat_capacity'] = $this->request->post['seat_capacity'];
+				} elseif (!empty($seating_management_info)) {
+				$data['seat_capacity'] = $seating_management_info['seat_capacity'];
+				} else {
+				$data['seat_capacity'] = '';
+			}
+			
+			if (isset($this->request->post['vendor_store_id'])) {
+				$data['vendor_store_id'] = $this->request->post['vendor_store_id'];
+				} elseif (!empty($seating_management_info)) {
+				$data['vendor_store_id'] = $seating_management_info['vendor_store_id'];
+				} else {
+				$data['vendor_store_id'] = 0;
 			}
 
 			$data['header'] = $this->load->controller('common/header');
