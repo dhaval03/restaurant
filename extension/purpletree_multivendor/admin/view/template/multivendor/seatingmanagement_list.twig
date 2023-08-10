@@ -1,0 +1,79 @@
+{{ header }}{{ column_left }}
+<div id="content">
+	<div class="page-header">
+		<div class="container-fluid">
+			<div class="pull-right float-end">
+				<a href="{{ add }}" data-bs-toggle="tooltip" title="{{ button_add }}" class="btn btn-primary"><i class="fa fa-plus"></i></a> 
+				<button type="button" data-bs-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" onclick="confirm('{{ text_confirm }}') ? $('#form-category').submit() : false;"><i class="fa fa-trash-o fas fa-trash-alt"></i></button>
+				{% if helpcheck %}
+					<a href="{{ helplink }}" rel=”nofollow”  target="_blank" id="button-pts-help" class="btn"><img src="{{ helpimage }}" alt="Help" width="85" height="43"></a>
+				{% endif %}
+				</div>
+			<h1>{{ heading_title }}</h1>
+			<ul class="breadcrumb">
+				{% for breadcrumb in breadcrumbs %}
+				<li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+	<div class="container-fluid">
+		{% if error_warning %}
+		<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+		  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+		</div>
+		{% endif %}
+	   {% if success %}
+		<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+		  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+		</div>
+		{% endif %}
+		<div class="panel panel-default card">
+			<div class="panel-heading">
+				<h3 class="panel-title card-header"><i class="fa fa-list"></i> {{ text_list }}</h3>
+			</div>
+			<div class="panel-body card-body">
+				<form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-category">
+					<div class="table-responsive">
+						<table class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<td class="text-center ptsc-vendorlis-width"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" class="form-check-input"/></td>
+									<td class="text-start">{{ column_vendor }}</td>
+									
+									<td class="text-start">{{ column_table_no }}</td>
+									<td class="text-end">{{ column_seat }}</td>
+									<td class="text-end">{{ column_status }}</td>
+									<td class="text-end">{{ column_action }}</td>
+								</tr>    
+							</thead>
+							<tbody>
+								{% if sellerareas %}
+								{% for sellerarea in sellerareas %}
+								<tr>
+									<td class="text-center">{% if sellerarea.area_id in selected %}
+										<input type="checkbox" name="selected[]" value="{{ sellerarea.area_id }}" checked="checked" class="form-check-input"/>
+										{% else %}
+										<input type="checkbox" name="selected[]" value="{{ sellerarea.area_id }}" class="form-check-input"/>
+									{% endif %}</td>
+									<td class="text-start">{{ sellerarea.vendor }}</td>									
+									<td class="text-start">{{ sellerarea.table_no }}</td>
+									<td class="text-end">{{ sellerarea.seat }}</td>
+									<td class="text-end">{{ sellerarea.status }}</td>
+									<td class="text-end"><a href="{{ sellerarea.edit }}" data-bs-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary"><i class="fa fa-pencil fas fa-edit"></i></a></td>
+								</tr>
+								{% endfor %}
+								{% else %}
+								<tr>
+									<td class="text-center" colspan="100%">{{ text_no_results }}</td>
+								</tr>
+								{% endif %}
+							</tbody>
+						</table>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{{ footer }}
