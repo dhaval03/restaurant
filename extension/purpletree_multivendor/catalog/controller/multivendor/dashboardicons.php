@@ -148,6 +148,8 @@ class Dashboardicons extends \Opencart\System\Engine\Controller {
 			}
 			$data['bulkproductupload'] = $this->url->link('extension/purpletree_multivendor/multivendor/bulkproductupload', 'language=' . $this->config->get('config_language'), true);
 			
+			$data['tableseating'] = $this->url->link('extension/purpletree_multivendor/multivendor/tableseating', 'language=' . $this->config->get('config_language'), true);
+			
 			$data['purpletree_multivendor_subscription_plans'] = $this->config->get('module_purpletree_multivendor_subscription_plans');
 			if($this->config->get('module_purpletree_multivendor_subscription_plans')==1){
 				
