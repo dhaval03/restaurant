@@ -19,7 +19,7 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 			
 			$this->load->model('extension/purpletree_multivendor/multivendor/seatingmanagement');
 			
-			if (($this->request->server['REQUEST_METHOD'] == 'POST')  && $this->validateForm() ) {
+			if (($this->request->server['REQUEST_METHOD'] == 'POST')  /*&& $this->validateForm()*/ ) {
 				
 				$this->model_extension_purpletree_multivendor_multivendor_seatingmanagement->addSeatingmanagement($this->request->post);
 				
@@ -144,7 +144,6 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 			
 			$data['add'] = $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement|add', 'user_token=' . $this->session->data['user_token'] . $url, true);
 			$data['delete'] = $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement|delete', 'user_token=' . $this->session->data['user_token'] . $url, true);
-			$data['repair'] = $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement|repair', 'user_token=' . $this->session->data['user_token'] . $url, true);
 			
 			$data['seatingmanagements'] = array();
 			
@@ -160,6 +159,7 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 				'table_no'        => $result['table_no'],
 				'status'       	   => ($result['status'])? $text_enabled :$text_disabled,
 				'vendor_store_id'    => $result['vendor_store_id'],				
+				'vendor_id'    => $result['vendor_id'],				
 				'edit'        => $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement|edit', 'user_token=' . $this->session->data['user_token'] . '&table_id=' . $result['table_id'] . $url, true),
 				'delete'      => $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement|delete', 'user_token=' . $this->session->data['user_token'] . '&table_id=' . $result['table_id'] . $url, true)
 				);
@@ -221,9 +221,6 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 				} else {
 				$data['error_sort_order'] = '';
 			}
-			
-			
-			
 			$url = '';
 			
 			if (isset($this->request->get['sort'])) {
@@ -253,8 +250,6 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 			$data['entry_joinning_fee']=$this->language->get('entry_joinning_fee');
 			$data['entry_default_subscription_plan']=$this->language->get('entry_default_subscription_plan');
 			
-			
-			
 			$data['cancel'] = $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement', 'user_token=' . $this->session->data['user_token'] . $url, true);
 			
 			
@@ -274,7 +269,6 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 			];
 
 			$stores = $this->model_setting_store->getStores();
-
 			foreach ($stores as $store) {
 				$data['stores'][] = [
 					'store_id' => $store['store_id'],
@@ -282,11 +276,16 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 				];
 			}
 			
+			$this->load->model('extension/purpletree_multivendor/multivendor/vendor');
+			
+			$data['sellers'] = $this->model_extension_purpletree_multivendor_multivendor_vendor->getVendors();
+//print_r($stores);EXIT;
 			
 			
 			if (isset($this->request->get['table_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 				$seating_management_info = $this->model_extension_purpletree_multivendor_multivendor_seatingmanagement->getSeatingManagement($this->request->get['table_id']);		
 			}
+			//print_r($seating_management_info);exit;
 			
 			if (isset($this->request->post['status'])) {
 				$data['status'] = $this->request->post['status'];
@@ -302,6 +301,13 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 				$data['table_no'] = $seating_management_info['table_no'];
 				} else {
 				$data['table_no'] = '';
+			}
+			if (isset($this->request->post['vendor_id'])) {
+				$data['vendor_id'] = $this->request->post['vendor_id'];
+				} elseif (!empty($seating_management_info)) {
+				$data['vendor_id'] = $seating_management_info['vendor_id'];
+				} else {
+				$data['vendor_id'] = '';
 			}
 			
 			if (isset($this->request->post['seat_capacity'])) {
@@ -334,10 +340,6 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 				}
 				
 			}
-			
-			
-			
-			
 			return !$this->error;
 		}
 		

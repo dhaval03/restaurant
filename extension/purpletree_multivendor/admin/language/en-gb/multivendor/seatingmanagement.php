@@ -22,6 +22,8 @@ $_['entry_tableno']         = 'Table No';
 $_['entry_seat']  = 'Seat';
 $_['entry_storename']  = 'storename';
 $_['entry_status']  = 'Status';
+$_['entry_vendor']  = 'Vendor';
+$_['entry_location']  = 'Location';
 
 // Error
 $_['error_permission']   = 'Warning: You do not have permission to modify seating management!';

@@ -2,8 +2,9 @@
 namespace Opencart\Admin\Model\Extension\PurpletreeMultivendor\Multivendor;
 class Seatingmanagement extends \Opencart\System\Engine\Model {
 	public function addSeatingmanagement($data) {
+		//print_r($data);exit;
 			
-		$this->db->query("INSERT INTO " . DB_PREFIX . "seatingmanagement SET table_no = '" . $this->db->escape($data['table_no']) . "', seat_capacity = '" . (int)$data['seat_capacity'] . "', vendor_store_id = '" . (int)$data['vendor_store_id'] . "', status = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "', date_modified = NOW(), date_added = NOW()");
+		$this->db->query("INSERT INTO " . DB_PREFIX . "seatingmanagement SET table_no = '" . $this->db->escape($data['table_no']) . "', seat_capacity = '" . (int)$data['seat_capacity'] . "', vendor_store_id = '" . (int)$data['vendor_store_id'] . "',vendor_id = '" . (int)$data['vendor_id'] . "', status = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "', date_modified = NOW(), date_added = NOW()");
 		
 		$table_id = $this->db->getLastId();
 			
