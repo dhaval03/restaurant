@@ -1,40 +1,40 @@
 <?php
 namespace Opencart\Admin\Model\Extension\PurpletreeMultivendor\Multivendor;
 class Location extends \Opencart\System\Engine\Model {
-	public function addSeatingmanagement($data) {
+	public function addLocation($data) {
 		//print_r($data);exit;
 			
-		$this->db->query("INSERT INTO " . DB_PREFIX . "seatingmanagement SET table_no = '" . $this->db->escape($data['table_no']) . "', seat_capacity = '" . (int)$data['seat_capacity'] . "', vendor_store_id = '" . (int)$data['vendor_store_id'] . "',vendor_id = '" . (int)$data['vendor_id'] . "', status = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "', date_modified = NOW(), date_added = NOW()");
+		$this->db->query("INSERT INTO " . DB_PREFIX . "seating_location SET name = '" . $this->db->escape($data['name']) . "',vendor_id = '" . (int)$data['vendor_id'] . "',sort_order = '" . (int)$data['sort_order'] . "', status = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "', date_modified = NOW(), date_added = NOW()");
 		
-		$table_id = $this->db->getLastId();
+		$tl_id = $this->db->getLastId();
 			
 	}
 		
-	public function editSeatingmanagement(int $table_id, array $data) {
+	public function editLocation(int $tl_id, array $data) {
 		
-		$this->db->query("UPDATE `" . DB_PREFIX . "seatingmanagement` SET table_no = '" . $this->db->escape($data['table_no']) . "', seat_capacity = '" . (int)$data['seat_capacity'] . "', vendor_store_id = '" . (int)$data['vendor_store_id'] . "', status = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "' WHERE `table_id` = '" . (int)$table_id . "'");
+		$this->db->query("INSERT INTO " . DB_PREFIX . "seating_location SET name = '" . $this->db->escape($data['name']) . "',vendor_id = '" . (int)$data['vendor_id'] . "',sort_order = '" . (int)$data['sort_order'] . "', status = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "'");
 					
-		$this->cache->delete('seatingmanagement');
+		$this->cache->delete('seating_location');
 	}
 	
-	public function deleteSeatingManagement(int $table_id) {
+	public function deleteLocation($tl_id) {
 		
-		$this->db->query("DELETE FROM `" . DB_PREFIX . "seatingmanagement` WHERE `table_id` = '" . (int)$table_id . "'");
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "seating_location` WHERE `tl_id` = '" . (int)$tl_id . "'");
 		
-		$this->cache->delete('seatingmanagement');
+		$this->cache->delete('seating_location');
 			
 	}
 		
-	public function getSeatingManagement($table_id) {
+	public function getLocation($tl_id) {
 			
-		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "seatingmanagement` WHERE `table_id` = '" . (int)$table_id . "'");
+		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "seating_location` WHERE `tl_id` = '" . (int)$tl_id . "'");
 
 		return $query->row;
 	}
 		
-	public function getSeatingManagements($data = array()) {			
+	public function getLocations($data = array()) {			
 			
-		$sql="SELECT * FROM ". DB_PREFIX ."seatingmanagement";
+		$sql="SELECT * FROM ". DB_PREFIX ."seating_location";
 			
 		if (isset($data['start']) || isset($data['limit'])) {
 		if ($data['start'] < 0) {
@@ -54,10 +54,18 @@ class Location extends \Opencart\System\Engine\Model {
 	}
 	
 	public function getTotalSeatingManagements () {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "seatingmanagement`");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "seating_location`");
 
 		return (int)$query->row['total'];
 	}
-		
+	
+	public function jxLocations($data){
+		if($data['tl_id'] > 0){
+			$this->db->query("UPDATE " . DB_PREFIX . "seating_location SET name = '" . $this->db->escape($data['name']) . "',vendor_id = '" . (int)$data['vendor_id'] . "',sort_order = '" . (int)$data['sort_order'] . "', status = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "' WHERE tl_id = '".$data['tl_id']."'");
+		}else{
+			$this->db->query("INSERT INTO " . DB_PREFIX . "seating_location SET name = '" . $this->db->escape($data['name']) . "',vendor_id = '" . (int)$data['vendor_id'] . "',sort_order = '" . (int)$data['sort_order'] . "', status = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "'");
+		}
+		$this->cache->delete('seating_location');
+	}
 		
 }
