@@ -31,11 +31,12 @@
 						<thead>
 							<tr>
 								<td class="text-center ptsc-attr-tab-width"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+								
 								<td class="text-left">
-									<a>{{ column_tableno }}</a>
+									<a >{{ column_table_no }}</a>
 								</td>
 								<td class="text-left">
-									<a >{{ column_seating }}</a>
+									<a>{{ column_seat }}</a>
 								</td>
 								<td class="text-left">
 									<a>{{ column_status }}</a>
@@ -44,18 +45,19 @@
 							</tr>
 						</thead>
 						<tbody>
-							{% if attributes %}
-							{% for attribute in attributes %}
+							{% if seatingmanagements %}
+							{% for seatingmanagement in seatingmanagements %}
 							<tr>
-								<td class="text-center">{% if attribute.attribute_id in selected %}
-									<input type="checkbox" name="selected[]" value="{{ attribute.attribute_id }}" checked="checked" />
+								<td class="text-center">{% if seatingmanagement.table_id in selected %}
+									<input type="checkbox" name="selected[]" value="{{ seatingmanagement.table_id }}" checked="checked" />
 									{% else %}
-									<input type="checkbox" name="selected[]" value="{{ attribute.attribute_id }}" />
+									<input type="checkbox" name="selected[]" value="{{ seatingmanagement.table_id }}" />
 								{% endif %}</td>
-								<td class="pts-text-left">{{ tableno }}</td>
-								<td class="pts-text-left">{{ seating }}</td>
-								<td class="pts-text-left">{{ status }}</td>
-								<td id="attributeIdForSelenium" class="pts-text-right"><a href="{{ attribute.edit }}" data-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary"><i class="fa fa-pencil fas fa-pen"></i></a></td>
+								
+								<td class="pts-text-left">{{ seatingmanagement.table_no }}</td>
+								<td class="pts-text-left">{{ seatingmanagement.seat_capacity }}</td>
+								<td class="pts-text-left">{{ seatingmanagement.status }}</td>
+								<td id="attributeIdForSelenium" class="pts-text-right"><a href="{{ seatingmanagement.edit }}" data-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary"><i class="fa fa-pencil fas fa-pen"></i></a></td>
 							</tr>
 							{% endfor %}
 							{% else %}
