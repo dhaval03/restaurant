@@ -35,28 +35,27 @@
 			</div>
 			<div class="pts-panel-body">
 				<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-attribute" class="pts-form-horizontal">
-					<input type="hidden" name="id" value="{{ idd }}" />
-					<input type="hidden" name="seller_id" value="{{ seller_id }}" />
-					<input type="hidden" name="attribute_idd" value="{{ attribute_idd }}" />
+					
 					<div class="pts-form-group required">
 						<label class="pts-col-sm-2 pts-control-label">{{ entry_tableno }}</label>
-						
 						<div class="pts-col-sm-10">
-							<input type="text" name="tableno" value="{{ tableno }}" placeholder="{{ entry_tableno }}" id="input-sort-order" class="pts-form-control" />
+							<input type="text" name="table_no" value="{{ table_no }}" placeholder="{{ entry_tableno }}" id="input-sort-order" class="pts-form-control" />
 						</div>
 					</div>
 					
 					<div class="pts-form-group">
-						<label class="pts-col-sm-2 pts-control-label" for="input-sort-order">{{ entry_seating }}</label>
+						<label class="pts-col-sm-2 pts-control-label" for="input-sort-order">{{ entry_seat }}</label>
 						<div class="pts-col-sm-10">
-							<input type="text" name="sort_order" value="{{ sort_order }}" placeholder="{{ entry_seating }}" id="input-sort-order" class="pts-form-control" />
+							<input type="text" name="seat_capacity" value="{{ seat_capacity }}" placeholder="{{ entry_seat }}" id="input-sort-order" class="pts-form-control" />
 						</div>
 					</div>
 					<div class="pts-form-group">
-						<label class="pts-col-sm-2 pts-control-label" for="input-attribute-group">{{ entry_store }}</label>
+						<label class="pts-col-sm-2 pts-control-label" for="input-storestate">{{ entry_storename }}</label>
 						<div class="pts-col-sm-10">
-							<select name="attribute_group_id" id="input-attribute-group" class="pts-form-control">
-								<option value="0"></option>
+							<select name="vendor_store_id" id="input-store" class="pts-form-control">
+								{% for store in stores %}
+								<option value="{{ store.store_id }}"{% if store.store_id == store_id %} selected{% endif %}>{{ store.name }}</option>
+								{% endfor %}
 							</select>
 						</div>
 					</div>
