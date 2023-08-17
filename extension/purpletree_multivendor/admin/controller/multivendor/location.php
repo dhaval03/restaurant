@@ -115,6 +115,24 @@ class Location extends \Opencart\System\Engine\Controller {
 			$this->getList();
 	}
 	protected function getList() {
+			 
+			if (isset($this->request->get['sort'])) {
+				$sort = $this->request->get['sort'];
+				} else {
+				$sort = 'name';
+			}
+			
+			if (isset($this->request->get['order'])) {
+				$order = $this->request->get['order'];
+				} else {
+				$order = 'ASC';
+			}
+			
+			if (isset($this->request->get['page'])) {
+				$page = $this->request->get['page'];
+				} else {
+				$page = 1;
+			}
 			
 			$url = '';
 			
@@ -132,13 +150,6 @@ class Location extends \Opencart\System\Engine\Controller {
 			
 			$data['breadcrumbs'] = array();
 			
-			/*$filter_data = array(
-			'sort'  => $sort,
-			'order' => $order,
-			'start' => ($page - 1) * $this->config->get('config_pagination_admin'),
-			'limit' => $this->config->get('config_pagination_admin')
-			);*/
-			
 			$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_home'),
 			'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true)
@@ -154,37 +165,46 @@ class Location extends \Opencart\System\Engine\Controller {
 			$this->load->model('extension/purpletree_multivendor/multivendor/vendor');
 			
 			$data['sellers'] = $this->model_extension_purpletree_multivendor_multivendor_vendor->getVendors();
-			$data['seatingmanagements'] = array();
+
+			$data['locations'] = array();
+			$data['heading_title'] = $this->language->get('heading_title');
 			
-			$seatingmanagement_total = $this->model_extension_purpletree_multivendor_multivendor_location->getTotalSeatingManagements();
-			//$data['locations'] = $this->model_extension_purpletree_multivendor_multivendor_location->getLocation();
-			$results = $this->model_extension_purpletree_multivendor_multivendor_location->getLocations();
+			$filter_data = array(
+			'sort'  => $sort,
+			'order' => $order,
+			'start' => ($page - 1) * $this->config->get('config_pagination_admin'),
+			'limit' => $this->config->get('config_pagination_admin')
+			);
+			$location_total = $this->model_extension_purpletree_multivendor_multivendor_location->getTotalLocations();
+			
+			$sellers = $this->model_extension_purpletree_multivendor_multivendor_vendor->getVendors();
+			$results = $this->model_extension_purpletree_multivendor_multivendor_location->getLocations($filter_data);
 			$text_enabled =  $this->language->get('text_enabled');
 			$text_disabled =  $this->language->get('text_disabled');
 			foreach ($results as $result) {	
+			$name = '';
+				foreach($sellers as $seller){
+					if($seller['seller_id'] == $result['vendor_id']){
+						$name = $seller['store_name'];
+					}
+				}
 				$data['locations'][] = array(
 				'tl_id'        => $result['tl_id'],
-				'vendor_id'    => $result['vendor_id'],				
+				'vendor_id'    =>$name,				
 				'sort_order' => $result['sort_order'],
 				'name'        => $result['name'],
 				'status'       	   => ($result['status'])? $text_enabled :$text_disabled,
 				'location' => $this->model_extension_purpletree_multivendor_multivendor_location->getLocation($result['tl_id']),
-				'delete'      => $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement|delete', 'user_token=' . $this->session->data['user_token'] . '&tl_id=' . $result['tl_id'] . $url, true)
+				'delete'      => $this->url->link('extension/purpletree_multivendor/multivendor/location|delete', 'user_token=' . $this->session->data['user_token'] . '&tl_id=' . $result['tl_id'] . $url, true)
 				);
 				
 			} 
-			
-			
-			
+					
 			if (isset($this->error['warning'])) {
 				$data['error_warning'] = $this->error['warning'];
-				}elseif (isset($this->session->data['error_warning'])) {
-				$data['error_warning'] = $this->session->data['error_warning'];
-				unset($this->session->data['error_warning']);
 				} else {
 				$data['error_warning'] = '';
 			}
-			
 			
 			if (isset($this->session->data['success'])) {
 				$data['success'] = $this->session->data['success'];
@@ -199,18 +219,41 @@ class Location extends \Opencart\System\Engine\Controller {
 				} else {
 				$data['selected'] = array();
 			}
+			$url = '';
 			
-			/*$data['pagination'] = $this->load->controller('common/pagination', [
-			'total' => $seatingmanagement_total,
+			if ($order == 'ASC') {
+				$url .= '&order=DESC';
+				} else {
+				$url .= '&order=ASC';
+			}
+			
+			if (isset($this->request->get['page'])) {
+				$url .= '&page=' . $this->request->get['page'];
+			}
+			
+			$url = '';
+			
+			if (isset($this->request->get['sort'])) {
+				$url .= '&sort=' . $this->request->get['sort'];
+			}
+			
+			if (isset($this->request->get['order'])) {
+				$url .= '&order=' . $this->request->get['order'];
+			}
+			
+			$data['pagination'] = $this->load->controller('common/pagination', [
+			'total' => $location_total,
 			'page'  => $page,
 			'limit' => $this->config->get('config_pagination_admin'),
-			'url'   => $this->url->link('extension/purpletree_multivendor/multivendor/location', '' . $url . '&page={page}'.'language=' . $this->config->get('config_language'), true)
+			'url'   => $this->url->link('extension/purpletree_multivendor/multivendor/location', 'user_token=' . $this->session->data['user_token'] . $url . '&page={page}'.'&language=' . $this->config->get('config_language'), true)
 		]);
-
-			$data['results'] = sprintf($this->language->get('text_pagination'), ($seatingmanagement_total) ? (($page - 1) * $this->config->get('config_pagination_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_pagination_admin')) > ($seatingmanagement_total - $this->config->get('config_pagination_admin'))) ? $seatingmanagement_total : ((($page - 1) * $this->config->get('config_pagination_admin')) + $this->config->get('config_pagination_admin')), $seatingmanagement_total, ceil($seatingmanagement_total / $this->config->get('config_pagination_admin')));
+		
+		
+			$data['results'] = sprintf($this->language->get('text_pagination'), ($location_total) ? (($page - 1) * $this->config->get('config_pagination_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_pagination_admin')) > ($location_total - $this->config->get('config_pagination_admin'))) ? $location_total : ((($page - 1) * $this->config->get('config_pagination_admin')) + $this->config->get('config_pagination_admin')), $location_total, ceil($location_total / $this->config->get('config_pagination_admin')));
 			
 			$data['sort'] = $sort;
-			$data['order'] = $order;*/
+			$data['order'] = $order;
+			
 			$data['user_token'] = $this->session->data['user_token'];
 			$data['languages'] = $this->model_localisation_language->getLanguages();
 			$data['header'] = $this->load->controller('common/header');

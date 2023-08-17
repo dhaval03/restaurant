@@ -34,7 +34,7 @@ class Location extends \Opencart\System\Engine\Model {
 		
 	public function getLocations($data = array()) {			
 			
-		$sql="SELECT * FROM ". DB_PREFIX ."seating_location";
+		$sql="SELECT * FROM ". DB_PREFIX ."seating_location ORDER BY tl_id ASC";
 			
 		if (isset($data['start']) || isset($data['limit'])) {
 		if ($data['start'] < 0) {
@@ -42,7 +42,7 @@ class Location extends \Opencart\System\Engine\Model {
 		}
 
 		if ($data['limit'] < 1) {
-			$data['limit'] = 20;
+			$data['limit'] = 10;
 		}
 
 		$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
@@ -53,7 +53,7 @@ class Location extends \Opencart\System\Engine\Model {
 		return $query->rows;
 	}
 	
-	public function getTotalSeatingManagements () {
+	public function getTotalLocations () {
 		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "seating_location`");
 
 		return (int)$query->row['total'];
@@ -63,7 +63,7 @@ class Location extends \Opencart\System\Engine\Model {
 		if($data['tl_id'] > 0){
 			$this->db->query("UPDATE " . DB_PREFIX . "seating_location SET name = '" . $this->db->escape($data['name']) . "',vendor_id = '" . (int)$data['vendor_id'] . "',sort_order = '" . (int)$data['sort_order'] . "', status = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "' WHERE tl_id = '".$data['tl_id']."'");
 		}else{
-			$this->db->query("INSERT INTO " . DB_PREFIX . "seating_location SET name = '" . $this->db->escape($data['name']) . "',vendor_id = '" . (int)$data['vendor_id'] . "',sort_order = '" . (int)$data['sort_order'] . "', status = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "seating_location SET name = '" . $this->db->escape($data['name']) . "',vendor_id = '" . (int)$data['vendor_id'] . "',sort_order = '" . (int)$data['sort_order'] . "', status = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "',date_modified = NOW(), date_added = NOW()");
 		}
 		$this->cache->delete('seating_location');
 	}
