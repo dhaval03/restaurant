@@ -19,7 +19,7 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 			
 			$this->load->model('extension/purpletree_multivendor/multivendor/seatingmanagement');
 			
-			if (($this->request->server['REQUEST_METHOD'] == 'POST')  /*&& $this->validateForm()*/ ) {
+			if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm() ) {
 				
 				$this->model_extension_purpletree_multivendor_multivendor_seatingmanagement->addSeatingmanagement($this->request->post);
 				
@@ -268,13 +268,11 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 				$data['error_warning'] = '';
 			}
 			
-			
-			if (isset($this->error['name'])) {
-				$data['error_name'] = $this->error['name'];
+			if (isset($this->error['error_table_no'])) {
+				$data['error_table_no'] = $this->error['error_table_no'];
 				} else {
-				$data['error_name'] = array();
+				$data['error_table_no'] = '';
 			}
-			
 			
 			
 			if (isset($this->error['sort_order'])) {
@@ -340,7 +338,10 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 			$this->load->model('extension/purpletree_multivendor/multivendor/vendor');
 			
 			$data['sellers'] = $this->model_extension_purpletree_multivendor_multivendor_vendor->getVendors();
-//print_r($stores);EXIT;
+			
+			$this->load->model('extension/purpletree_multivendor/multivendor/location');
+			
+			$data['locations'] = $this->model_extension_purpletree_multivendor_multivendor_location->getLocations();
 			
 			
 			if (isset($this->request->get['table_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
@@ -395,8 +396,16 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 		}
 		
 		protected function validateForm() {
-			if (empty($this->request->post['table_no']) && $this->request->post['table_no'] > 0 && !is_numeric($this->request->post['table_no'])) {
-				$this->error['name'] = $this->language->get('error_table_no');
+			if (!$this->user->hasPermission('modify', 'extension/purpletree_multivendor/multivendor/seatingmanagement')) {
+				$this->error['warning'] = $this->language->get('error_permission');
+			}
+			if (empty($this->request->post['table_no']) || !is_numeric($this->request->post['table_no'])) {
+				$this->error['error_table_no'] = $this->language->get('error_table_no');
+			}elseif(!empty($this->request->post['table_no']) && strlen($this->request->post['table_no']) > 2){				
+				$this->error['error_table_no'] = $this->language->get('error_table_numbers');
+			}
+			if ($this->error && !isset($this->error['warning'])) {
+				$this->error['warning'] = $this->language->get('error_warning');
 			}
 			return !$this->error;
 		}
