@@ -24,6 +24,7 @@ $_['column_status']      = 'Status';
 
 // Entry
 $_['entry_tableno']         = 'Table No';
+$_['entry_location']         = 'Location';
 $_['entry_seat']  = 'Seat';
 $_['entry_storename']  = 'storename';
 $_['entry_status']  = 'Status';

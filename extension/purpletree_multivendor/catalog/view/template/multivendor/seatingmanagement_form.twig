@@ -61,6 +61,17 @@
 						</div>
 					</div>
 					<div class="pts-form-group">
+						<label class="pts-col-sm-2 pts-control-label" for="input-storestate">{{ entry_location }}</label>
+						<div class="pts-col-sm-10">
+							<select name="location" id="input-location" class="pts-form-control">
+								{% for location in locations %}
+								<option value="{{ location.tl_id }}"{% if location.tl_id == location_id %} selected{% endif %}>{{ location.name }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+					
+					<div class="pts-form-group">
 						<label class="pts-col-sm-2 pts-control-label" for="input-attribute-group">{{ entry_status }}</label>
 						<div class="pts-col-sm-10">
 							<label class="switch">
