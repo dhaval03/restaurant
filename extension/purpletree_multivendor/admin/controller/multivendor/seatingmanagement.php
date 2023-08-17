@@ -115,7 +115,23 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 			$this->getList();
 	}
 	protected function getList() {
+			if (isset($this->request->get['sort'])) {
+				$sort = $this->request->get['sort'];
+				} else {
+				$sort = 'name';
+			}
 			
+			if (isset($this->request->get['order'])) {
+				$order = $this->request->get['order'];
+				} else {
+				$order = 'ASC';
+			}
+			
+			if (isset($this->request->get['page'])) {
+				$page = $this->request->get['page'];
+				} else {
+				$page = 1;
+			}
 			$url = '';
 			
 			if (isset($this->request->get['sort'])) {
@@ -141,41 +157,52 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 			'text' => $this->language->get('heading_title'),
 			'href' => $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement', 'user_token=' . $this->session->data['user_token'] . $url, true)
 			);
+			//$this->load->model('extension/purpletree_multivendor/multivendor/dashboard');
+			
+			//$this->model_extension_purpletree_multivendor_multivendor_dashboard->checkSellerApproval();
 			
 			$data['add'] = $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement|add', 'user_token=' . $this->session->data['user_token'] . $url, true);
 			$data['delete'] = $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement|delete', 'user_token=' . $this->session->data['user_token'] . $url, true);
 			
 			$data['seatingmanagements'] = array();
+			$data['heading_title'] = $this->language->get('heading_title');
 			
+			$filter_data = array(
+			'sort'  => $sort,
+			'order' => $order,
+			'start' => ($page - 1) * $this->config->get('config_pagination_admin'),
+			'limit' => $this->config->get('config_pagination_admin')
+			);
 			$seatingmanagement_total = $this->model_extension_purpletree_multivendor_multivendor_seatingmanagement->getTotalSeatingManagements();
+			$this->load->model('extension/purpletree_multivendor/multivendor/vendor');
 			
-			$results = $this->model_extension_purpletree_multivendor_multivendor_seatingmanagement->getSeatingManagements();
+			$sellers = $this->model_extension_purpletree_multivendor_multivendor_vendor->getVendors();
+			$results = $this->model_extension_purpletree_multivendor_multivendor_seatingmanagement->getSeatingManagements($filter_data);
 			$text_enabled =  $this->language->get('text_enabled');
 			$text_disabled =  $this->language->get('text_disabled');
 			foreach ($results as $result) {	
+				$name = '';
+				foreach($sellers as $seller){
+					if($seller['seller_id'] == $result['vendor_id']){
+						$name = $seller['store_name'];
+					}
+				}
 				$data['seatingmanagements'][] = array(
 				'table_id'        => $result['table_id'],
 				'seat_capacity' => $result['seat_capacity'],
 				'table_no'        => $result['table_no'],
 				'status'       	   => ($result['status'])? $text_enabled :$text_disabled,
 				'vendor_store_id'    => $result['vendor_store_id'],				
-				'vendor_id'    => $result['vendor_id'],				
+				'vendor_id'    => $name,				
 				'edit'        => $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement|edit', 'user_token=' . $this->session->data['user_token'] . '&table_id=' . $result['table_id'] . $url, true),
 				'delete'      => $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement|delete', 'user_token=' . $this->session->data['user_token'] . '&table_id=' . $result['table_id'] . $url, true)
 				);
 			} 
-			
-			
-			
 			if (isset($this->error['warning'])) {
 				$data['error_warning'] = $this->error['warning'];
-				}elseif (isset($this->session->data['error_warning'])) {
-				$data['error_warning'] = $this->session->data['error_warning'];
-				unset($this->session->data['error_warning']);
 				} else {
 				$data['error_warning'] = '';
 			}
-			
 			
 			if (isset($this->session->data['success'])) {
 				$data['success'] = $this->session->data['success'];
@@ -190,6 +217,40 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 				} else {
 				$data['selected'] = array();
 			}
+			
+			$url = '';
+			
+			if ($order == 'ASC') {
+				$url .= '&order=DESC';
+				} else {
+				$url .= '&order=ASC';
+			}
+			
+			if (isset($this->request->get['page'])) {
+				$url .= '&page=' . $this->request->get['page'];
+			}
+			
+			$url = '';
+			
+			if (isset($this->request->get['sort'])) {
+				$url .= '&sort=' . $this->request->get['sort'];
+			}
+			
+			if (isset($this->request->get['order'])) {
+				$url .= '&order=' . $this->request->get['order'];
+			}
+			
+			$data['pagination'] = $this->load->controller('common/pagination', [
+			'total' => $seatingmanagement_total,
+			'page'  => $page,
+			'limit' => $this->config->get('config_pagination_admin'),
+			'url'   => $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement', 'user_token=' . $this->session->data['user_token'] . $url . '&page={page}'.'&language=' . $this->config->get('config_language'), true)
+		]);
+
+			$data['results'] = sprintf($this->language->get('text_pagination'), ($seatingmanagement_total) ? (($page - 1) * $this->config->get('config_pagination_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_pagination_admin')) > ($seatingmanagement_total - $this->config->get('config_pagination_admin'))) ? $seatingmanagement_total : ((($page - 1) * $this->config->get('config_pagination_admin')) + $this->config->get('config_pagination_admin')), $seatingmanagement_total, ceil($seatingmanagement_total / $this->config->get('config_pagination_admin')));
+			
+			$data['sort'] = $sort;
+			$data['order'] = $order;
 			
 			$data['header'] = $this->load->controller('common/header');
 			$data['column_left'] = $this->load->controller('common/column_left');
@@ -334,11 +395,8 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 		}
 		
 		protected function validateForm() {
-			foreach ($this->request->post['table_no'] as $language_id => $value) {
-				if ((strlen($value['name']) < 1) || (strlen($value['name']) > 255)) {
-					$this->error['name'][$language_id] = $this->language->get('error_name');
-				}
-				
+			if (empty($this->request->post['table_no']) && $this->request->post['table_no'] > 0 && !is_numeric($this->request->post['table_no'])) {
+				$this->error['name'] = $this->language->get('error_table_no');
 			}
 			return !$this->error;
 		}
