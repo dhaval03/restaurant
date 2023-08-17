@@ -93,8 +93,8 @@ class Location extends \Opencart\System\Engine\Controller {
 			//$this->model_extension_purpletree_multivendor_multivendor_dashboard->checkSellerApproval();
 			
 			if (isset($this->request->post['selected'])) {
-				foreach ($this->request->post['selected'] as $attribute_id) {
-					$this->model_extension_purpletree_multivendor_multivendor_location->deleteSeatingManagement($attribute_id);
+				foreach ($this->request->post['selected'] as $tl_id) {
+					$this->model_extension_purpletree_multivendor_multivendor_location->deleteLocation($tl_id);
 				}
 				
 				$this->session->data['success'] = $this->language->get('text_success');
@@ -185,14 +185,14 @@ class Location extends \Opencart\System\Engine\Controller {
 			$text_enabled =  $this->language->get('text_enabled');
 			$text_disabled =  $this->language->get('text_disabled');
 			foreach ($results as $result) {	
+			
 				$data['locations'][] = array(
-				'tl_id'        => $result['tl_id'],
-				'vendor_id'    => $result['vendor_id'],				
-				'sort_order' => $result['sort_order'],
-				'name'        => $result['name'],
-				'status'       	   => ($result['status'])? $text_enabled :$text_disabled,
-				'location' => $this->model_extension_purpletree_multivendor_multivendor_location->getLocation($result['tl_id']),
-				'delete'      => $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement|delete', '&tl_id=' . $result['tl_id'] . $url, true)
+					'tl_id'        => $result['tl_id'],	
+					'sort_order' => $result['sort_order'],
+					'name'        => $result['name'],
+					'status'       	   => ($result['status'])? $text_enabled :$text_disabled,
+					'location' => $this->model_extension_purpletree_multivendor_multivendor_location->getLocation($result['tl_id']),
+					'delete'      => $this->url->link('extension/purpletree_multivendor/multivendor/location|delete', '&tl_id=' . $result['tl_id'] . $url, true)
 				);
 				
 			} 

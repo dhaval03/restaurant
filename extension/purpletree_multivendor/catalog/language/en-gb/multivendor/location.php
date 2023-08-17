@@ -5,6 +5,7 @@ $_['heading_title']      = 'Location';
 
 // Text
 $_['text_success']       = 'Success: You have modified location!';
+$_['text_confirm']       = 'Are you sure?';
 $_['text_list']          = 'Location List';
 $_['text_add']           = 'Add Location';
 $_['text_edit']          = 'Edit Location';

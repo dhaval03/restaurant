@@ -1,21 +1,7 @@
 <?php
 namespace Opencart\Catalog\Model\Extension\PurpletreeMultivendor\Multivendor;
 class Location extends \Opencart\System\Engine\Model {
-	public function addLocation($data) {
-		//print_r($data);exit;
-			
-		$this->db->query("INSERT INTO " . DB_PREFIX . "seating_location SET name = '" . $this->db->escape($data['name']) . "',vendor_id = '" . (int)$data['vendor_id'] . "',sort_order = '" . (int)$data['sort_order'] . "', status = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "', date_modified = NOW(), date_added = NOW()");
-		
-		$tl_id = $this->db->getLastId();
-			
-	}
-		
-	public function editLocation(int $tl_id, array $data) {
-		
-		$this->db->query("INSERT INTO " . DB_PREFIX . "seating_location SET name = '" . $this->db->escape($data['name']) . "',vendor_id = '" . (int)$data['vendor_id'] . "',sort_order = '" . (int)$data['sort_order'] . "', status = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "'");
-					
-		$this->cache->delete('seating_location');
-	}
+	
 		
 	public function deleteLocation($tl_id) {
 		
@@ -34,7 +20,7 @@ class Location extends \Opencart\System\Engine\Model {
 	
 	public function getLocations($data = array()) {			
 			
-		$sql="SELECT * FROM ". DB_PREFIX ."seating_location";
+		$sql="SELECT * FROM ". DB_PREFIX ."seating_location ORDER BY tl_id ASC";
 			
 		if (isset($data['start']) || isset($data['limit'])) {
 		if ($data['start'] < 0) {
@@ -60,9 +46,9 @@ class Location extends \Opencart\System\Engine\Model {
 	}
 	public function jxLocations($data){
 		if($data['tl_id'] > 0){
-			$this->db->query("UPDATE " . DB_PREFIX . "seating_location SET name = '" . $this->db->escape($data['name']) . "',vendor_id = '" . (int)$data['vendor_id'] . "',sort_order = '" . (int)$data['sort_order'] . "', status = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "' WHERE tl_id = '".$data['tl_id']."'");
+			$this->db->query("UPDATE " . DB_PREFIX . "seating_location SET name = '" . $this->db->escape($data['name']) . "',sort_order = '" . (int)$data['sort_order'] . "', status = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "' WHERE tl_id = '".$data['tl_id']."'");
 		}else{
-			$this->db->query("INSERT INTO " . DB_PREFIX . "seating_location SET name = '" . $this->db->escape($data['name']) . "',vendor_id = '" . (int)$data['vendor_id'] . "',sort_order = '" . (int)$data['sort_order'] . "', status = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "seating_location SET name = '" . $this->db->escape($data['name']) . "',sort_order = '" . (int)$data['sort_order'] . "', status = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "', date_modified = NOW(), date_added = NOW()");
 		}
 		$this->cache->delete('seating_location');
 	}
