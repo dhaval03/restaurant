@@ -4,10 +4,12 @@ $_['heading_title']      = 'Seating Management';
 
 // Text
 $_['text_success']       = 'Success: You have modified seating management!';
+$_['text_confirm']       = 'Are you sure?';
 $_['text_list']          = 'Seating Management List';
 $_['text_add']           = 'Add Seating Management';
 $_['text_edit']          = 'Edit Seating Management';
 $_['text_geo_zone']      = 'Seating Managements';
+$_['text_default']           = 'Default';
 $_['text_default']           = 'Default';
 $_['text_enabled']          = 'Enabled';
 $_['text_disabled']          = 'Disabled';
@@ -25,10 +27,14 @@ $_['entry_tableno']         = 'Table No';
 $_['entry_seat']  = 'Seat';
 $_['entry_storename']  = 'storename';
 $_['entry_status']  = 'Status';
+$_['entry_vendor']  = 'Vendor';
+$_['entry_location']  = 'Location';
 
 // Error
+$_['error_warning']         = 'Warning: Please check the form carefully for errors!';
 $_['error_permission']   = 'Warning: You do not have permission to modify seating management!';
-$_['error_name']         = 'Seating Management Name must be between 3 and 32 characters!';
+$_['error_table_no']      = 'Table No must be in number!';
+$_['error_table_numbers']   = 'Table No must be between 1 and 2 numbers!';
 $_['error_store_name']   = 'Store name must be between 3 and 32 characters!';
 $_['error_price_numeric']   = 'Price must be in number!';
 $_['error_price']   = 'Price must be between 1 and 8 numbers!';

@@ -8,9 +8,7 @@
 		<div id="content" class="pts-col-sm-9 col-sm-9 pts-col-md-9 col-md-9 pts-col-lg-10 col-lg-10 pts-col-xs-12 col-xs-12"> 
 			<div class="page-header">
 			   {% if error_warning %}
-<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
-	<button type="button" class="close" data-dismiss="alert">&times;</button>
-</div>
+<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
 {% endif %}
     <div class="container-fluid">
      <h1>{{ heading_title }}</h1>
@@ -40,6 +38,9 @@
 						<label class="pts-col-sm-2 pts-control-label">{{ entry_tableno }}</label>
 						<div class="pts-col-sm-10">
 							<input type="text" name="table_no" value="{{ table_no }}" placeholder="{{ entry_tableno }}" id="input-sort-order" class="pts-form-control" />
+							{% if error_table_no %}
+								<div class="text-danger">{{ error_table_no }}</div>
+							{% endif %}
 						</div>
 					</div>
 					
@@ -54,7 +55,7 @@
 						<div class="pts-col-sm-10">
 							<select name="vendor_store_id" id="input-store" class="pts-form-control">
 								{% for store in stores %}
-								<option value="{{ store.store_id }}"{% if store.store_id == store_id %} selected{% endif %}>{{ store.name }}</option>
+								<option value="{{ store.store_id }}"{% if store.store_id == vendor_store_id %} selected{% endif %}>{{ store.name }}</option>
 								{% endfor %}
 							</select>
 						</div>
@@ -63,7 +64,7 @@
 						<label class="pts-col-sm-2 pts-control-label" for="input-attribute-group">{{ entry_status }}</label>
 						<div class="pts-col-sm-10">
 							<label class="switch">
-								<input type="checkbox"  name="" value="1" />
+								<input type="checkbox"  name="status" value="1" id="status" data-oc-toggle="switch" data-oc-target="#input-points" class="form-check-input"{% if status %} checked{% endif %}/>
 								<span class="slider round"></span>
 							</label>
 						</div>
