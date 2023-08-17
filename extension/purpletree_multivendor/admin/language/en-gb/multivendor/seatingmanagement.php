@@ -8,6 +8,7 @@ $_['text_list']          = 'Seating Management List';
 $_['text_add']           = 'Add Seating Management';
 $_['text_edit']          = 'Edit Seating Management';
 $_['text_geo_zone']      = 'Seating Managements';
+$_['text_confirm']                  = 'Are you sure?';
 
 // Column
 $_['column_vendor']        = 'Vendor';

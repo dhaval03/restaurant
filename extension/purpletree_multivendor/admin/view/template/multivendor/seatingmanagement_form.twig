@@ -67,9 +67,9 @@
 									</div>
 									
 									<div class="form-group row  py-4">
-									<label class="col-sm-2 control-label col-form-label" for="input-storestate">{{ entry_location }}</label>
+									<label class="col-sm-2 control-label col-form-label" for="input-location">{{ entry_location }}</label>
 									<div class="col-sm-10">
-										<select name="vendor_store_id" id="input-location" class="form-select">
+										<select name="location" id="input-location" class="form-select">
 										  {% for location in locations %}
 											<option value="{{ location.tl_id }}"{% if location.tl_id == vendor_store_id %} selected="selected"{% endif %}>{{ location.name }}</option>
 										  {% endfor %}

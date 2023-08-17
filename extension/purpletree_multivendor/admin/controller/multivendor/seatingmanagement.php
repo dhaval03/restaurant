@@ -157,9 +157,6 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 			'text' => $this->language->get('heading_title'),
 			'href' => $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement', 'user_token=' . $this->session->data['user_token'] . $url, true)
 			);
-			//$this->load->model('extension/purpletree_multivendor/multivendor/dashboard');
-			
-			//$this->model_extension_purpletree_multivendor_multivendor_dashboard->checkSellerApproval();
 			
 			$data['add'] = $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement|add', 'user_token=' . $this->session->data['user_token'] . $url, true);
 			$data['delete'] = $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement|delete', 'user_token=' . $this->session->data['user_token'] . $url, true);
