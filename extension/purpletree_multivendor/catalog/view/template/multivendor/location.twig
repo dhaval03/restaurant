@@ -1,28 +1,29 @@
 {{ header }}
 <div class="pts-container container">
 <div class="pts-row d-flex row">{{ column_left }}
-		<div id="content" class="pts-col-sm-9 col-sm-9 pts-col-md-9 col-md-9 pts-col-lg-10 col-lg-10 pts-col-xs-12 col-xs-12"> 
-			<div class="page-header">
-				{% if error_warning %}
-    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
-    {% endif %}
-    {% if success %}
-    <div class="alert pts-alert-success"><i class="fa fa-check-circle"></i> {{ success }}</div>
-    {% endif %}
-    <div class="container-fluid">
-     <h1>{{ heading_title }}</h1>
-      <ul class="breadcrumb">
-	  {% for breadcrumb in breadcrumbs %}
-	  <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
-				{% endfor %}
-              </ul>
-			  <div class="pull-right float-right"><a href="{{ add }}" data-toggle="modal" data-target="#exampleModal"  data-toggle="tooltip" title="{{ button_add }}" class="pts-btn pts-btn-primary"><i class="fa fa-plus"></i></a>
-				 {% if helpcheck %}
-					<a href="{{ helplink }}" rel=”nofollow”  target="_blank" id="button-pts-help" class="btn"><img src="{{ helpimage }}" alt="Help" width="85" height="43"></a>
-				{% endif %}
-			</div>
-    </div>
-  </div>
+	<div id="content" class="pts-col-sm-9 col-sm-9 pts-col-md-9 col-md-9 pts-col-lg-10 col-lg-10 pts-col-xs-12 col-xs-12"> <div class="page-header">
+		{% if error_warning %}
+		<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
+		{% endif %}
+		{% if success %}
+		<div class="alert pts-alert-success"><i class="fa fa-check-circle"></i> {{ success }}</div>
+		{% endif %}
+		<div class="container-fluid">
+		 <h1>{{ heading_title }}</h1>
+		  <ul class="breadcrumb">
+			{% for breadcrumb in breadcrumbs %}
+			<li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+			{% endfor %}
+		  </ul>
+			<div class="pull-right float-right">
+				<a  data-toggle="modal" data-target="#exampleModal"  data-toggle="tooltip" title="{{ button_add }}" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+			    <button type="button" data-bs-toggle="tooltip" title="{{ button_delete }}" class="btn btn-danger" onclick="confirm('{{ text_confirm }}') ? $('#form-attribute').submit() : false;"><i class="fa fa-trash-o fas fa-trash-alt"></i></button>
+				{% if helpcheck %}
+				<a href="{{ helplink }}" rel=”nofollow”  target="_blank" id="button-pts-help" class="btn"><img src="{{ helpimage }}" alt="Help" width="85" height="43"></a>
+			   {% endif %}
+		    </div>
+		</div>
+	  </div>
 			<form action="{{ delete }}" method="post" enctype="multipart/form-data" id="form-attribute">
 				<div class="pts-table-responsive">
 					<table class="pts-table pts-table-bordered pts-table-hover">
@@ -50,7 +51,8 @@
 									<input type="checkbox" name="selected[]" value="{{ location.table_id }}" checked="checked" />
 									{% else %}
 									<input type="checkbox" name="selected[]" value="{{ location.table_id }}" />
-								{% endif %}</td>
+									{% endif %}
+								</td>
 								
 								<td class="pts-text-left">{{ location.name }}</td>
 								<td class="pts-text-left">{{ location.sort_order }}</td>
@@ -100,17 +102,17 @@
 							<div class="tab-content">
 								{% for language in languages %}
 								<div class="tab-pane{% if loop.first %} active{% endif %}" id="language{{ language.language_id }}">
-									<div class="form-group row py-4">
+									<div class="form-group row py-4 control-label">
 										<label class="col-sm-2 control-label col-form-label" for="input-name{{ language.language_id }}">{{ entry_name }}</label>
 										<div class="col-sm-10">
-											<input type="text" name="table_no" value="{{ table_no }}" placeholder="{{ entry_name }}" id="input-name" list="cat-filter" class="form-control" />
+											<input type="text" name="name" value="{{ name }}" placeholder="{{ entry_name }}" id="input-name" list="cat-filter" class="form-control" />
 										</div>
 									</div>	
 									
 									<div class="form-group row  py-4">
 										<label class="col-sm-2 control-label col-form-label" for="input-name{{ language.language_id }}">{{ entry_sort_order }}</label>
 										<div class="col-sm-10">
-											<input type="text" name="seat_capacity" value="{{ seat_capacity }}" placeholder="{{ entry_sort_order }}" id="input-name" list="cat-filter" class="form-control" />
+											<input type="text" name="sort_order" value="{{ sort_order }}" placeholder="{{ entry_sort_order }}" id="input-name" list="cat-filter" class="form-control" />
 										</div>
 									</div>	
 									
@@ -123,7 +125,12 @@
 										</label>
 									</div>
 									</div>	
-									<button type="button" class="btn btn-primary">Save</button>									
+									<div class="form-group row  py-4">
+										<div class="col-sm-12 text-end ">
+											<input type="hidden" name="tl_id" value="" id="tl_id"/>
+											<button type="button" id="submitButton" class="btn btn-primary">Save</button>
+										</div>
+									</div>										
 								</div>
 								{% endfor %}
 							</div>
@@ -193,3 +200,66 @@ input:checked + .slider:before {
 	border-radius: 50%;
 }
 </style>
+
+<script>
+ $(document).on('change', '#input-status', function(){
+	if($('#input-status').is(':checked')){
+		$('#input-status').val(1);
+	}else{
+		$('#input-status').val(0); 
+	}
+});
+$('#submitButton').click(function() {
+	var name = $('input[name=name]').val();
+	var vendor_id = $('select[name=vendor_id]').val();
+	var sort_order = $('#input-sortorder').val();
+	var status = $('input[name=status]').val();
+	var tl_id = $('#tl_id').val();
+	$.ajax({
+		url:'index.php?route=extension/purpletree_multivendor/multivendor/location|jxLocations&user_token={{ user_token }}',	
+		type: "POST",
+		data: 'name='+name+'&vendor_id='+vendor_id+'&sort_order='+sort_order+'&status='+status+'&tl_id='+tl_id,
+		dataType: 'json',
+		success: function (results) {
+			if(results){
+				html = '';
+				html += '<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i>Return Request Send Successfully!<button type="button" class="close" data-dismiss="alert">&times;</button></div>';
+				$('.jxsuccess').html(html);
+				location.reload();
+			}
+		}
+	});
+	
+});
+function popEditLocation(tl_id){
+	$('#exampleModalLabel').empty();
+	$.ajax({
+		url:'index.php?route=extension/purpletree_multivendor/multivendor/location|jxGetLocation&user_token={{ user_token }}',	
+		type: "POST",
+		data: 'tl_id='+tl_id,
+		success: function (results) {
+			if(results['success'] && results['data']){
+				$('#input-name').val(results['data']['name']);
+				$('#input-vendor_id').val(results['data']['vendor_id']);
+				$('#input-sortorder').val(results['data']['sort_order']);
+				$('#tl_id').val(results['data']['tl_id']);
+				$('#input-status').val(results['data']['status']);
+				if(results['data']['status'] == 1){
+					$('#input-status').attr('checked', true);
+				}else{
+					$('#input-status').attr('checked', false);
+				}
+				$('#exampleModalLabel').html('Edit');
+			}else{
+				$('#input-name').val('');
+				$('#input-vendor_id').val('');
+				$('#input-sortorder').val('');
+				$('#tl_id').val(0);
+				$('#input-status').val(0);
+				$('#input-status').attr('checked', false);
+				$('#exampleModalLabel').html('Add');
+			}
+		}
+	});
+}
+</script>

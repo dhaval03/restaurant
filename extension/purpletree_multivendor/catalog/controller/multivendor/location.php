@@ -2,7 +2,6 @@
 namespace Opencart\Catalog\Controller\Extension\PurpletreeMultivendor\Multivendor;
 class Location extends \Opencart\System\Engine\Controller {
 		private $error = array();
-		private $ptsValidateSeller = false;
 		public function index() {
 			
 			$this->load->language('extension/purpletree_multivendor/multivendor/location');
@@ -180,22 +179,22 @@ class Location extends \Opencart\System\Engine\Controller {
 			'limit' => $this->config->get('config_pagination_admin')
 			);
 			
-			$atrribute_total = $this->model_extension_purpletree_multivendor_multivendor_location->getTotalSeatingManagements($this->customer->getId());
+			$atrribute_total = $this->model_extension_purpletree_multivendor_multivendor_location->getTotalLocations($this->customer->getId());
 			
-			$results = $this->model_extension_purpletree_multivendor_multivendor_location->getSeatingManagements($filter_data);
+			$results = $this->model_extension_purpletree_multivendor_multivendor_location->getLocations($filter_data);
 			$text_enabled =  $this->language->get('text_enabled');
 			$text_disabled =  $this->language->get('text_disabled');
 			foreach ($results as $result) {	
-				$data['seatingmanagements'][] = array(
-				'table_id'        => $result['table_id'],
-				'seat_capacity' => $result['seat_capacity'],
-				'table_no'        => $result['table_no'],
+				$data['locations'][] = array(
+				'tl_id'        => $result['tl_id'],
+				'vendor_id'    => $result['vendor_id'],				
+				'sort_order' => $result['sort_order'],
+				'name'        => $result['name'],
 				'status'       	   => ($result['status'])? $text_enabled :$text_disabled,
-				'vendor_store_id'    => $result['vendor_store_id'],				
-				//'edit'      => $this->url->link('extension/purpletree_multivendor/multivendor/location|edit', '&table_id=' . $result['table_id'] . $url, true),
-				'edit'       => $this->url->link('extension/purpletree_multivendor/multivendor/location|edit', '&table_id=' . $result['table_id'].$url.'&language=' . $this->config->get('config_language'), true),
-				'delete'      => $this->url->link('extension/purpletree_multivendor/multivendor/location|delete', '&table_id=' . $result['table_id'] . $url, true)
+				'location' => $this->model_extension_purpletree_multivendor_multivendor_location->getLocation($result['tl_id']),
+				'delete'      => $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement|delete', '&tl_id=' . $result['tl_id'] . $url, true)
 				);
+				
 			} 
 			
 			
@@ -259,7 +258,7 @@ class Location extends \Opencart\System\Engine\Controller {
 			
 			$data['sort'] = $sort;
 			$data['order'] = $order;
-			
+			$data['languages'] = $this->model_localisation_language->getLanguages();
 			$data['column_left'] = $this->load->controller('extension/purpletree_multivendor/multivendor/common/column_left');
 			$data['footer'] = $this->load->controller('extension/purpletree_multivendor/multivendor/common/footer');
 			$data['header'] = $this->load->controller('extension/purpletree_multivendor/multivendor/common/header');
@@ -386,6 +385,44 @@ class Location extends \Opencart\System\Engine\Controller {
 			
 			return !$this->error;
 		}
+		public function jxLocations(){
+		$this->load->language('extension/purpletree_multivendor/multivendor/location');
+		$this->document->setTitle($this->language->get('heading_title'));
+		$this->load->model('extension/purpletree_multivendor/multivendor/location');
+		
+		$json = array();
+		if(isset($this->request->post['name']) && isset($this->request->post['status'])){
+			$tl_id = $this->model_extension_purpletree_multivendor_multivendor_location->jxLocations($this->request->post);
+			$json['success'] = true;			
+			$json['text_success'] = $this->language->get('text_success');
+		}
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}	
+	public function jxGetLocation(){
+		$this->load->language('extension/purpletree_multivendor/multivendor/location');
+		$this->document->setTitle($this->language->get('heading_title'));
+		$this->load->model('extension/purpletree_multivendor/multivendor/location');
+		
+		$json = array();
+		if(isset($this->request->post['tl_id']) && $this->request->post['tl_id'] > 0){
+			$location_info = $this->model_extension_purpletree_multivendor_multivendor_location->getLocation($this->request->post['tl_id']);
+			if(!empty($location_info)){
+				$json['data'] = array(
+					"tl_id"=>$location_info['tl_id'],
+					"name"=>$location_info['name'],
+					"status"=>$location_info['status'],
+					"sort_order"=>$location_info['sort_order']					
+				);
+				$json['success'] = true;
+			}
+		}else{
+			$json['data'] = array();
+		}
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
+
 		
 	}
 ?>
