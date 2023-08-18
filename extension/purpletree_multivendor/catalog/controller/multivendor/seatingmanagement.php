@@ -23,6 +23,7 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 			$this->load->model('extension/purpletree_multivendor/multivendor/seatingmanagement');
 			
 			if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+				
 				$this->model_extension_purpletree_multivendor_multivendor_seatingmanagement->addSeatingmanagement($this->customer->getId(),$this->request->post);
 				
 				
@@ -87,10 +88,6 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 			$this->document->setTitle($this->language->get('heading_title'));
 			
 			$this->load->model('extension/purpletree_multivendor/multivendor/seatingmanagement');
-			
-			//$this->load->model('extension/purpletree_multivendor/multivendor/dashboard');
-			
-			//$this->model_extension_purpletree_multivendor_multivendor_dashboard->checkSellerApproval();
 			if (isset($this->request->post['selected'])) {
 				$url = '';				
 				foreach ($this->request->post['selected'] as $table_id) {
@@ -371,6 +368,7 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 				} else {
 				$data['location_id'] = 0;
 			}	
+			$data['seats'] = array('2','4','6','8');
 			
 			$data['column_left'] = $this->load->controller('extension/purpletree_multivendor/multivendor/common/column_left');
 			$data['footer'] = $this->load->controller('extension/purpletree_multivendor/multivendor/common/footer');
