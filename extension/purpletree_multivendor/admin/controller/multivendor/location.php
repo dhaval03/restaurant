@@ -130,8 +130,7 @@ class Location extends \Opencart\System\Engine\Controller {
 				'delete'      => $this->url->link('extension/purpletree_multivendor/multivendor/location|delete', 'user_token=' . $this->session->data['user_token'] . '&tl_id=' . $result['tl_id'] . $url, true)
 			);
 			
-		} 
-				
+		}	
 		if (isset($this->error['warning'])) {
 			$data['error_warning'] = $this->error['warning'];
 			} else {
