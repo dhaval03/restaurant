@@ -94,6 +94,7 @@ class ColumnLeft extends \Opencart\System\Engine\Controller {
 					$data['sellerreview'] = $this->url->link('extension/purpletree_multivendor/multivendor/sellerstore|sellerreview', 'language=' . $this->config->get('config_language'), true);
 					$data['bulkproductupload'] = $this->url->link('extension/purpletree_multivendor/multivendor/bulkproductupload', 'language=' . $this->config->get('config_language'), true);
 					$data['seatingmanagement'] = $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement', 'language=' . $this->config->get('config_language'), true);
+					$data['location'] = $this->url->link('extension/purpletree_multivendor/multivendor/location', 'language=' . $this->config->get('config_language'), true);
 					if($this->config->get('module_purpletree_multivendor_shippingtype')){
 						$data['shipping'] = $this->url->link('extension/purpletree_multivendor/multivendor/sellergeozone','language=' . $this->config->get('config_language'), true);
 						}else{

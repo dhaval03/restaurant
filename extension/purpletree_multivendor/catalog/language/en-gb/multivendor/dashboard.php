@@ -65,6 +65,7 @@ $_['text_Customer_Enquiries'] = 'Customer Enquiries';
 $_['text_Manage_products'] = 'Products';
 $_['text_Bulk_product_upload'] = 'Bulk Product Upload';
 $_['text_seatingmanagement'] = 'Seating Management';
+$_['text_location'] = 'Location';
 $_['text_Orders'] = 'Orders';
 $_['text_Seller_Store'] = 'Seller Store';
 $_['text_Store_information'] = 'Store Information';
