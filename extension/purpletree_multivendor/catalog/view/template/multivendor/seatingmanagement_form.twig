@@ -44,12 +44,32 @@
 						</div>
 					</div>
 					
-					<div class="pts-form-group">
+					<!--<div class="pts-form-group">
 						<label class="pts-col-sm-2 pts-control-label" for="input-sort-order">{{ entry_seat }}</label>
 						<div class="pts-col-sm-10">
 							<input type="text" name="seat_capacity" value="{{ seat_capacity }}" placeholder="{{ entry_seat }}" id="input-sort-order" class="pts-form-control" />
 						</div>
+					</div>-->
+					<div class="pts-form-group">
+						<label class="pts-col-sm-2 pts-control-label" for="input-sort-order">{{ entry_seat }}</label>
+						<div class="pts-col-sm-10">
+							<div class="pts-form-group" data-toggle="buttons">
+								  <label class="pts-btn pts-btn-primary active">
+									<input type="radio" name="seat_capacity" id="option2" value="2" checked> 2
+								  </label>
+								  <label class="pts-btn pts-btn-primary">
+									<input type="radio" name="seat_capacity" id="option4" value="4"> 4
+								  </label>
+								  <label class="pts-btn pts-btn-primary">
+									<input type="radio" name="seat_capacity" id="option6" value="6"> 6
+								  </label>
+								  <label class="pts-btn pts-btn-primary">
+									<input type="radio" name="seat_capacity" id="option8" value="8"> 8
+								  </label>
+								</div>
+						</div>
 					</div>
+					
 					<div class="pts-form-group">
 						<label class="pts-col-sm-2 pts-control-label" for="input-storestate">{{ entry_storename }}</label>
 						<div class="pts-col-sm-10">
@@ -145,4 +165,5 @@ input:checked + .slider:before {
 	border-radius: 50%;
 }
 </style>
+
 {{ footer }}
