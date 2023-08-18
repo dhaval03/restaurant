@@ -12,19 +12,19 @@ $_['text_confirm']                  = 'Are you sure?';
 
 // Column
 $_['column_vendor']        = 'Vendor';
-$_['column_name1']        = 'Seating Management Name';
-$_['column_table_no'] = 'Table No';
-$_['column_action']      = 'Action';
-$_['column_seat']      = 'Seat';
-$_['column_status']      = 'Status';
+$_['column_name1']         = 'Seating Management Name';
+$_['column_table_no']      = 'Table No';
+$_['column_action']        = 'Action';
+$_['column_seat']          = 'Seat';
+$_['column_status']        = 'Status';
 
 // Entry
 $_['entry_tableno']         = 'Table No';
-$_['entry_seat']  = 'Seat';
-$_['entry_storename']  = 'storename';
-$_['entry_status']  = 'Status';
-$_['entry_vendor']  = 'Vendor';
-$_['entry_location']  = 'Location';
+$_['entry_seat']  			= 'Seat';
+$_['entry_store']  		= 'Store';
+$_['entry_status']  		= 'Status';
+$_['entry_vendor']  		= 'Vendor';
+$_['entry_location']  		= 'Location';
 
 // Error
 $_['error_warning']         = 'Warning: Please check the form carefully for errors!';

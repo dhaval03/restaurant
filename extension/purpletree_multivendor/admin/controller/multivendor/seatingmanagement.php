@@ -367,16 +367,15 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 				} elseif (!empty($seating_management_info)) {
 				$data['location'] = $seating_management_info['location'];
 				} else {
-				$data['location'] = '';
+				$data['location'] = 0;
 			}
 			if (isset($this->request->post['vendor_id'])) {
 				$data['vendor_id'] = $this->request->post['vendor_id'];
 				} elseif (!empty($seating_management_info)) {
 				$data['vendor_id'] = $seating_management_info['vendor_id'];
 				} else {
-				$data['vendor_id'] = '';
+				$data['vendor_id'] = 0;
 			}
-			
 			if (isset($this->request->post['seat_capacity'])) {
 				$data['seat_capacity'] = $this->request->post['seat_capacity'];
 				} elseif (!empty($seating_management_info)) {
@@ -399,7 +398,7 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 				} else {
 				$data['location_id'] = 0;
 			}
-
+			$data['seats'] = array('2','4','6','8');
 			$data['header'] = $this->load->controller('common/header');
 			$data['column_left'] = $this->load->controller('common/column_left');
 			$data['footer'] = $this->load->controller('common/footer');

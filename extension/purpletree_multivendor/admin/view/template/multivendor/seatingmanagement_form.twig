@@ -43,15 +43,19 @@
 											<div class="text-danger">{{ error_table_no }}</div>
 											{% endif %}
 										</div>
-										
 										<div id="error-table_no" class="invalid-feedback"> {{ entry_table_no }}</div>
 									</div>	
+								
 									<div class="form-group row  py-4">
-										<label class="col-sm-2 control-label col-form-label" for="input-name{{ language.language_id }}">{{ entry_seat }}</label>
+										<label class="col-sm-2  form-check  col-form-label">{{ entry_seat }}</label>
 										<div class="col-sm-10">
-											<input type="text" name="seat_capacity" value="{{ seat_capacity }}" placeholder="{{ entry_seat }}" id="input-name" list="cat-filter" class="form-control" />
+										{% for seat in seats %}
+											<input type="radio" name="seat_capacity" id="btn-check-outlined option{{seat}}" value="{{seat}}" class="btn-check" autocomplete="off" {% if seat_capacity == seat %} checked{% endif %}>											
+											<label class="btn btn-outline-primary" for="btn-check-outlined option{{seat}}">{{seat}}</label>
+										{% endfor %}										
 										</div>
 									</div>	
+									
 									<div class="form-group row  py-4">
 										<label class="col-sm-2 control-label col-form-label" for="input-name{{ language.language_id }}">{{ entry_vendor }}</label>
 										<div class="col-sm-10">
@@ -59,9 +63,7 @@
 										<option value="">{{ text_select }}</option>
 										  {% for seller in sellers %}
 											<option value="{{ seller.id }}"{% if seller.id == vendor_id %} selected="selected" {% endif %}>{{ seller.store_name }}</option>
-											
-											
-										  {% endfor %}
+											{% endfor %}
 										  </select>
 										</div>
 									</div>
@@ -69,20 +71,21 @@
 									<div class="form-group row  py-4">
 									<label class="col-sm-2 control-label col-form-label" for="input-location">{{ entry_location }}</label>
 									<div class="col-sm-10">
-										<select name="location" id="input-location" class="form-select">
+										<select name="location" id="inputlocation"  class="form-select">
+										<option value="">{{ text_select }}</option>
 										  {% for location in locations %}
-											<option value="{{ location.tl_id }}"{% if location.tl_id == location_id %} selected="selected"{% endif %}>{{ location.name }}</option>
+											<option value="{{ location.tl_id }}" {% if location.tl_id == location_id %} selected="selected" {% endif %}  data-vendor-id="{{ location.vendor_id }}">{{ location.name }}</option>
 										  {% endfor %}
 										</select>
 									  </div>
 									</div>
 									
 									<div class="form-group row  py-4">
-									<label class="col-sm-2 control-label col-form-label" for="input-storestate">{{ entry_storename }}</label>
+									<label class="col-sm-2 control-label col-form-label" for="input-storestate">{{ entry_store }}</label>
 									<div class="col-sm-10">
 										<select name="vendor_store_id" id="input-store" class="form-select">
 										  {% for store in stores %}
-											<option value="{{ store.store_id }}"{% if store.store_id == vendor_store_id %} selected="selected"{% endif %}>{{ store.name }}</option>
+											<option value="{{ store.store_id }}" {% if store.store_id == vendor_store_id %} selected="selected" {% endif %}>{{ store.name }}</option>
 										  {% endfor %}
 										</select>
 									  </div>
@@ -98,6 +101,7 @@
 									</div>
 									</div>
 									
+									
 								</div>
 								{% endfor %}
 							</div>
@@ -106,24 +110,53 @@
 	</form>
 </div>
 </div>
+</div> 
+<script>
+$( document ).ready(function() {
+    $("#input-vendor_id").trigger('change');
+	location_id = {{location_id}};
+	if(location_id > 0){
+		$("#inputlocation").val(location_id);
+	}
+});
+$("#input-vendor_id").change(function(){
+	vendor_id = $(this).val();
+	$("#inputlocation").val("").trigger('change');
+	$("#inputlocation option").hide();
+	$("#inputlocation option[data-vendor-id='"+vendor_id+"']").show();
+});
+function vendorLocation(id){
+	$('#exampleModalLabel').empty();
+	$.ajax({
+		url:'index.php?route=extension/purpletree_multivendor/multivendor/location|jxGetLocation&user_token={{ user_token }}',	
+		type: "POST",
+		data: 'tl_id='+tl_id,
+		success: function (results) {
+			if(results['success'] && results['data']){
+				$('#input-name').val(results['data']['name']);
+				$('#input-vendor_id').val(results['data']['vendor_id']);
+				$('#input-sortorder').val(results['data']['sort_order']);
+				$('#tl_id').val(results['data']['tl_id']);
+				$('#input-status').val(results['data']['status']);
+				if(results['data']['status'] == 1){
+					$('#input-status').attr('checked', true);
+				}else{
+					$('#input-status').attr('checked', false);
+				}
+				$('#exampleModalLabel').html('Edit');
+			}else{
+				$('#input-name').val('');
+				$('#input-vendor_id').val('');
+				$('#input-sortorder').val('');
+				$('#tl_id').val(0);
+				$('#input-status').val(0);
+				$('#input-status').attr('checked', false);
+				$('#exampleModalLabel').html('Add');
+			}
+		}
+	});
+}
+</script>
 </div>
-<link href="view/javascript/codemirror/lib/codemirror.css" rel="stylesheet" />
-<link href="view/javascript/codemirror/theme/monokai.css" rel="stylesheet" />
-<script type="text/javascript" src="view/javascript/codemirror/lib/codemirror.js"></script> 
-<script type="text/javascript" src="view/javascript/codemirror/lib/xml.js"></script> 
-<script type="text/javascript" src="view/javascript/codemirror/lib/formatting.js"></script> 
-
-{% if module_purpletree_multivendor_status %}
-<script type="text/javascript" src="view/javascript/purpletreejs/summernote.js"></script>
-{% else %}
-<script type="text/javascript" src="view/javascript/summernote/summernote.js"></script>
-{% endif %}
-<link href="view/javascript/summernote/summernote.css" rel="stylesheet" />
-<script type="text/javascript" src="view/javascript/summernote/summernote-image-attributes.js"></script> 
-<script type="text/javascript" src="view/javascript/summernote/opencart.js"></script> 
-
-
-<script type="text/javascript"><!--
-	$('#language a:first').tab('show');
-//--></script></div>
 {{ footer }}
+
