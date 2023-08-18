@@ -53,25 +53,26 @@
 					<div class="pts-form-group">
 						<label class="pts-col-sm-2 pts-control-label" for="input-sort-order">{{ entry_seat }}</label>
 						<div class="pts-col-sm-10">
-							<div class="pts-form-group" data-toggle="buttons">
-								  <label class="pts-btn pts-btn-primary active">
-									<input type="radio" name="seat_capacity" id="option2" value="2" checked> 2
+							<div class="pts-group" data-toggle="buttons">
+								  <label class="pts-btn pts-btn-default {% if seat_capacity == 2 %} active{% endif %}">
+									<input type="radio" name="seat_capacity" id="option2" value="2" /> 2
 								  </label>
-								  <label class="pts-btn pts-btn-primary">
-									<input type="radio" name="seat_capacity" id="option4" value="4"> 4
+								  <label class="pts-btn pts-btn-default {% if seat_capacity == 4 %} active{% endif %}">
+									<input type="radio" name="seat_capacity" id="option4" value="4" /> 4
 								  </label>
-								  <label class="pts-btn pts-btn-primary">
-									<input type="radio" name="seat_capacity" id="option6" value="6"> 6
+								  <label class="pts-btn pts-btn-default {% if seat_capacity == 6 %} active{% endif %}">
+									<input type="radio" name="seat_capacity" id="option6" value="6" /> 6
 								  </label>
-								  <label class="pts-btn pts-btn-primary">
-									<input type="radio" name="seat_capacity" id="option8" value="8"> 8
+								  <label class="pts-btn pts-btn-default  {% if seat_capacity == 8 %} active{% endif %}">
+									<input type="radio" name="seat_capacity" id="option8" value="8"/> 8
 								  </label>
 								</div>
+
 						</div>
 					</div>
 					
 					<div class="pts-form-group">
-						<label class="pts-col-sm-2 pts-control-label" for="input-storestate">{{ entry_storename }}</label>
+						<label class="pts-col-sm-2 pts-control-label" for="input-storestate">{{ entry_store }}</label>
 						<div class="pts-col-sm-10">
 							<select name="vendor_store_id" id="input-store" class="pts-form-control">
 								{% for store in stores %}
