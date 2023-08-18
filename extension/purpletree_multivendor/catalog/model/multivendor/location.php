@@ -40,7 +40,7 @@ class Location extends \Opencart\System\Engine\Model {
 	}
 	
 	public function getTotalLocations () {
-		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "seating_location`");
+		$query = $this->db->query("SELECT COUNT(*) AS `total` FROM `" . DB_PREFIX . "seating_location` WHERE vendor_id = '".(int)$this->customer->getId()."'");
 
 		return (int)$query->row['total'];
 	}
