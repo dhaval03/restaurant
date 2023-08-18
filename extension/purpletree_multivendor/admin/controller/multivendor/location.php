@@ -11,6 +11,7 @@ class Location extends \Opencart\System\Engine\Controller {
 			
 			$this->getList();
 	}
+	
 	public function delete() {
 			
 			$this->load->language('extension/purpletree_multivendor/multivendor/location');
@@ -27,8 +28,6 @@ class Location extends \Opencart\System\Engine\Controller {
 					$this->model_extension_purpletree_multivendor_multivendor_location->deleteLocation($tl_id);		
 							
 					$this->session->data['success'] = $this->language->get('text_success');
-						
-					
 				}
 				
 				if (isset($this->request->get['sort'])) {
@@ -208,6 +207,7 @@ class Location extends \Opencart\System\Engine\Controller {
 			$tl_id = $this->model_extension_purpletree_multivendor_multivendor_location->jxLocations($this->request->post);
 			$json['success'] = true;			
 			$json['text_success'] = $this->language->get('text_success');
+			
 		}
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
