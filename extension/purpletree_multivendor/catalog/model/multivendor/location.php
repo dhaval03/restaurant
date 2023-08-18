@@ -2,7 +2,6 @@
 namespace Opencart\Catalog\Model\Extension\PurpletreeMultivendor\Multivendor;
 class Location extends \Opencart\System\Engine\Model {
 	
-		
 	public function deleteLocation($tl_id) {
 		
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "seating_location` WHERE `tl_id` = '" . (int)$tl_id . "'");
