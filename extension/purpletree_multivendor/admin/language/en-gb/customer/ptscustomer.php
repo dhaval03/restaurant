@@ -54,3 +54,6 @@ $_['text_pt_selleremail']        = 'Seller E-mails';
 $_['text_pt_seller_area']        = 'Seller Area';
 $_['text_shipping_charge']        = 'Shipping Charge';
 $_['column_updated_by']        = 'Updated by';
+
+$_['text_seating_management']        = 'Seating Management';
+$_['text_location']        = 'Location';

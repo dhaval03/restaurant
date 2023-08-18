@@ -230,6 +230,22 @@ class ColumnLeft extends \Opencart\System\Engine\Controller {
 					'children' => array()		
 				);	
 			}
+			
+			
+			if ($this->user->hasPermission('access', 'extension/purpletree_multivendor/multivendor/seatingmanagement')) {				$purpletree_multivendor[] = array(
+				'name'  => $this->language->get('text_seating_management'),
+				'href'  => $this->url->link('extension/purpletree_multivendor/multivendor/seatingmanagement', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);	
+			}
+			
+			if ($this->user->hasPermission('access', 'extension/purpletree_multivendor/multivendor/location')) { 			$purpletree_multivendor[] = array(
+				'name'  => $this->language->get('text_location'),
+				'href'  => $this->url->link('extension/purpletree_multivendor/multivendor/location', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);	
+			}
+			
 			}
 			
 			if ($purpletree_multivendor) {
