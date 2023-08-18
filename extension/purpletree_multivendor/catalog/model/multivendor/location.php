@@ -20,7 +20,7 @@ class Location extends \Opencart\System\Engine\Model {
 	
 	public function getLocations($data = array()) {			
 			
-		$sql="SELECT * FROM ". DB_PREFIX ."seating_location ORDER BY tl_id ASC";
+		$sql="SELECT * FROM ". DB_PREFIX ."seating_location WHERE vendor_id = '".(int)$this->customer->getId()."' ORDER BY tl_id DESC";
 			
 		if (isset($data['start']) || isset($data['limit'])) {
 		if ($data['start'] < 0) {
@@ -48,7 +48,7 @@ class Location extends \Opencart\System\Engine\Model {
 		if($data['tl_id'] > 0){
 			$this->db->query("UPDATE " . DB_PREFIX . "seating_location SET name = '" . $this->db->escape($data['name']) . "',sort_order = '" . (int)$data['sort_order'] . "', status = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "' WHERE tl_id = '".$data['tl_id']."'");
 		}else{
-			$this->db->query("INSERT INTO " . DB_PREFIX . "seating_location SET name = '" . $this->db->escape($data['name']) . "',sort_order = '" . (int)$data['sort_order'] . "', status = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "', date_modified = NOW(), date_added = NOW()");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "seating_location SET name = '" . $this->db->escape($data['name']) . "',sort_order = '" . (int)$data['sort_order'] . "', vendor_id= '".(int)$this->customer->getId()."', status = '" . (bool)(isset($data['status']) ? $data['status'] : 0) . "', date_modified = NOW(), date_added = NOW()");
 		}
 		$this->cache->delete('seating_location');
 	}

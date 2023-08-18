@@ -97,7 +97,7 @@
 							<div class="tab-content">
 								{% for language in languages %}
 								<div class="tab-pane{% if loop.first %} active{% endif %}" id="language{{ language.language_id }}">
-									<div class="form-group row py-4 control-label">
+									<div class="form-group row py-4 control-label required">
 										<label class="col-sm-2 control-label col-form-label" for="input-name{{ language.language_id }}">{{ entry_name }}</label>
 										<div class="col-sm-10">
 											<input type="text" name="name" value="{{ name }}" placeholder="{{ entry_name }}" id="input-name" list="cat-filter" class="form-control" />
@@ -206,10 +206,10 @@ input:checked + .slider:before {
 });
 $('#submitButton').click(function() {
 	var name = $('input[name=name]').val();
-	
 	var sort_order = $('#input-sortorder').val();
 	var status = $('input[name=status]').val();
 	var tl_id = $('#tl_id').val();
+	if(name != '' && name.length > 2){
 	$.ajax({
 		url:'index.php?route=extension/purpletree_multivendor/multivendor/location|jxLocations',	
 		type: "POST",
@@ -218,12 +218,18 @@ $('#submitButton').click(function() {
 		success: function (results) {
 			if(results){
 				html = '';
-				html += '<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i>Return Request Send Successfully!<button type="button" class="close" data-dismiss="alert">&times;</button></div>';
+				html += '<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i>Return Request Send Successfully!<button type="button" class="btn-close" data-dismiss="alert">&times;</button></div>';
 				$('.jxsuccess').html(html);
-				location.reload();
+				$('#exampleModal').modal('toggle');
+					setInterval(function() {
+						location.reload();
+					}, 2000);
 			}
 		}
 	});
+	}else{
+		alert('Location Name must be greater than 2 and less than 255 characters!');
+	}
 	
 });
 function popEditLocation(tl_id){
