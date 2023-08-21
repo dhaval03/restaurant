@@ -55,13 +55,7 @@
 								{% endif %}</td>
 								
 								<td class="pts-text-left">{{ seatingmanagement.table_no }}</td>
-								<td class="pts-text-left">
-									<div class="seat" style="margin-bottom: 20px;">
-										<span class="fa-layers fa-fw" style="background:#f9f7f6;">
-											<i class="fa-solid fa fa-couch fa-2xl w-25" style="z-index: 9999;position: absolute;margin-top: 13px;padding-left: 37px;"></i>
-											<span class="fa-layers-text fa-inverse" data-fa-transform="shrink-8 down-3" style="font-weight:900;margin-left:50px;z-index: 99999999;position: absolute;">{{ seatingmanagement.seat_capacity }}</span>
-										</span>
-									</div></td>
+								<td class="pts-text-left">{{ seatingmanagement.seat_capacity }}</td>
 								<td class="pts-text-left">{{ seatingmanagement.status }}</td>
 								<td id="attributeIdForSelenium" class="pts-text-right"><a href="{{ seatingmanagement.edit }}" data-toggle="tooltip" title="{{ button_edit }}" class="btn btn-primary"><i class="fa fa-pencil fas fa-pen"></i></a></td>
 							</tr>

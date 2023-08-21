@@ -17,7 +17,6 @@ require_once(DIR_SYSTEM . 'engine/restcontroller.php');
 
 class Cart extends \RestController
 {
-	echo "yes";exit;
 
     private $error = array();
 
