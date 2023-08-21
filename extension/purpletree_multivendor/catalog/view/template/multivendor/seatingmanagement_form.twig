@@ -54,20 +54,12 @@
 						<label class="pts-col-sm-2 pts-control-label" for="input-sort-order">{{ entry_seat }}</label>
 						<div class="pts-col-sm-10">
 							<div class="pts-group" data-toggle="buttons">
-								  <label class="pts-btn pts-btn-default {% if seat_capacity == 2 %} active{% endif %}">
-									<input type="radio" name="seat_capacity" id="option2" value="2" /> 2
-								  </label>
-								  <label class="pts-btn pts-btn-default {% if seat_capacity == 4 %} active{% endif %}">
-									<input type="radio" name="seat_capacity" id="option4" value="4" /> 4
-								  </label>
-								  <label class="pts-btn pts-btn-default {% if seat_capacity == 6 %} active{% endif %}">
-									<input type="radio" name="seat_capacity" id="option6" value="6" /> 6
-								  </label>
-								  <label class="pts-btn pts-btn-default  {% if seat_capacity == 8 %} active{% endif %}">
-									<input type="radio" name="seat_capacity" id="option8" value="8"/> 8
-								  </label>
-								</div>
-
+								{% for seat in seats %}											
+									<label class="btn_default pts-btn pts-btn-default {% if (seat_capacity == seat) or ((seat == 2) and (seat_capacity == '')) %} active{% endif %}">
+										<input type="radio" name="seat_capacity" id="option{{seat}}" value="{{seat}}" /> {{seat}}
+									</label>
+								{% endfor %}
+							</div>
 						</div>
 					</div>
 					
@@ -164,6 +156,16 @@ input:checked + .slider:before {
   
 .slider.round:before {
 	border-radius: 50%;
+}
+
+.pts-btn-default.active {
+  color: #fff !important;
+  background-color: #1e91cf !important;
+  border-color: #1e91cf !important;
+}
+.btn_default {
+  color: #1e91cf !important;
+  border-color: #1e91cf !important;
 }
 </style>
 

@@ -32,7 +32,7 @@ class Seatingmanagement extends \Opencart\System\Engine\Model {
 	}
 	public function getSeatingManagements($data = array()) {			
 			
-		$sql="SELECT * FROM ". DB_PREFIX ."seatingmanagement ORDER BY table_id ASC";
+		$sql="SELECT * FROM ". DB_PREFIX ."seatingmanagement ORDER BY table_id DESC";
 			
 		if (isset($data['start']) || isset($data['limit'])) {
 		if ($data['start'] < 0) {
