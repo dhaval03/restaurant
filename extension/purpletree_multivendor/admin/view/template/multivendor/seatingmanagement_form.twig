@@ -5,6 +5,7 @@
 			<div class="pull-right float-end">
 				<button type="submit" form="form-subscription" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
 			<a href="{{ cancel }}" data-bs-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default btn-light"><i class="fa fa-reply"></i></a>
+			
 			{% if helpcheck %}
 				<a href="{{ helplink }}" rel=”nofollow”  target="_blank" id="button-pts-help" class="btn"><img src="{{ helpimage }}" alt="Help" width="85" height="43"></a>
 			{% endif %}
@@ -50,7 +51,7 @@
 										<label class="col-sm-2  form-check  col-form-label">{{ entry_seat }}</label>
 										<div class="col-sm-10">
 										{% for seat in seats %}
-											<input type="radio" name="seat_capacity" id="btn-check-outlined option{{seat}}" value="{{seat}}" class="btn-check" autocomplete="off" {% if seat_capacity == seat %} checked{% endif %}>											
+											<input type="radio" name="seat_capacity" id="btn-check-outlined option{{seat}}" value="{{seat}}" class="btn-check" autocomplete="off" {% if (seat_capacity == seat) or ((seat == 2) and (seat_capacity == '')) %} checked{% endif %}>											
 											<label class="btn btn-outline-primary" for="btn-check-outlined option{{seat}}">{{seat}}</label>
 										{% endfor %}										
 										</div>
