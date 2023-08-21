@@ -143,9 +143,10 @@ class Sellerlogin extends \Opencart\System\Engine\Controller {
 		}
 
 		if ($this->customer->isLogged()) {
+			$this->load->model('extension/purpletree_multivendor/multivendor/vendor');
 			$store_detail = $this->model_extension_purpletree_multivendor_multivendor_vendor->isSeller($this->customer->getId());
 			if(!empty($store_detail)){
-			$json['redirect'] = $this->url->link('extension/purpletree_multivendor/multivendor/dashboardicons', 'language=' . $this->config->get('config_language') . '&customer_token=' . $this->session->data['customer_token'], true);
+			$json['redirect'] = $this->url->link('extension/purpletree_multivendor/multivendor/dashboardicons', 'language=' . $this->config->get('config_language'), true);
 			}
 		}
 
@@ -210,7 +211,7 @@ class Sellerlogin extends \Opencart\System\Engine\Controller {
 			// Default address
 			$this->load->model('account/address');
 
-			$address_info = $this->model_account_address->getAddress($this->customer->getAddressId());
+			$address_info = $this->model_account_address->getAddress($this->customer->getId(),$this->customer->getAddressId());
 
 			if ($address_info) {
 				$this->session->data['shipping_address'] = $address_info;
@@ -232,7 +233,8 @@ class Sellerlogin extends \Opencart\System\Engine\Controller {
 
 			// Create customer token
 			if(version_compare(VERSION, '4.0.0.0', '>')){
-				$this->session->data['customer_token'] = Helper\General\token(26);
+				$this->session->data['customer_token'] = oc_token(26);
+				//$this->session->data['customer_token'] = Helper\General\token(26);
 			} else {
 				$this->session->data['customer_token']=token(26);
 			}
@@ -306,7 +308,7 @@ class Sellerlogin extends \Opencart\System\Engine\Controller {
 			// Default Addresses
 			$this->load->model('account/address');
 
-			$address_info = $this->model_account_address->getAddress($customer_info['address_id']);
+			$address_info = $this->model_account_address->getAddress($this->customer->getId(),$customer_info['address_id']);
 
 			if ($this->config->get('config_tax_customer') && $address_info) {
 				$this->session->data[$this->config->get('config_tax_customer') . '_address'] = $address_info;
