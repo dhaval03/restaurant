@@ -52,9 +52,13 @@
 									<input type="checkbox" name="selected[]" value="{{ seatingmanagement.table_id }}" checked="checked" />
 									{% else %}
 									<input type="checkbox" name="selected[]" value="{{ seatingmanagement.table_id }}" />
-								{% endif %}</td>
-								
-								<td class="pts-text-left">{{ seatingmanagement.table_no }}</td>
+								{% endif %}</td>								
+								<td class="pts-text-left">							
+									<div class="table_container">
+										<img src="view/image/table_logo.jpg" style="width: 64px;">
+										<div class="table_centered">{{ seatingmanagement.table_no }}</div>
+									</div>							
+								</td>
 								<td class="pts-text-left">
 									<div class="seat" style="margin-bottom: 20px;">
 										<span class="fa-layers fa-fw" style="background:#f9f7f6;">
@@ -90,4 +94,18 @@
 		}	  
 	}
 </script>
+<style>
+.table_container {
+  position: relative;
+  color: white;
+}
+
+.table_centered {
+  position: absolute;
+  top: 30%;
+  left: 13%;
+  transform: translate(-50%, -50%);
+  color: #212529;
+}
+</style>
 {{ footer }}

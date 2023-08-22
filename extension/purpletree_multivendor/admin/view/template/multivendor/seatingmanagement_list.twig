@@ -54,10 +54,12 @@
 								<tr>	
 									<td class="text-center"><input type="checkbox" name="selected[]" value="{{ seatingmanagement.table_id }}" class="form-check-input"/></td><td class="text-start">{{ seatingmanagement.vendor_id }}</td>
 									
-									<td class="text-start"  >
-									{{ seatingmanagement.table_no }}<img src="view/image/table_logo.jpg" style="width: 64px;"></td>
-									
-									
+									<td class="text-start">
+										<div class="table_container">
+										  <img src="view/image/table_logo.jpg" style="width: 64px;">
+										  <div class="table_centered">{{ seatingmanagement.table_no }}</div>
+										</div>
+									</td>									
 									<td class="text-start">
 									  <div class="seat" style="margin-bottom: 20px;">
 										<span class="fa-layers fa-fw" style="background:#f9f7f6;">
@@ -87,4 +89,18 @@
 		</div>
 	</div>
 </div>
+<style>
+.table_container {
+  position: relative;
+  color: white;
+}
+
+.table_centered {
+  position: absolute;
+  top: 30%;
+  left: 13%;
+  transform: translate(-50%, -50%);
+  color: #212529;
+}
+</style>
 {{ footer }}
