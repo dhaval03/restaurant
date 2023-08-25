@@ -47,7 +47,7 @@ Options -Indexes
 ## SEO URL Settings
 RewriteEngine On
 ## If your opencart installation does not run on the main web folder make sure you folder it does run in ie. / becomes /shop/
-Rewritebase /restaurant/
+Rewritebase /restaurant 
 ## Rewrite Rules
 
 RewriteRule ^system/storage/(.*) index.php?route=error/not_found [L]
@@ -66,20 +66,7 @@ RewriteRule ^api/rest/affiliate index.php?route=feed/rest_api/affiliate  [L]
 ####################################### Restaurant RULES #################################################
 
 #REST API selected Seatingmanagement
-
-RewriteRule ^api/rest/seatingmanagement index.php?route=extension/restapi/rest/seatingmanagement|seatingmanagement  [L]
-
 RewriteRule ^api/rest/seatingmanagement?([0-9]+) index.php?route=extension/restapi/rest/seatingmanagement&id=$1  [L]
-
-
-#REST API cart
-RewriteRule ^api/rest/cart index.php?route=extension/restapi/rest/cart|cart  [L]
-
-
-#REST API selected course
-
-#REST API course
-RewriteRule ^api/rest/course index.php?route=extension/restapi/rest/course|course  [L,QSA]
 
 
 
@@ -244,7 +231,8 @@ RewriteRule ^api/rest/cart/empty index.php?route=rest/cart/emptycart  [L]
 RewriteRule ^api/rest/cart/?([a-zA-Z0-9,\s]+) index.php?route=rest/cart/cart&key=$1  [L]
 #REST API cart
 RewriteRule ^api/rest/cart/update index.php?route=rest/cart/updatecartv2  [L]
-
+#REST API cart
+RewriteRule ^api/rest/cart index.php?route=rest/cart/cart  [L]
 #######################################CUSTOMERS####################################################
 #REST API registration
 RewriteRule ^api/rest/register index.php?route=rest/register/register  [L]
