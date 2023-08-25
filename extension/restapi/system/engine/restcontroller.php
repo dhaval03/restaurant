@@ -10,7 +10,7 @@ error_reporting(E_ALL & ~E_NOTICE);
  */
 abstract class RestController extends \Opencart\System\Engine\Controller
 {
-    public $statusCode = 200;
+	public $statusCode = 200;
     public $post = array();
     public $allowedHeaders = array("GET", "POST", "PUT", "DELETE");
     public $accessControlAllowHeaders = array("Content-Type", "Authorization", "X-Requested-With", "X-Oc-Merchant-Id",
@@ -222,7 +222,7 @@ abstract class RestController extends \Opencart\System\Engine\Controller
         $password = DB_PASSWORD;
 
         // Autoloading (composer is preferred, but for this example let's just do this)
-        require_once(DIR_SYSTEM . 'oauth2-server-php/src/OAuth2/Autoloader.php');
+        require_once(DIR_EXTENSION . 'restapi/system/oauth2-server-php/src/OAuth2/Autoloader.php');
         \OAuth2\Autoloader::register();
 
         $config = array(
@@ -305,7 +305,7 @@ abstract class RestController extends \Opencart\System\Engine\Controller
         $headers = $this->getRequestHeaders();
 
         //set currency
-        if (isset($headers['x-oc-currency'])) {
+        /*if (isset($headers['x-oc-currency'])) {
             $currency = $headers['x-oc-currency'];
             if (!empty($currency)) {
                 $this->currency->setRestCurrencyCode($currency);
@@ -315,7 +315,7 @@ abstract class RestController extends \Opencart\System\Engine\Controller
             }
         } else {
             $this->currency->setRestCurrencyCode($this->session->data['currency']);
-        }
+        }*/
 
         //set store ID
         if (isset($headers['x-oc-store-id'])) {

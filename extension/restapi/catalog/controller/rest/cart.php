@@ -17,7 +17,6 @@ require_once(DIR_SYSTEM . 'engine/restcontroller.php');
 
 class Cart extends \RestController
 {
-	echo "yes";exit;
 
     private $error = array();
 
@@ -25,6 +24,7 @@ class Cart extends \RestController
     public function cart()
     {
 
+		//echo "yes";exit;
         $this->checkPlugin();
 
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -325,7 +325,7 @@ class Cart extends \RestController
     private function addItemCart($data)
     {
 
-
+		echo "yes";exit;
         $this->language->load('checkout/cart');
 
         if (isset($data['product_id'])) {
