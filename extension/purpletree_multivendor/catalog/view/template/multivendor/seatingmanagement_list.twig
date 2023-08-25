@@ -55,8 +55,8 @@
 								{% endif %}</td>								
 								<td class="pts-text-left">							
 									<div class="table_container">
-										<img src="view/image/table_logo.jpg" style="width: 64px;">
-										<div class="table_centered">{{ seatingmanagement.table_no }}</div>
+										<img src="{{table_image}}" style="width: 64px;">
+										<div class="table_centered"><b>{{ seatingmanagement.table_no }}</b></div>
 									</div>							
 								</td>
 								<td class="pts-text-left">
@@ -103,7 +103,7 @@
 .table_centered {
   position: absolute;
   top: 30%;
-  left: 13%;
+  left: 12%;
   transform: translate(-50%, -50%);
   color: #212529;
 }

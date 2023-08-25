@@ -215,6 +215,8 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 				$data['selected'] = array();
 			}
 			
+			$data['table_image'] = HTTP_CATALOG.'extension/purpletree_multivendor/image/table_logo.jpg';
+			
 			$url = '';
 			
 			if ($order == 'ASC') {
