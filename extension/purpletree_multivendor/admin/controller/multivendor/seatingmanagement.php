@@ -181,7 +181,7 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 				$name = '';
 				foreach($sellers as $seller){
 					if($seller['seller_id'] == $result['vendor_id']){
-						$name = $seller['store_name'];
+						$name = $seller['name'];
 					}
 				}
 				$data['seatingmanagements'][] = array(
