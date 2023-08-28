@@ -50,7 +50,7 @@
 							<div class="pts-group" data-toggle="buttons">
 								{% for seat in seats %}											
 									<label class="btn_default pts-btn pts-btn-default {% if (seat_capacity == seat) or ((seat == 2) and (seat_capacity == '')) %} active{% endif %}">
-										<input type="radio" name="seat_capacity" id="option{{seat}}" value="{{seat}}" /> {{seat}}
+										<input type="radio" name="seat_capacity" id="option{{seat}}" value="{{seat}}" {% if (seat_capacity == seat) or ((seat == 2) and (seat_capacity == '')) %} checked{% endif %}/> {{seat}}
 									</label>
 								{% endfor %}
 							</div>
