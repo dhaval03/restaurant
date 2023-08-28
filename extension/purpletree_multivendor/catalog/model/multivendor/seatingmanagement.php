@@ -31,7 +31,14 @@ class Seatingmanagement extends \Opencart\System\Engine\Model {
 	}
 	public function getSeatingManagements($data = array()) {			
 			
-		$sql="SELECT * FROM ". DB_PREFIX ."seatingmanagement ORDER BY table_id DESC";
+		$sql="SELECT * FROM ". DB_PREFIX ."seatingmanagement WHERE vendor_id=".$this->customer->getId();
+		
+		if(isset($data['status'])){
+			$sql.= " AND status='".(int)$data['status']."'";
+		}
+		
+		
+		$sql.= 'ORDER BY table_id DESC';
 			
 		if (isset($data['start']) || isset($data['limit'])) {
 		if ($data['start'] < 0) {
@@ -41,6 +48,7 @@ class Seatingmanagement extends \Opencart\System\Engine\Model {
 		if ($data['limit'] < 1) {
 			$data['limit'] = 20;
 		}
+		
 
 		$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 		}

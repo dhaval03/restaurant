@@ -37,8 +37,21 @@ class Seatingmanagement extends \RestController
 	public function listSeatingmanagement()
     {
 		$this->load->model('extension/purpletree_multivendor/multivendor/seatingmanagement');
-
-        $seatingmanagement = $this->model_extension_purpletree_multivendor_multivendor_seatingmanagement->getSeatingManagements();
+		$limit = 10
+		if(isset($this->request->get['limit'])){
+			$limit = $this->request->get['limit'];
+		}
+		$page = 1;
+		if(isset($this->request->get['page'])){
+			$page = $this->request->get['page'];
+		}
+		
+		$filter_data = array(
+			'start'=>($page-1)*$limit,
+			'limit'=>$limit,
+			'status'=>1,
+		);
+        $seatingmanagement = $this->model_extension_purpletree_multivendor_multivendor_seatingmanagement->getSeatingManagements($filter_data);
         $data['seatingmanagement'] = array_values($seatingmanagement);
 
         if (!empty($data['seatingmanagement'])) {
