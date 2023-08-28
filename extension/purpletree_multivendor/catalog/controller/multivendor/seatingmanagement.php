@@ -308,21 +308,14 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 			$data['locations'] = $this->model_extension_purpletree_multivendor_multivendor_location->getLocations();
 			
 			$data['languages'] = $this->model_localisation_language->getLanguages();
-			$this->load->model('setting/store');
 
 			$data['stores'] = [];
-
-			$data['stores'][] = [
-				'store_id' => 0,
-				'name'     => $this->language->get('text_default')
-			];
-
-			$stores = $this->model_setting_store->getStores();
-
+            $this->load->model('extension/purpletree_multivendor/multivendor/vendor');
+			$stores = $this->model_extension_purpletree_multivendor_multivendor_vendor->getStoresById($this->customer->getId());
 			foreach ($stores as $store) {
 				$data['stores'][] = [
-					'store_id' => $store['store_id'],
-					'name'     => $store['name']
+					'store_id' => $store['id'],
+					'name'     => $store['store_name']
 				];
 			}
 			

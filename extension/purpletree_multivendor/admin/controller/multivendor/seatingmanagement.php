@@ -319,31 +319,21 @@ class Seatingmanagement extends \Opencart\System\Engine\Controller {
 			
 			$data['languages'] = $this->model_localisation_language->getLanguages();
 			
-			$this->load->model('setting/store');
-
-			$data['stores'] = [];
-
-			$data['stores'][] = [
-				'store_id' => 0,
-				'name'     => $this->language->get('text_default')
-			];
-
-			$stores = $this->model_setting_store->getStores();
-			foreach ($stores as $store) {
-				$data['stores'][] = [
-					'store_id' => $store['store_id'],
-					'name'     => $store['name']
-				];
-			}
-			
-			$this->load->model('extension/purpletree_multivendor/multivendor/vendor');
-			
+			$this->load->model('extension/purpletree_multivendor/multivendor/vendor');			
 			$data['sellers'] = $this->model_extension_purpletree_multivendor_multivendor_vendor->getVendors();
 			
-			$this->load->model('extension/purpletree_multivendor/multivendor/location');
-			
+			$this->load->model('extension/purpletree_multivendor/multivendor/location');			
 			$data['locations'] = $this->model_extension_purpletree_multivendor_multivendor_location->getLocations();
 			
+			$data['stores'] = array();
+			$stores = $this->model_extension_purpletree_multivendor_multivendor_vendor->getStoresById();
+			foreach ($stores as $store) {
+				$data['stores'][] = [
+					'store_id' => $store['id'],
+					'seller_id' => $store['seller_id'],
+					'name'     => $store['store_name']
+				];
+			}	
 			
 			if (isset($this->request->get['table_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 				$seating_management_info = $this->model_extension_purpletree_multivendor_multivendor_seatingmanagement->getSeatingManagement($this->request->get['table_id']);		

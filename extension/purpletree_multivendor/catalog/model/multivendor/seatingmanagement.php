@@ -25,7 +25,7 @@ class Seatingmanagement extends \Opencart\System\Engine\Model {
 		
 	public function getSeatingManagement($table_id) {
 			
-		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "seatingmanagement` WHERE `table_id` = '" . (int)$table_id . "'");
+		$query = $this->db->query("SELECT DISTINCT * FROM `" . DB_PREFIX . "seatingmanagement` WHERE `table_id` = '" . (int)$table_id . "' AND vendor_id=".$this->customer->getId());
 
 		return $query->row;
 	}
@@ -49,12 +49,12 @@ class Seatingmanagement extends \Opencart\System\Engine\Model {
 			
 		return $query->rows;
 	}
-	public function getTotalSeatingManagements () {
+	public function getTotalSeatingManagements ($data) {
 		$sql="SELECT COUNT(*) AS `total` FROM ". DB_PREFIX ."seatingmanagement WHERE vendor_id=".$this->customer->getId();		
 		if(isset($data['status'])){
 			$sql.= " AND status='".(int)$data['status']."'";
 		}
-		$sql.= ' ORDER BY table_id DESC';
+		
 		
 		$query = $this->db->query($sql);
 			

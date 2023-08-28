@@ -803,14 +803,18 @@ class Vendor extends \Opencart\System\Engine\Model {
 				return NULL;
 			}
 	}
-
-			
-
 	public function getTemplateprod() {
 		$query = $this->db->query("SELECT product_id FROM " . DB_PREFIX . "purpletree_vendor_template");
 			if($query->num_rows>0){
 		return $query->rows;
 			}
 	}
+	public function getStoresById(){
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "purpletree_vendor_stores");
+			if ($query->num_rows > 0) {
+				return $query->rows;
+			}	
+			return array();
+		}
 }
 ?>

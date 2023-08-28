@@ -467,6 +467,13 @@ class Vendor extends \Opencart\System\Engine\Model{
 			}	
 			return '';
 		}
+		public function getStoresById($sellerid){
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "purpletree_vendor_stores WHERE seller_id='". (int)$sellerid."'");
+			if ($query->num_rows > 0) {
+				return $query->rows;
+			}	
+			return array();
+		}
 		public function getCustomerEmailId($seller_id) {
 			
 			$query = $this->db->query("SELECT email  FROM " . DB_PREFIX . "customer WHERE customer_id = '" . (int)$seller_id . "'");
