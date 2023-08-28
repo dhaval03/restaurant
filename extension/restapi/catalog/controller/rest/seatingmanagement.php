@@ -37,7 +37,7 @@ class Seatingmanagement extends \RestController
 	public function listSeatingmanagement()
     {
 		$this->load->model('extension/purpletree_multivendor/multivendor/seatingmanagement');
-		$limit = 10
+		$limit = 10;
 		if(isset($this->request->get['limit'])){
 			$limit = $this->request->get['limit'];
 		}
@@ -59,7 +59,6 @@ class Seatingmanagement extends \RestController
         }
 
         if($this->includeMeta) {
-
             $data = $this->json['data'];
 
             if(isset($this->json['data']['seatingmanagement'])) {
@@ -69,7 +68,7 @@ class Seatingmanagement extends \RestController
             }
             $this->response->addHeader('X-Total-Count: ' . count($intercomsData));
             $this->response->addHeader('X-Pagination-Limit: '.count($intercomsData));
-            $this->response->addHeader('X-Pagination-Page: 1');        
-        }
+            $this->response->addHeader('X-Pagination-Page: '.(int)$page);        
+        }		
 	}
 }
