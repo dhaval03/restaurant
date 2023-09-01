@@ -1,0 +1,68 @@
+{{ header }}
+<div class="pts-container container">
+<div class="pts-row d-flex row">{{ column_left }}
+<div id="content" class="pts-col-sm-9 col-sm-9 pts-col-md-9 col-md-9 pts-col-lg-10 col-lg-10 pts-col-xs-12 col-xs-12"> <div class="page-header">
+		{% if error_warning %}
+		<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
+		{% endif %}
+		<div class="container-fluid">
+			<h1>{{ heading_title }}</h1>
+			<ul class="breadcrumb">
+				{% for breadcrumb in breadcrumbs %}
+				<li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+				{% endfor %}
+			</ul>
+			{% if helpcheck %}
+			  <div class="pull-right float-right">
+					<a href="{{ helplink }}" rel=”nofollow”  target="_blank" id="button-pts-help" class="btn"><img src="{{ helpimage }}" alt="Help" width="85" height="43"></a>				
+			   </div>
+			  {% endif %}
+		</div>
+	</div>
+	<div class="pts-panel pts-panel-default">
+		<div class="pts-panel-heading">
+			<h3 class="pts-panel-title"><i class="fa fa-list"></i> {{ text_pos }}</h3>
+		</div>
+	<div class="pts-panel-body">
+		<form action="" method="post" enctype="multipart/form-data" id="form-pos">
+		<div class="pts-table-responsive">
+			<div class="pts-col-sm-6">
+				<div class="pts-col-sm-5">
+				<ul class="pts-nav nav-pills">
+					{% for vendor_categorie in vendor_categories %}
+						<li><a href="">{{ vendor_categorie.name }}</a></li>
+					{% endfor %}
+				</ul>
+				</div>
+				<div class="pts-col-sm-7">
+					<div class="input-group">
+						<input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">
+							<div class="input-group-btn">
+								<button class="btn btn-default" type="submit">
+								<span class="glyphicon glyphicon-search"></span>
+								</button>
+							</div>
+					</div>
+				</div>
+			</div>
+			<div class="pts-col-sm-6">
+				<div class="pts-col-sm-12 pts-btn-group" data-toggle="buttons">
+				  <label class="pts-btn btn-primary active col-sm-4">
+					<input type="radio" name="options" id="option1" checked> Dining
+				  </label>
+				  <label class="pts-btn btn-primary col-sm-4">
+					<input type="radio" name="options" id="option2"> Delivery
+				  </label>
+				  <label class="pts-btn btn-primary col-sm-4">
+					<input type="radio" name="options" id="option3"> Pickup
+				  </label>
+				</div>
+			</div>
+		</div>
+		</form>
+	</div>
+	</div>
+</div>
+</div>
+{{ footer }}
+</div>
