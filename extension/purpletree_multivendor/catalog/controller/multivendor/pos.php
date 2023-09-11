@@ -31,5 +31,13 @@ class Pos extends \Opencart\System\Engine\Controller {
 			
 			$this->response->setOutput($this->load->view('extension/purpletree_multivendor/multivendor/pos', $data));
 		}
+		public function getCategorieProducts(){
+			$json = [];
+			if(isset($this->request->post['category_id']) && $this->request->post['category_id'] > 0){
+				
+			}
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput(json_encode($json));
+		}
 	}
 ?>
