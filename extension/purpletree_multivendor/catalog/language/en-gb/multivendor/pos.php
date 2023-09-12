@@ -13,6 +13,7 @@ $_['text_geo_zone']      = 'Pos';
 $_['text_default']       = 'Default';
 $_['text_enabled']       = 'Enabled';
 $_['text_disabled']      = 'Disabled';
+$_['text_category']      = 'Disabled';
 
 // Column
 $_['column_name']        = 'Name';
