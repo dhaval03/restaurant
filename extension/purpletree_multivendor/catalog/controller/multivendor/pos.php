@@ -4,6 +4,7 @@ class Pos extends \Opencart\System\Engine\Controller {
 		private $error = array();
 		public function index() {
 			
+			
 			$this->load->language('extension/purpletree_multivendor/multivendor/pos');
 			
 			$this->document->setTitle($this->language->get('heading_title'));
@@ -27,6 +28,8 @@ class Pos extends \Opencart\System\Engine\Controller {
 			
 			$this->load->model('catalog/product');
 			$data['products'] = $this->model_catalog_product->getProducts();
+			$data['image1'] = HTTP_SERVER.'extension/purpletree_multivendor/image/table_logo.jpg';
+			$data['image2'] = HTTP_SERVER.'extension/purpletree_multivendor/image/profile.png';
 			
 			$data['column_left'] = $this->load->controller('extension/purpletree_multivendor/multivendor/common/column_left');
 			$data['footer'] = $this->load->controller('extension/purpletree_multivendor/multivendor/common/footer');
@@ -35,7 +38,6 @@ class Pos extends \Opencart\System\Engine\Controller {
 			$this->response->setOutput($this->load->view('extension/purpletree_multivendor/multivendor/pos', $data));
 		}
 		public function getCategorieProducts(){
-			
 			$json = [];
 			if(isset($this->request->post['category_id']) && $this->request->post['category_id'] > 0){
 				$this->load->model('extension/purpletree_multivendor/multivendor/pos');
@@ -54,6 +56,19 @@ class Pos extends \Opencart\System\Engine\Controller {
 					);
 				}				
 				$json['success'] = true;
+			}
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput(json_encode($json));
+		}
+		public function getProductDetails(){
+			$json = [];
+			if(isset($this->request->post['product_id']) && $this->request->post['product_id'] > 0){
+			$this->load->model('extension/purpletree_multivendor/multivendor/pos');
+			$product = $this->model_extension_purpletree_multivendor_multivendor_pos->getProducts($this->request->post['product_id']);
+				if(!empty($product)){
+					$json['product_data'] = $product;
+					$json['success'] = true;
+				}
 			}
 			$this->response->addHeader('Content-Type: application/json');
 			$this->response->setOutput(json_encode($json));

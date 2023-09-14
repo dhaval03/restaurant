@@ -16,15 +16,12 @@ $_['text_disabled']      = 'Disabled';
 $_['text_category']      = 'Disabled';
 
 // Column
-$_['column_name']        = 'Name';
-$_['column_sort_order']  = 'Sort Order';
-$_['column_status']      = 'Status';
-$_['column_action']      = 'Action';
 
-// Entry
-$_['entry_name']         = 'Location Name';
-$_['entry_sort_order']   = 'Sort Order';
-$_['entry_status']       = 'Status';
+
+$_['column_name']                = 'Item';
+$_['column_quantity']            = 'Quantity';
+$_['column_total']               = 'Total';
+
 
 // Error
 $_['error_permission']   = 'Warning: You do not have permission to modify location!';

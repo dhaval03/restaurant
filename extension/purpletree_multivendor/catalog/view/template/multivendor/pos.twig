@@ -45,7 +45,7 @@
 										<div id="append"></div>
 								</td>
 								<td class="pts-col-sm-6">
-									<div class="pts-col-sm-12 pts-btn-group" data-toggle="buttons">
+									<div class="pts-col-sm-12 pts-btn-group"  data-toggle="buttons">
 									  <label class="pts-btn btn-primary active col-sm-4">
 										<input type="radio" name="options" id="option1" checked> Dining
 									  </label>
@@ -55,7 +55,14 @@
 									  <label class="pts-btn btn-primary col-sm-4">
 										<input type="radio" name="options" id="option3"> Pickup
 									  </label>
+									</div><br><br>
+									<div id="myimageDiv">
+										<img id="myimage1" src="{{image1}}" alt="" width="40" height="40" style="margin-left:16px";/><i class="bi bi-airplane"></i>
+										<img id="myimage1" class="bi bi-people" alt="" width="40" height="40"/>
 									</div>
+									
+									<br>
+									<div id="appended"></div>
 								</td>
 							</tr>
 						</thead>
@@ -80,13 +87,47 @@ function getCategorieProducts(category_id){
 					html = '';
 					if(json['rt_products']){
 						$.each(json['rt_products'],function(index, value){
-							html += '<div class="col-md-6 product_img"><img src="'+value['thumb']+'" alt="" width="100" height="100" title=""><br>'+value['name']+'</div>';
+							html += '<div class="col-md-6 product_img" onclick="getProductData('+value['product_id']+')"><img src="'+value['thumb']+'" alt="" width="60" height="60" style="padding-top: 10px"; title=""><br>'+value['name']+'</div>';
 						});
 					}
 					$("#append").append(html);
 				}	
 			}
 		}); 
+	}
+}
+function getProductData(product_id){
+	if(product_id > 0){
+		$.ajax({
+			url: 'index.php?route=extension/purpletree_multivendor/multivendor/pos|getProductDetails&language&language={{ language }}',
+			type: 'post',
+			data: 'product_id='+product_id,
+			dataType: 'json',
+			success: function (json) {
+				if(json['success']){
+					//alert(JSON.stringify(json['product_data']));
+					html = '';
+					if(json['product_data']){ //alert('kfgvdfkkkk');
+						
+						html += '<table class="table table-sm table-striped">';
+						html += '<tr>';
+						html += '<td class="text-start">{{column_name}}'; 
+						html += '<td class="text-start">{{column_quantity}}'; 
+						html += '<td class="text-start">{{column_total}}'; 
+						html += '</td>'; 
+						html += '</tr>'; 
+						html += '<tr>'; 
+						html += ' <td class="text-start">'+ json['product_data']['name'] +'</a>';
+						html += '<td class="text-end"> '+ json['product_data']['quantity'] +'</td>';
+						html += '<td class="text-end"> '+ json['product_data']['total'] +'</td>';
+						html += '</tr>';
+						html += '</table>';
+						
+					}
+					$("#appended").append(html);
+				}
+			}
+		});
 	}
 }
 </script>
