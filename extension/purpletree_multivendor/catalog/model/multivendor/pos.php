@@ -1,12 +1,15 @@
 <?php
 namespace Opencart\Catalog\Model\Extension\PurpletreeMultivendor\Multivendor;
 class Pos extends \Opencart\System\Engine\Model {	
-	function getPos($category_id){
+	function getPos($category_id,$filter){
+		//echo $filter;exit;
+		$sql ="SELECT * FROM `product` p LEFT JOIN `product_description` pd ON (p.`product_id` = pd.`product_id`) LEFT JOIN `product_to_category` pc ON (p.`product_id` = pc.`product_id`) WHERE pc.`category_id` = '".$category_id."'";
+		if (!empty($filter)) {
+			$sql .= " AND ((pd.`name` LIKE '" . $this->db->escape((string)$filter . '%') . "') OR (p.`model` LIKE '" . $this->db->escape((string)$filter . '%') . "'))";
+		}
+		$query = $this->db->query($sql);
 				
-			$sql ="SELECT * FROM `product` p LEFT JOIN `product_description` pd ON (p.`product_id` = pd.`product_id`) LEFT JOIN `product_to_category` pc ON (p.`product_id` = pc.`product_id`) WHERE pc.`category_id` = '".$category_id."'";
-		    $query = $this->db->query($sql);
-				
-				return $query->rows;
+		return $query->rows;
 	}
 	public function getProducts($product_id): array {
 		$cart_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "cart` WHERE `api_id` = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND `customer_id` = '" . (int)$this->customer->getId() . "' AND `session_id` = '" . $this->db->escape($this->session->getId()) . "' AND product_id = ".$product_id);
@@ -290,7 +293,5 @@ class Pos extends \Opencart\System\Engine\Model {
 		}
 		return $data;
 	}
-
-	
 }
 ?>

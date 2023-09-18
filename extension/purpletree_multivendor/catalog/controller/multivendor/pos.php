@@ -37,11 +37,38 @@ class Pos extends \Opencart\System\Engine\Controller {
 			
 			$this->response->setOutput($this->load->view('extension/purpletree_multivendor/multivendor/pos', $data));
 		}
+		public function getProductSearch(){
+			$json = [];
+			if(isset($this->request->post['product_id']) && $this->request->post['product_id'] > 0){
+				$this->load->model('extension/purpletree_multivendor/multivendor/pos');
+				$results = $this->model_extension_purpletree_multivendor_multivendor_pos->getPos($this->request->post['product_id']);
+				foreach ($results as $result) {
+					if (!empty($result['image'])) {
+						//$thumb = str_replace('\\', '/', realpath(DIR_IMAGE.$result['image']));
+						$thumb = HTTP_SERVER.'image/'.$result['image'];
+					} else {
+						$thumb = DIR_IMAGE.'no_image.png';
+					}
+					$json['rt_products'][] = array(
+						'product_id' => $result['product_id'],
+						'name'       => strip_tags(html_entity_decode($result['model']." - ".$result['name'], ENT_QUOTES, 'UTF-8')),
+						'thumb'=>$thumb	
+					);
+				}				
+				$json['success'] = true;
+			}
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput(json_encode($json));
+		}
 		public function getCategorieProducts(){
 			$json = [];
 			if(isset($this->request->post['category_id']) && $this->request->post['category_id'] > 0){
 				$this->load->model('extension/purpletree_multivendor/multivendor/pos');
-				$results = $this->model_extension_purpletree_multivendor_multivendor_pos->getPos($this->request->post['category_id']);
+				$filter = '';
+				if(isset($this->request->post['product']) && $this->request->post['product'] != ''){
+					$filter = $this->request->post['product'];
+				}				
+				$results = $this->model_extension_purpletree_multivendor_multivendor_pos->getPos($this->request->post['category_id'],$filter);
 				foreach ($results as $result) {
 					if (!empty($result['image'])) {
 						//$thumb = str_replace('\\', '/', realpath(DIR_IMAGE.$result['image']));
@@ -63,8 +90,8 @@ class Pos extends \Opencart\System\Engine\Controller {
 		public function getProductDetails(){
 			$json = [];
 			if(isset($this->request->post['product_id']) && $this->request->post['product_id'] > 0){
-			$this->load->model('extension/purpletree_multivendor/multivendor/pos');
-			$product = $this->model_extension_purpletree_multivendor_multivendor_pos->getProducts($this->request->post['product_id']);
+				$this->load->model('extension/purpletree_multivendor/multivendor/pos');
+				$product = $this->model_extension_purpletree_multivendor_multivendor_pos->getProducts($this->request->post['product_id']);
 				if(!empty($product)){
 					$json['product_data'] = $product;
 					$json['success'] = true;
