@@ -174,6 +174,13 @@ class Currency {
 			return 0;
 		}
 	}
+	public function getRestCurrencyCode($currency): float {
+		if (isset($this->currencies[$currency])) {
+			return $this->currencies[$currency]['value'];
+		} else {
+			return 0;
+		}
+	}
 	
 	/**
 	 * Has

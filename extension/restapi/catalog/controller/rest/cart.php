@@ -12,7 +12,7 @@
  * @documentations https://opencart-api.com/opencart-rest-api-documentations/
  */
 namespace Opencart\Catalog\Controller\Extension\RestApi\Rest;
-require_once(DIR_SYSTEM . 'engine/restcontroller.php');
+require_once(DIR_EXTENSION . 'restapi/system/engine/restcontroller.php');
 
 
 class Cart extends \RestController
@@ -325,7 +325,7 @@ class Cart extends \RestController
     private function addItemCart($data)
     {
 
-		echo "yes";exit;
+		//echo "yes";exit;
         $this->language->load('checkout/cart');
 
         if (isset($data['product_id'])) {
@@ -353,11 +353,11 @@ class Cart extends \RestController
                 $option = array();
             }
 
-            $product_options = $this->model_catalog_product->getProductOptions($data['product_id']);
+            $product_options = $this->model_catalog_product->getOptions($data['product_id']);
 
             foreach ($product_options as $product_option) {
                 if ($product_option['required'] && empty($option[$product_option['product_option_id']])) {
-                    $this->json['error'][] = sprintf($this->language->get('error_required'), $product_option['name']);
+                    //$this->json['error'][] = sprintf($this->language->get('error_required'), $product_option['name']);
                 }
             }
 
@@ -367,7 +367,7 @@ class Cart extends \RestController
                 $recurring_id = 0;
             }
 
-            $recurrings = $this->model_catalog_product->getProfiles($product_info['product_id']);
+            /*$recurrings = $this->model_catalog_product->getProfiles($product_info['product_id']);
 
             if ($recurrings) {
                 $recurring_ids = array();
@@ -379,7 +379,7 @@ class Cart extends \RestController
                 if (!in_array($recurring_id, $recurring_ids)) {
                     $this->json['error'][] = $this->language->get('error_recurring_required');
                 }
-            }
+            }*/
 
             if (empty($this->json['error'])) {
 
@@ -410,7 +410,7 @@ class Cart extends \RestController
                 );
 
 
-                if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
+              /*  if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
                     $sort_order = array();
 
                     $results = $this->model_setting_extension->getExtensions('total');
@@ -427,7 +427,7 @@ class Cart extends \RestController
                             $this->{'model_extension_total_' . $result['code']}->getTotal($total_data);
                         }
                     }
-                }
+                }*/
 
 
                 $sort_order = array();
