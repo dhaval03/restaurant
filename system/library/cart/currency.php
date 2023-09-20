@@ -13,6 +13,7 @@ class Currency {
 	public function __construct(\Opencart\System\Engine\Registry $registry) {
 		$this->db = $registry->get('db');
 		$this->language = $registry->get('language');
+		$this->session = $registry->get('session');
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "currency`");
 
@@ -174,12 +175,9 @@ class Currency {
 			return 0;
 		}
 	}
-	public function getRestCurrencyCode($currency): float {
-		if (isset($this->currencies[$currency])) {
-			return $this->currencies[$currency]['value'];
-		} else {
-			return 0;
-		}
+	
+	public function getRestCurrencyCode(): string {
+		return $this->session->data['currency'];
 	}
 	
 	/**
