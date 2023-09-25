@@ -3,6 +3,7 @@ namespace Opencart\System\Library\Cart;
 class Currency {
 	private object $db;
 	private object $language;
+	private object $session;
 	private array $currencies = [];
 
 	/**
@@ -13,7 +14,7 @@ class Currency {
 	public function __construct(\Opencart\System\Engine\Registry $registry) {
 		$this->db = $registry->get('db');
 		$this->language = $registry->get('language');
-		//$this->session = $registry->get('session');
+		$this->session = $registry->get('session');
 
 		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "currency`");
 
