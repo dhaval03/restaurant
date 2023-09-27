@@ -20,6 +20,7 @@ $_['text_week']                  = 'week';
 $_['text_semi_month']            = 'half-month';
 $_['text_month']                 = 'month';
 $_['text_year']                  = 'year';
+$_['text_items']                  = '%s item(s) - %s';
 
 // Column
 $_['column_image']               = 'Image';
