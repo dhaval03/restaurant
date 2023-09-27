@@ -61,4 +61,23 @@ class Category extends \Opencart\System\Engine\Model {
 			return 0;
 		}
 	}
+	public function getSeoUrls(int $category_id): array {
+		$category_seo_url_data = [];
+
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "seo_url` WHERE `key` = 'path' AND `value` = '" . $this->db->escape($this->getPath($category_id)) . "'");
+
+		foreach ($query->rows as $result) {
+			$category_seo_url_data[$result['store_id']][$result['language_id']] = $result['keyword'];
+		}
+
+		return $category_seo_url_data;
+	}
+	public function getPath(int $category_id): string {
+		return implode('_', array_column($this->getPaths($category_id), 'path_id'));
+	}
+	public function getPaths(int $category_id): array {
+		$query = $this->db->query("SELECT `category_id`, `path_id`, `level` FROM `" . DB_PREFIX . "category_path` WHERE `category_id` = '" . (int)$category_id . "' ORDER BY `level` ASC");
+
+		return $query->rows;
+	}
 }

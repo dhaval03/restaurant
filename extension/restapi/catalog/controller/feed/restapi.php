@@ -12,7 +12,8 @@
  * @documentations https://opencart-api.com/opencart-rest-api-documentations/
  */
 namespace Opencart\Catalog\Controller\Extension\RestApi\Feed;
-require_once(DIR_SYSTEM . 'engine/restcontroller.php');
+//require_once(DIR_SYSTEM . 'engine/restcontroller.php');
+require_once(DIR_EXTENSION . 'restapi/system/engine/restcontroller.php');
 
 class RestApi extends \RestController
 {
@@ -683,6 +684,7 @@ class RestApi extends \RestController
 
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             //get category details
+			//echo $this->request->get['id'];exit;
             if (isset($this->request->get['id']) && ctype_digit($this->request->get['id'])) {
                 $this->getCategory($this->request->get['id']);
             } else if (isset($this->request->get['slug']) && !empty($this->request->get['slug'])) {
@@ -762,7 +764,7 @@ class RestApi extends \RestController
                 'image' => $image,
                 'original_image' => $original_image,
                 'filters' => $this->getCategoryFilters($category_id),
-                'seo_url' => $this->model_catalog_product->getCategorySeoUrls($category_id),
+                'seo_url' => $this->model_catalog_category->getSeoUrls($category_id),
                 'sub_categories' => $this->loadCatTree($category['category_id'], $level)
             );
         } else {
@@ -778,7 +780,7 @@ class RestApi extends \RestController
 
         $data['filter_groups'] = array();
 
-        $filter_groups = $this->model_catalog_category->getCategoryFilters($category_id);
+        $filter_groups = $this->model_catalog_category->getFilters($category_id);
 
         if ($filter_groups) {
             foreach ($filter_groups as $filter_group) {
@@ -835,7 +837,7 @@ class RestApi extends \RestController
                     'category_id' => (int)$category['category_id'],
                     'parent_id' => (int)$category['parent_id'],
                     'name' => $category['name'],
-                    'seo_url' => $this->model_catalog_product->getCategorySeoUrls($category['category_id']),
+                    'seo_url' => $this->model_catalog_category->getSeoUrls($category['category_id']),
                     'image' => $image,
                     'original_image' => $original_image,
                     'filters' => $this->getCategoryFilters($category['category_id']),
