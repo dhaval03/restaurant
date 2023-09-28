@@ -45,14 +45,13 @@ class RestApi extends \RestController
 
                 $server = $this->getOauthServer();
                 $token = $server->handleTokenRequest(\OAuth2\Request::createFromGlobals())->getParameters();
-// print_r($token);exit;
+
                 if (!empty($oldTokenData)) {
                     $this->model_account_customer->loadSessionToNew($oldTokenData['data'], $token['access_token']);
                     $this->model_account_customer->deleteOldToken($oldToken);
                 }
-// echo "yes";exit;
 
-                    //clear token table
+                //clear token table
                 if (isset($token['access_token'])) {
                     $this->clearTokensTable($token['access_token'], $this->session->getId());
 
@@ -129,7 +128,6 @@ class RestApi extends \RestController
     */
     public function products()
     {
-
         $this->checkPlugin();
 
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -158,10 +156,10 @@ class RestApi extends \RestController
 
     public function getProduct($id)
     {
-
         $this->load->model('catalog/product');
 
         $products = $this->model_catalog_product->getProductsByIds(array($id), $this->customer);
+		
         if (!empty($products)) {
             $this->json["data"] = $this->getProductInfo(reset($products));
         } else {
@@ -227,7 +225,7 @@ class RestApi extends \RestController
         }
 
         if (!$simpleList) {
-            $additional_images = $this->model_catalog_product->getProductImages($product['product_id']);
+            $additional_images = $this->model_catalog_product->getImages($product['product_id']);
 
             if(!empty($additional_images)) {
                 foreach ($additional_images as $additional_image) {
@@ -243,29 +241,29 @@ class RestApi extends \RestController
             }
 
             //discounts
-            $data_discounts = $this->model_catalog_product->getProductDiscounts($product['product_id']);
+            $data_discounts = $this->model_catalog_product->getDiscounts($product['product_id']);
 
             if(!empty($data_discounts)) {
                 foreach ($data_discounts as $discount) {
                     $discounts[] = array(
                         'quantity' => (int)$discount['quantity'],
-                        'price_excluding_tax' => empty($hidePrices) ? $this->currency->format($discount['price'], $this->currency->getRestCurrencyCode(), '', false) : false,
+                        'price_excluding_tax' => empty($hidePrices) ? $this->currency->format($discount['price'], $this->currency->getRestCurrencyCode(), 0, false) : false,
                         'price_excluding_tax_formated' => empty($hidePrices) ? $this->currency->format($discount['price'], $this->currency->getRestCurrencyCode()) : false,
-                        'price' => empty($hidePrices) ? $this->currency->format($this->tax->calculate($discount['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->currency->getRestCurrencyCode(), '', false) : false,
+                        'price' => empty($hidePrices) ? $this->currency->format($this->tax->calculate($discount['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->currency->getRestCurrencyCode(), 0, false) : false,
                         'price_formated' => empty($hidePrices) ? $this->currency->format($this->tax->calculate($discount['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->currency->getRestCurrencyCode()) : false
                     );
                 }
             }
 
             //options
-            foreach ($this->model_catalog_product->getProductOptions($product['product_id']) as $option) {
+            foreach ($this->model_catalog_product->getOptions($product['product_id']) as $option) {
                 $product_option_value_data = array();
 
                 foreach ($option['product_option_value'] as $option_value) {
                     if (!$option_value['subtract'] || ($option_value['quantity'] > 0)) {
                         if ((($this->customer->isLogged() && $this->config->get('config_customer_price')) || !$this->config->get('config_customer_price')) && (float)$option_value['price']) {
-                            $price = $this->currency->format($this->tax->calculate($option_value['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->currency->getRestCurrencyCode(), '', false);
-                            $price_excluding_tax = $this->currency->format($option_value['price'], $this->currency->getRestCurrencyCode(), '', false);
+                            $price = $this->currency->format($this->tax->calculate($option_value['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->currency->getRestCurrencyCode(), 0, false);
+                            $price_excluding_tax = $this->currency->format($option_value['price'], $this->currency->getRestCurrencyCode(), 0, false);
                             $price_excluding_tax_formated = $this->currency->format($option_value['price'], $this->currency->getRestCurrencyCode());
                             $price_formated = $this->currency->format($this->tax->calculate($option_value['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->currency->getRestCurrencyCode());
                         } else {
@@ -320,7 +318,7 @@ class RestApi extends \RestController
                 }
             }
 
-            $recurrings = $this->model_catalog_product->getProfiles($product['product_id']);
+            /*$recurrings = $this->model_catalog_product->getProfiles($product['product_id']);
 
             foreach ($recurrings as $recurring) {
                 $recurring_info = $this->model_catalog_product->getProfile($product['product_id'], $recurring['recurring_id']);
@@ -328,7 +326,7 @@ class RestApi extends \RestController
                 $product_seo_url = $this->model_catalog_product->getProductSeoUrls($product['product_id']);
                 $recurring_info['product_seo_url'] = $product_seo_url;
                 $recurringDetails[] = $recurring_info;
-            }
+            }*/
 
             /*reviews*/
             $this->load->model('catalog/review');
@@ -354,9 +352,9 @@ class RestApi extends \RestController
 
         //special
         if ((float)$product['special'] && empty($hidePrices)) {
-            $special_excluding_tax = $this->currency->format($product['special'], $this->currency->getRestCurrencyCode(), '', false);
+            $special_excluding_tax = $this->currency->format($product['special'], $this->currency->getRestCurrencyCode(), 0, false);
             $special_excluding_tax_formated = $this->currency->format($product['special'], $this->currency->getRestCurrencyCode());
-            $special = $this->currency->format($this->tax->calculate($product['special'], $product['tax_class_id'], $this->config->get('config_tax')), $this->currency->getRestCurrencyCode(), '', false);
+            $special = $this->currency->format($this->tax->calculate($product['special'], $product['tax_class_id'], $this->config->get('config_tax')), $this->currency->getRestCurrencyCode(), 0, false);
             $special_formated = $this->currency->format($this->tax->calculate($product['special'], $product['tax_class_id'], $this->config->get('config_tax')), $this->currency->getRestCurrencyCode());
         }
 
@@ -371,13 +369,13 @@ class RestApi extends \RestController
             'images' => $images,
             'original_image' => $original_image,
             'original_images' => $original_images,
-            'price_excluding_tax' => empty($hidePrices) ? $this->currency->format($product['price'], $this->currency->getRestCurrencyCode(), '', false) : false,
+            'price_excluding_tax' => empty($hidePrices) ? $this->currency->format($product['price'], $this->currency->getRestCurrencyCode(), 0, false) : false,
             'price_excluding_tax_formated' => empty($hidePrices) ? $this->currency->format($product['price'], $this->currency->getRestCurrencyCode()) : false,
-            'price' => empty($hidePrices) ? $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->currency->getRestCurrencyCode(), '', false) : false,
+            'price' => empty($hidePrices) ? $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->currency->getRestCurrencyCode(), 0, false) : false,
             'price_formated' => empty($hidePrices) ? $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')), $this->currency->getRestCurrencyCode()) : false,
             'rating' => (int)$product['rating'],
             'description' => html_entity_decode($product['description'], ENT_QUOTES, 'UTF-8'),
-            'attribute_groups' => empty($simpleList) ? $this->model_catalog_product->getProductAttributes($product['product_id']) : array(),
+            'attribute_groups' => empty($simpleList) ? $this->model_catalog_product->getAttributes($product['product_id']) : array(),
             'special' => $special,
             'special_excluding_tax' => $special_excluding_tax,
             'special_excluding_tax_formated' => $special_excluding_tax_formated,
@@ -414,7 +412,7 @@ class RestApi extends \RestController
             'status' => $product['status'],
             'date_added' => $product['date_added'],
             'date_modified' => $product['date_modified'],
-            'viewed' => $product['viewed'],
+            //'viewed' => $product['viewed'],
             'weight_class' => isset($product['weight_class']) ? $product['weight_class'] : '',
             'length_class' => isset($product['length_class']) ? $product['length_class'] : '',
             'shipping' => isset($product['shipping']) ? $product['shipping'] : '',
@@ -596,15 +594,15 @@ class RestApi extends \RestController
 
         $parameters["start"] = ($parameters["start"] - 1) * $parameters["limit"];
 
-        $products = $this->model_catalog_product->getProductsAllData($parameters, $this->customer);
-
+       $products = $this->model_catalog_product->getProductsAllData($parameters, $this->customer);
+		
         if (!empty($products)) {
             foreach ($products as $product) {
                 $this->json['data'][] = $this->getProductInfo($product, $simpleList, $customFields);
             }
         }
 
-        if($this->includeMeta) {
+       if($this->includeMeta) {
 
             $total = $this->model_catalog_product->getProductsTotal($parameters, $this->customer, true);
 
@@ -684,7 +682,6 @@ class RestApi extends \RestController
 
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             //get category details
-			//echo $this->request->get['id'];exit;
             if (isset($this->request->get['id']) && ctype_digit($this->request->get['id'])) {
                 $this->getCategory($this->request->get['id']);
             } else if (isset($this->request->get['slug']) && !empty($this->request->get['slug'])) {
