@@ -594,7 +594,7 @@ class RestApi extends \RestController
 
         $parameters["start"] = ($parameters["start"] - 1) * $parameters["limit"];
 
-       $products = $this->model_catalog_product->getProductsAllData($parameters, $this->customer);
+       $products = $this->model_catalog_product->getProductsAllData($this->customer, $parameters);
 		
         if (!empty($products)) {
             foreach ($products as $product) {
@@ -604,7 +604,7 @@ class RestApi extends \RestController
 
        if($this->includeMeta) {
 
-            $total = $this->model_catalog_product->getProductsTotal($parameters, $this->customer, true);
+            $total = $this->model_catalog_product->getProductsTotal($this->customer, $parameters, true);
 
             $this->response->addHeader('X-Total-Count: ' . (int)$total);
             $this->response->addHeader('X-Pagination-Limit: ' . (int)$parameters["limit"]);

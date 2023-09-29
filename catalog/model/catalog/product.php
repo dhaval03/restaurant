@@ -578,7 +578,7 @@ class Product extends \Opencart\System\Engine\Model {
 									'height'           => $result['height'],
 									'length_class_id'  => $result['length_class_id'],
 									'subtract'         => $result['subtract'],
-									'rating'           => round($result['rating']),
+									'rating'           => round((int)$result['rating']),
 									'reviews'          => $result['reviews'] ? $result['reviews'] : 0,
 									'minimum'          => $result['minimum'],
 									'sort_order'       => $result['sort_order'],
@@ -604,7 +604,7 @@ class Product extends \Opencart\System\Engine\Model {
 	public function getProductSeoUrls($product_id) {
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url
-		WHERE query = 'product_id=" . (int)$product_id . "'
+		WHERE `key` = 'product_id' and `value`='" . (int)$product_id . "'
 		AND language_id = '" . (int)$this->config->get('config_language_id') . "'
 		AND store_id = '" . (int)$this->config->get('config_store_id') . "'
 		");
@@ -615,7 +615,7 @@ class Product extends \Opencart\System\Engine\Model {
 
 		return "";
 	}	
-	public function getProductsAllData($data = array(), $customer) {
+	public function getProductsAllData($customer, $data = array()) {
 		if ($customer->isLogged()) {
 			$customer_group_id = $customer->getGroupId();
 		} else {
@@ -873,7 +873,7 @@ class Product extends \Opencart\System\Engine\Model {
 		}
 		return $sql;
 	}
-	public function getProductsTotal($data = array(), $customer, $onlycount=true) {
+	public function getProductsTotal($customer, $data = array() , $onlycount=true) {
 
 		if ($customer->isLogged()) {
 			$customer_group_id = $customer->getGroupId();
