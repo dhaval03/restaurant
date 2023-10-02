@@ -245,6 +245,14 @@ class ColumnLeft extends \Opencart\System\Engine\Controller {
 					'children' => array()		
 				);	
 			}
+			if ($this->user->hasPermission('access', 'extension/purpletree_multivendor/multivendor/pos')) 
+			{ 			
+			$purpletree_multivendor[] = array(
+				'name'  => $this->language->get('text_pos'),
+				'href'  => $this->url->link('extension/purpletree_multivendor/multivendor/pos', 'user_token=' . $this->session->data['user_token'], true),
+					'children' => array()		
+				);	
+			}
 			
 			}
 			

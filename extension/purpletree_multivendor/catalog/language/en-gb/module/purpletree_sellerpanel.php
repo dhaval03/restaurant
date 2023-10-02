@@ -19,6 +19,7 @@ $_['text_downloads']   = 'Downloads';
 $_['text_bulkproductupload']     = 'Bulk Product Upload';
 $_['text_seatingmanagement']   = 'Seating Management';
 $_['text_location']   = 'Location';
+$_['text_pos']   = 'Pos';
 $_['text_shipping']              = 'Shipping Rates';
 $_['text_subscription']              = 'Subscription Plan';
 $_['text_subscriptions']              = 'Subscription Invoice';
