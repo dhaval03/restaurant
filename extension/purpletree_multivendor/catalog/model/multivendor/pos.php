@@ -3,7 +3,7 @@ namespace Opencart\Catalog\Model\Extension\PurpletreeMultivendor\Multivendor;
 class Pos extends \Opencart\System\Engine\Model {	
 	function getPos($category_id,$filter){
 		//echo $filter;exit;
-		$sql ="SELECT * FROM `product` p LEFT JOIN `product_description` pd ON (p.`product_id` = pd.`product_id`) LEFT JOIN `product_to_category` pc ON (p.`product_id` = pc.`product_id`) WHERE pc.`category_id` = '".$category_id."'";
+		$sql ="SELECT * FROM `product` p LEFT JOIN `product_description` pd ON (p.`product_id` = pd.`product_id`) LEFT JOIN `product_to_category` pc ON (p.`product_id` = pc.`product_id`) WHERE pc.`category_id` = '".$category_id."'customer_id= '".(int)$this->customer->getId()."'";
 		if (!empty($filter)) {
 			$sql .= " AND ((pd.`name` LIKE '" . $this->db->escape((string)$filter . '%') . "') OR (p.`model` LIKE '" . $this->db->escape((string)$filter . '%') . "'))";
 		}

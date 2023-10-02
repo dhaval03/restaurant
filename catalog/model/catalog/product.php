@@ -913,4 +913,14 @@ class Product extends \Opencart\System\Engine\Model {
 		return $query->row['total'];
 
 	}
+	public function getValue(int $option_value_id): array {
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "option_value` ov LEFT JOIN `" . DB_PREFIX . "option_value_description` ovd ON (ov.`option_value_id` = ovd.`option_value_id`) WHERE ov.`option_value_id` = '" . (int)$option_value_id . "' AND ovd.`language_id` = '" . (int)$this->config->get('config_language_id') . "'");
+
+		return $query->row;
+	}
+	public function getOption(int $option_id): array {
+		$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "option` o LEFT JOIN `" . DB_PREFIX . "option_description` od ON (o.`option_id` = od.`option_id`) WHERE o.`option_id` = '" . (int)$option_id . "' AND od.`language_id` = '" . (int)$this->config->get('config_language_id') . "'");
+
+		return $query->row;
+	}
 }

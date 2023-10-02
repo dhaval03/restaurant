@@ -26,10 +26,10 @@
 							<tr>
 								<td class="pts-col-sm-6">
 									<div class="pts-col-sm-4">
-									<ul class="pts-nav">
+									<ul class="pts-nav ul_categories">
 											<b style="font-size: 24px !important;">Categories</b><br><br>
 										{% for vendor_categorie in vendor_categories %}
-											<li><a onclick="getCategorieProducts({{ vendor_categorie.category_id }})">{{ vendor_categorie.name }}</a></li>
+											<li class="categories categorie_{{ vendor_categorie.category_id }}" data-id="{{ vendor_categorie.category_id }}"><a onclick="getCategorieProducts({{ vendor_categorie.category_id }})">{{ vendor_categorie.name }}</a></li>
 										{% endfor %}
 									</ul>
 									</div>
@@ -54,12 +54,12 @@
 									  </label>
 									</div><br><br>
 									<div id="myimageDiv" style="margin-left:15px";>
-										<img class="myimage1" src="{{image1}}" alt="" width="50" height="50" />
-										<img class="myimage2" src="{{image2}}" alt="" width="50" height="50" />
-										
+										<img class="myimage1 " src="{{image1}}" alt="" width="50" height="50" />
+										<img class="myimage2" src="{{image2}}" alt="" width="50" height="50" disabled />
 									</div>
 									<br>
-									<div id="appended"></div>
+									<div id="appended">
+									</div>
 								</td>
 							</tr>
 						</thead>
@@ -69,23 +69,77 @@
 		</div>
 	</div>
 </div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+		<div class="modal-header">
+			<div class="form-group row  py-4">
+				<div class="col-sm-11 text-end ">
+					<h3 class="modal-title" id="exampleModalLabel">Product Option Value</h3>
+				</div>
+				<div class="col-sm-1 text-end ">
+					 <button type="button" class="pts-close" data-dismiss="modal" aria-label="Close">
+					 <span aria-hidden="true">&times;</span>
+					 </button>
+				</div>
+			</div>	
+		</div>
+		<div class="modal-body">
+			<div class="form-group row  py-4">
+				<div class="col-sm-12 text-end">
+					<div id="product_options" style="height: 150px; overflow: auto;"></div>
+					<a onclick="$(this).parent().find(':checkbox').prop('checked', true);">Select all</a> / <a onclick="$(this).parent().find(':checkbox').prop('checked', false);">Unselect All</a>
+				</div>
+			</div>	
+		</div>
+		<div class="modal-footer">
+			<div class="form-group row  py-4">
+				<div class="col-sm-12 text-center">
+					<!--<button type="button" id="addButton" class="btn btn-primary" data-dismiss="modal">Add</button>-->
+					<button type="button" class="btn btn-primary add">Add</button>
+				</div>
+			</div>	
+		</div>
+      </div>
+    </div>
+</div>
+<style>
+.categories.active {
+	background-color:#286090;
+}
+.categories.active a {
+	color:#fff;
+}
+.categories.active :hover {
+  color: #337ab7;
+}
+</style>
+<style>
+.myimage
+{
+	cursor: not-allowed;
+}
+</style>
 <script>
 $( document ).ready(function() {
-	$('.getcategorie').val('');
 	$("#option1").click(function(){
-		$(".myimage1").show();
-		$(".myimage2").show();
-	}); 
-	$("#option2").click(function(){
-		$(".myimage1").hide();
-		$(".myimage2").show();
+	$(".myimage1").removeClass('myimage');
+	});
+	$("#option2").click(function(){	
+		$(".myimage1").addClass('myimage');
 	});
 	$("#option3").click(function(){
-		$(".myimage1").hide();
-		$(".myimage2").show();
+		$(".myimage1").addClass('myimage');
 	});
 	
-	$("#search_products").on('change',function(e){
+	$('.categories').removeClass("active");
+	$(".ul_categories").each(function(){
+       $(this).find('.categories').first().addClass("active");
+    });
+	active_category = $('.ul_categories li.active').data('id');
+	if(active_category > 0){getCategorieProducts(active_category);}
+	$('.getcategorie').val(active_category);
+	$("#search_products").on('change',function(e){		
 		var categorie = $('.getcategorie').val();
 		if(categorie > 0){
 			$product = $(this).val();
@@ -115,12 +169,15 @@ $( document ).ready(function() {
 	});
 	
 });
-
-function getCategorieProducts(category_id){			
+var $products = {};
+function getCategorieProducts(category_id){  			
 	$("#categorie_products").empty();
 	if(category_id > 0){
+		$('.categories').removeClass("pts-btn btn-primary active");
+		$('.categorie_'+category_id).addClass("pts-btn btn-primary active");
 		$('.getcategorie').val(category_id);
 		$product = $('#search_products').val();
+		$products = {};
 		$.ajax({
 			url: 'index.php?route=extension/purpletree_multivendor/multivendor/pos|getCategorieProducts&language={{ language }}',
 			type: 'post',
@@ -131,7 +188,8 @@ function getCategorieProducts(category_id){
 					html = '';
 					if(json['rt_products']){
 						$.each(json['rt_products'],function(index, value){
-							html += '<div class="col-md-6 product_img" onclick="getProductData('+value['product_id']+')"><img src="'+value['thumb']+'" alt="" width="60" height="60" style="padding-top: 10px"; title=""><br>'+value['name']+'</div>';
+							$products[value['product_id']] = value;
+							html += '<div class="col-md-6 product_img" onclick="getProductData('+value['product_id']+','+value['options'].length+'); this.onclick=null;"><img src="'+value['thumb']+'" alt="" width="60" height="60" style="padding-top: 10px"; title=""><br>'+value['name']+'</div>';
 						});
 					}
 					$("#categorie_products").append(html);
@@ -140,38 +198,100 @@ function getCategorieProducts(category_id){
 		}); 
 	}
 }
-function getProductData(product_id){
+function getProductData(product_id,options_length){
 	if(product_id > 0){
-		$.ajax({
-			url: 'index.php?route=extension/purpletree_multivendor/multivendor/pos|getProductDetails&language&language={{ language }}',
-			type: 'post',
-			data: 'product_id='+product_id,
-			dataType: 'json',
-			success: function (json) {
-				if(json['success']){
-					//alert(JSON.stringify(json['product_data']));
-					html = '';
-					if(json['product_data']){ //alert('kfgvdfkkkk');
-						
-						html += '<table class="table table-sm table-striped">';
-						html += '<tr>';
-						html += '<td class="text-start">{{column_name}}'; 
-						html += '<td class="text-start">{{column_quantity}}'; 
-						html += '<td class="text-start">{{column_total}}'; 
-						html += '</td>'; 
-						html += '</tr>'; 
-						html += '<tr>'; 
-						html += ' <td class="text-start">'+ json['product_data']['name'] +'</a>';
-						html += '<td class="text-end"> '+ json['product_data']['quantity'] +'</td>';
-						html += '<td class="text-end"> '+ json['product_data']['total'] +'</td>';
-						html += '</tr>';
-						html += '</table>';
-						
+		if(options_length>0){
+			$('#exampleModal').modal('toggle');
+			$.ajax({
+				url: 'index.php?route=extension/purpletree_multivendor/multivendor/pos|getProductOptions&language={{ language }}',
+				type: 'post',
+				data: 'product_id='+product_id,
+				dataType: 'json',
+				success: function (json) {
+					if(json['success']){
+						html = '';
+						if(json['product_options']){
+							$.each(json['product_options'],function(index, value){
+								$.each(value['product_option_value'],function(key, val){
+									html+='<div class="checkbox"><label>';
+									html+='<input type="checkbox" name="option[]" value="'+value['product_option_id']+'/'+val['product_option_value_id']+'"> '+val['name'];
+									html+='</label></div>';
+								});
+							});
+						}
+						$("#product_options").append(html);
 					}
-					$("#appended").append(html);
 				}
-			}
-		});
+			});
+			$(".add").click(function(){
+				var chk_val = [];
+				$('input[type=checkbox]:checked').each(function(i){
+				  chk_val[i] = $(this).val();
+				});
+				if(chk_val != ''){
+					var pro_options = {};
+					$(chk_val).each(function(key,value){
+						var arr = value.split('/');
+						pro_options[arr[0]] = arr[1];
+					});
+					var option = pro_options;
+					$.ajax({
+						url: 'index.php?route=checkout/cart.add&language={{ language }}',
+						type: 'post',
+						data: 'product_option_value_id='+option+'&product_id='+product_id+'&quantity=4',
+						dataType: 'json',
+						contentType: 'application/x-www-form-urlencoded',
+						cache: false,
+						processData: false,
+						beforeSend: function() {
+							//$('#button-cart').button('loading');
+						},
+						complete: function() {
+							//$('#button-cart').button('reset');
+						},
+						success: function(json) {
+							console.log(json);
+							if(json['success']){
+								$('#appended').load('index.php?route=extension/purpletree_multivendor/multivendor/pos.getcart&language={{ language }}');
+							}
+							
+						},
+						error: function(xhr, ajaxOptions, thrownError) {
+							console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+						}
+					});
+				}else{
+					alert('Please must be select product option value!');
+				}
+			});
+				
+		}else{
+			$.ajax({
+				url: 'index.php?route=checkout/cart.add&language={{ language }}',
+				type: 'post',
+				data: 'product_id='+product_id+'&quantity=4',
+				dataType: 'json',
+				contentType: 'application/x-www-form-urlencoded',
+				cache: false,
+				processData: false,
+				beforeSend: function() {
+					//$('#button-cart').button('loading');
+				},
+				complete: function() {
+					//$('#button-cart').button('reset');
+				},
+				success: function(json) {
+					console.log(json);
+					if(json['success']){
+						$('#appended').load('index.php?route=extension/purpletree_multivendor/multivendor/pos.getcart&language={{ language }}');
+					}
+					
+				},
+				error: function(xhr, ajaxOptions, thrownError) {
+					console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+				}
+			});
+		}
 	}
 }
 </script>
