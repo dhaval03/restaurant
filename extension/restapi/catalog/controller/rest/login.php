@@ -14,7 +14,7 @@
  */
  
 namespace Opencart\Catalog\Controller\Extension\RestApi\Rest;
-require_once(DIR_SYSTEM . 'engine/restcontroller.php');
+require_once(DIR_EXTENSION . 'restapi/system/engine/restcontroller.php');
 
 class Login extends \RestController
 {
