@@ -263,9 +263,9 @@ class Cart extends \RestController
                     'total' => &$total
                 );
 
-                $sort_order = array();
+              /*  $sort_order = array();
 
-                $results = $this->model_setting_extension->getExtensions('total');
+                $results = $this->model_setting_extension->getExtensionsByType('total');
 
                 foreach ($results as $key => $value) {
                     $sort_order[$key] = $this->config->get('total_' . $value['code'] . '_sort_order');
@@ -278,7 +278,18 @@ class Cart extends \RestController
                         $this->load->model('extension/total/' . $result['code']);
                         $this->{'model_extension_total_' . $result['code']}->getTotal($total_data);
                     }
-                }
+                }*/
+				$data['modules'] = [];
+
+				$extensions = $this->model_setting_extension->getExtensionsByType('total');
+
+				foreach ($extensions as $extension) {
+					 $result = $this->load->controller('extension/' . $extension['extension'] . '/total/' . $extension['code']);
+
+					if (!$result instanceof \Exception) {
+						$data['modules'][] = $result;
+					}
+				}
 
                 $sort_order = array();
 
@@ -307,7 +318,7 @@ class Cart extends \RestController
 
             $data['has_shipping'] = (int)$this->cart->hasShipping();
             $data['has_download'] = (int)$this->cart->hasDownload();
-            $data['has_recurring_products'] = $this->cart->hasRecurringProducts();
+            //$data['has_recurring_products'] = $this->cart->hasRecurringProducts();
 
             $data['currency'] = array(
                 'currency_id'   => $this->currency->getId($this->currency->getRestCurrencyCode()),
