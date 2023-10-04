@@ -14,18 +14,12 @@
 namespace Opencart\Catalog\Controller\Extension\RestApi\Rest;
 require_once(DIR_EXTENSION . 'restapi/system/engine/restcontroller.php');
 
-
-class Cart extends \RestController
-{
-
-
+class Cart extends \RestController{
+	
     private $error = array();
-
-
-    public function cart()
-    {
-
-		//echo "yes";exit;
+	
+    public function cart(){
+		
         $this->checkPlugin();
 
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -49,12 +43,10 @@ class Cart extends \RestController
                 $this->deleteCartItem($post);
             }
         }
-
         return $this->sendResponse();
     }
 
-    public function getCart()
-    {
+    public function getCart() {
 
         $this->language->load('checkout/cart');
         $this->language->load('restapi/rest_api');
@@ -70,7 +62,7 @@ class Cart extends \RestController
             $points_total = 0;
 
             $products = $this->cart->getProducts();
-
+            
             foreach ($products as $product) {
                 if ($product['points']) {
                     $points_total += $product['points'];
@@ -120,7 +112,7 @@ class Cart extends \RestController
                 }
 
                 if ($product['image']) {
-                    $image = $this->model_tool_image->resize($product['image'], $this->config->get('config_shopping_cart_rest_api_image_width'), $this->config->get('config_shopping_cart_rest_api_image_height'));
+                    $image = $this->model_tool_image->resize($product['image'], $this->config->get('config_image_cart_width'), $this->config->get('config_image_cart_height'));
                 } else {
                     $image = '';
                 }
@@ -160,10 +152,9 @@ class Cart extends \RestController
                     $total_raw = 0;
                 }
 
-
                 $recurring = '';
 
-                if ($product['recurring']) {
+                if (!empty($product['recurring']) && isset($product['recurring'])) {
                     $frequencies = array(
                         'day'        => $this->language->get('text_day'),
                         'week'       => $this->language->get('text_week'),
@@ -201,7 +192,7 @@ class Cart extends \RestController
                     'total_raw' => $total_raw
                 );
             }
-
+            
             // Gift Voucher
             $data['vouchers'] = array();
 
@@ -308,8 +299,6 @@ class Cart extends \RestController
                         'value' => $t['value']
                     );
                 }
-
-
             }
 
             $data['total'] = sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total, $this->currency->getRestCurrencyCode()));
@@ -329,15 +318,12 @@ class Cart extends \RestController
             );
 
             $this->json["data"] = $data;
-
         }
     }
 
 
-    private function addItemCart($data)
-    {
+    private function addItemCart($data){
 
-		//echo "yes";exit;
         $this->language->load('checkout/cart');
 
         if (isset($data['product_id'])) {
@@ -357,7 +343,6 @@ class Cart extends \RestController
                 $quantity = 1;
                 $data['quantity'] = 1;
             }
-
 
             if (isset($data['option'])) {
                 $option = array_filter($data['option']);
