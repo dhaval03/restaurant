@@ -61,14 +61,14 @@ class Login extends \RestController
                 $this->load->model('account/address');
 
                 if ($this->config->get('config_tax_customer') == 'payment') {
-					$payment_address = $this->model_account_address->getAddress($this->customer->getAddressId());
+					$payment_address = $this->model_account_address->getAddress($this->customer->getId(),$this->customer->getAddressId());
 					if(count($payment_address)>0){
 						$this->session->data['payment_address'] = $payment_address;
 					}
                 }
 
                 if ($this->config->get('config_tax_customer') == 'shipping') {
-					$shipping_address = $this->model_account_address->getAddress($this->customer->getAddressId());
+					$shipping_address = $this->model_account_address->getAddress($this->customer->getId(),$this->customer->getAddressId());
 					if(count($shipping_address)>0){
 						$this->session->data['shipping_address'] = $shipping_address;
 					}
