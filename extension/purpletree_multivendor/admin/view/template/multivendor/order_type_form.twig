@@ -50,6 +50,29 @@
 												</div>
 										</div>
 									</div>
+									{% if ordertypes %}
+							{% for ordertype in ordertypes %}
+										<div class="pts-col-sm-6">
+											<div class="pts-col-sm-12 pts-btn-group"  data-toggle="buttons">
+											  <label class="pts-btn btn-primary active col-sm-4" id="option1">
+												<input type="radio" name="options" checked> Dining
+											  </label>
+											  <label class="pts-btn btn-primary col-sm-4" id="option2">
+												<input type="radio" name="options"> Delivery
+											  </label>
+											  <label class="pts-btn btn-primary col-sm-4" id="option3">
+												<input type="radio" name="options"> Pickup
+											  </label>
+											</div><br><br>
+											<div id="myimageDiv" style="margin-left:19px;">
+												<i class="myimage1 fa fa-table fa-3x" alt="" width="50" height="50"></i>
+												<i class="myimage2 fa fa-user fa-3x" disabled></i>
+												<!--<img class="myimage2 fa fa-user" class="fa fa-user"   alt="" width="50" height="50" disabled />-->
+											</div>
+										<br>
+										</div>
+										{% endfor %}
+									{% endif %}
 								</div>
 								{% endfor %}
 							</div>

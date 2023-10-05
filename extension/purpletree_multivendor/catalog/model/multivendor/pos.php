@@ -3,7 +3,7 @@ namespace Opencart\Catalog\Model\Extension\PurpletreeMultivendor\Multivendor;
 class Pos extends \Opencart\System\Engine\Model {	
 	function getPos($category_id,$filter){
 		//echo $filter;exit;
-		$sql ="SELECT * FROM `product` p LEFT JOIN `product_description` pd ON (p.`product_id` = pd.`product_id`) LEFT JOIN `product_to_category` pc ON (p.`product_id` = pc.`product_id`) WHERE pc.`category_id` = '".$category_id."'customer_id= '".(int)$this->customer->getId()."'";
+		$sql ="SELECT * FROM `product` p LEFT JOIN `product_description` pd ON (p.`product_id` = pd.`product_id`) LEFT JOIN `product_to_category` pc ON (p.`product_id` = pc.`product_id`) WHERE pc.`category_id` = '".$category_id."' AND customer_id= '".(int)$this->customer->getId()."'";
 		if (!empty($filter)) {
 			$sql .= " AND ((pd.`name` LIKE '" . $this->db->escape((string)$filter . '%') . "') OR (p.`model` LIKE '" . $this->db->escape((string)$filter . '%') . "'))";
 		}
@@ -292,6 +292,16 @@ class Pos extends \Opencart\System\Engine\Model {
 			//}
 		}
 		return $data;
+	}
+	public function remove(int $cart_id): void {
+		$this->db->query("DELETE FROM `" . DB_PREFIX . "cart` WHERE `cart_id` = '" . (int)$cart_id . "' AND `api_id` = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND `customer_id` = '" . (int)$this->customer->getId() . "' AND `session_id` = '" . $this->db->escape($this->session->getId()) . "'");
+
+		unset($this->data[$cart_id]);
+	}
+	public function getOrderTypes(){
+		$query = $this->db->query("SELECT * FROM ". DB_PREFIX ."order_type ORDER BY order_type_id ASC");
+			
+		return $query->rows;
 	}
 }
 ?>

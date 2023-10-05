@@ -1,5 +1,4 @@
 {{ header }}
-
 <div class="pts-container container">
 <div class="pts-row d-flex row">{{ column_left }}
 	<div id="content" class="pts-col-sm-9 col-sm-9 pts-col-md-9 col-md-9 pts-col-lg-10 col-lg-10 pts-col-xs-12 col-xs-12"> <div class="page-header">
@@ -43,19 +42,19 @@
 								</td>
 								<td class="pts-col-sm-6">
 									<div class="pts-col-sm-12 pts-btn-group"  data-toggle="buttons">
-									  <label class="pts-btn btn-primary active col-sm-4" id="option1">
-										<input type="radio" name="options" checked> Dining
-									  </label>
-									  <label class="pts-btn btn-primary col-sm-4" id="option2">
-										<input type="radio" name="options"> Delivery
-									  </label>
-									  <label class="pts-btn btn-primary col-sm-4" id="option3">
-										<input type="radio" name="options"> Pickup
-									  </label>
+									{% if ordertypes %}
+										{% for ordertype in ordertypes %}
+										<label class="pts-btn btn-primary col-sm-4 {{ ordertype.name|upper }}" onclick="getOrderType('{{ ordertype.name|upper }}')">{{ordertype.name}}
+										</label>
+										<input class="name" type="hidden" value="{{ordertype.name}}"/>
+										{% endfor %}
+									{% endif %}	
+									 
 									</div><br><br>
-									<div id="myimageDiv" style="margin-left:15px";>
-										<img class="myimage1 " src="{{image1}}" alt="" width="50" height="50" />
-										<img class="myimage2" src="{{image2}}" alt="" width="50" height="50" disabled />
+									<div id="myimageDiv" style="margin-left:19px;">
+										<i id="myicon" class="fa fa-table fa-3x" alt="" ></i>
+										<i class="myimage2 fa fa-user fa-3x"></i>
+										<!--<img class="myimage2 fa fa-user" class="fa fa-user"   alt="" width="50" height="50" disabled />-->
 									</div>
 									<br>
 									<div id="appended">
@@ -115,23 +114,13 @@
 }
 </style>
 <style>
-.myimage
-{
+.myimage{
 	cursor: not-allowed;
 }
 </style>
 <script>
 $( document ).ready(function() {
-	$("#option1").click(function(){
-	$(".myimage1").removeClass('myimage');
-	});
-	$("#option2").click(function(){	
-		$(".myimage1").addClass('myimage');
-	});
-	$("#option3").click(function(){
-		$(".myimage1").addClass('myimage');
-	});
-	
+	$('#myimageDiv').hide();
 	$('.categories').removeClass("active");
 	$(".ul_categories").each(function(){
        $(this).find('.categories').first().addClass("active");
@@ -169,6 +158,19 @@ $( document ).ready(function() {
 	});
 	
 });
+
+//
+
+function getOrderType(name){
+	$('#myimageDiv').show();
+	if(name == 'DINING'){
+		$(".myimage1").addClass('myimage');
+		$("#myicon").removeClass('myimage');
+	}
+	if(name == 'DELIVERY' || name == 'PICKUP'){
+		$("#myicon").addClass('myimage');
+	}
+}
 var $products = {};
 function getCategorieProducts(category_id){  			
 	$("#categorie_products").empty();
@@ -190,6 +192,28 @@ function getCategorieProducts(category_id){
 						$.each(json['rt_products'],function(index, value){
 							$products[value['product_id']] = value;
 							html += '<div class="col-md-6 product_img" onclick="getProductData('+value['product_id']+','+value['options'].length+'); this.onclick=null;"><img src="'+value['thumb']+'" alt="" width="60" height="60" style="padding-top: 10px"; title=""><br>'+value['name']+'</div>';
+							$('#appended').empty();
+							$.ajax({
+								url: 'index.php?route=checkout/cart.add&language={{ language }}',
+								type: 'post',
+								data: 'product_id='+value['product_id']+'&quantity=4',
+								dataType: 'json',
+								contentType: 'application/x-www-form-urlencoded',
+								cache: false,
+								processData: false,
+								beforeSend: function() {
+									//$('#button-cart').button('loading');
+								},
+								complete: function() {
+									//$('#button-cart').button('reset');
+								},
+								success: function(json) {
+									console.log(json);
+									if(json['success']){
+										$('#appended').load('index.php?route=extension/purpletree_multivendor/multivendor/pos.getcart&language={{ language }}');
+									}					
+								}
+							});
 						});
 					}
 					$("#categorie_products").append(html);
@@ -243,16 +267,18 @@ function getProductData(product_id,options_length){
 						contentType: 'application/x-www-form-urlencoded',
 						cache: false,
 						processData: false,
-						beforeSend: function() {
+						/*beforeSend: function() {
 							//$('#button-cart').button('loading');
 						},
 						complete: function() {
 							//$('#button-cart').button('reset');
-						},
+						},*/
 						success: function(json) {
-							console.log(json);
 							if(json['success']){
 								$('#appended').load('index.php?route=extension/purpletree_multivendor/multivendor/pos.getcart&language={{ language }}');
+								$('.jxsuccess').html(html);
+								$('#exampleModal').modal('toggle');
+								
 							}
 							
 						},
@@ -284,8 +310,7 @@ function getProductData(product_id,options_length){
 					console.log(json);
 					if(json['success']){
 						$('#appended').load('index.php?route=extension/purpletree_multivendor/multivendor/pos.getcart&language={{ language }}');
-					}
-					
+					}					
 				},
 				error: function(xhr, ajaxOptions, thrownError) {
 					console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
