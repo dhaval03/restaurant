@@ -32,6 +32,7 @@ class Login extends \RestController
             $post = $this->getPost();
 
             $this->language->load('checkout/checkout');
+			$this->language->load('account/login');
             if ($this->customer->isLogged()) {
                 $this->json['error'][] = "User is logged.";
                 $this->statusCode = 400;
