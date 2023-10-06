@@ -68,7 +68,7 @@
 			  {% endif %}
             {% endfor %}
 			<tr>
-                <td class="text-center"  colspan="4" onclick="confirmOrder({{ vendor_categorie.category_id }})"><button type="submit" data-bs-toggle="tooltip" class="btn btn-primary">Confirm</button></td>
+                <td class="text-center"  colspan="4"><button type="button" class="btn btn-primary" onclick="confirmOrder()">Confirm</button></td>
             </tr>
         </table>
 		
@@ -93,14 +93,4 @@
     {% endif %}
   </ul>
 </div>
-<script>
-/**function confirmOrder(){
-	$("confirm").click(function(){
-	  alert("The paragraph was clicked.");
-	}); 
-}*/
-$(".confirmOrder").click(function(){
-	alert();
-}
-</script>
 
