@@ -11,6 +11,7 @@ class Pos extends \Opencart\System\Engine\Model {
 				
 		return $query->rows;
 	}
+	
 	public function getProducts($product_id): array {
 		$cart_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "cart` WHERE `api_id` = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND `customer_id` = '" . (int)$this->customer->getId() . "' AND `session_id` = '" . $this->db->escape($this->session->getId()) . "' AND product_id = ".$product_id);
 		$data = array();
@@ -293,15 +294,48 @@ class Pos extends \Opencart\System\Engine\Model {
 		}
 		return $data;
 	}
+	
 	public function remove(int $cart_id): void {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "cart` WHERE `cart_id` = '" . (int)$cart_id . "' AND `api_id` = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND `customer_id` = '" . (int)$this->customer->getId() . "' AND `session_id` = '" . $this->db->escape($this->session->getId()) . "'");
 
 		unset($this->data[$cart_id]);
 	}
+	
 	public function getOrderTypes(){
 		$query = $this->db->query("SELECT * FROM ". DB_PREFIX ."order_type ORDER BY order_type_id ASC");
 			
 		return $query->rows;
 	}
+	
+	public function getMethods(array $payment_address = []): array {
+		$method_data = [];
+
+		$this->load->model('setting/extension');
+
+		$results = $this->model_setting_extension->getExtensionsByType('payment');
+
+		foreach ($results as $result) {
+			if ($this->config->get('payment_' . $result['code'] . '_status')) {
+				$this->load->model('extension/' . $result['extension'] . '/payment/' . $result['code']);
+
+				$payment_methods = $this->{'model_extension_' . $result['extension'] . '_payment_' . $result['code']}->getMethods($payment_address);
+
+				if ($payment_methods) {
+					$method_data[$result['code']] = $payment_methods;
+				}
+			}
+		}
+
+		$sort_order = [];
+
+		foreach ($method_data as $key => $value) {
+			$sort_order[$key] = $value['sort_order'];
+		}
+
+		array_multisort($sort_order, SORT_ASC, $method_data);
+
+		return $method_data;
+	}
+
 }
 ?>

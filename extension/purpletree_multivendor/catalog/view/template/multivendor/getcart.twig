@@ -33,13 +33,12 @@
               <td class="text-end">{{ product.total }}</td>
 			  
               <td class="text-end">
-                <form action="{{ product_remove }}" method="post" data-oc-toggle="ajax" data-oc-load="{{ list }}" data-oc-target="#header-cart">
+                <form action="{{ product_remove }}" method="post">
                   <input type="hidden" name="key" value="{{ product.cart_id }}">
                   <button type="submit" data-bs-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa-solid fa-circle-xmark"></i></button>
                 </form>
               </td>
-            </tr>
-			
+            </tr>			
           {% endfor %}
 
           {% for voucher in vouchers %}
@@ -69,7 +68,9 @@
             {% endfor %}
 			<tr>
                 <td class="text-center"  colspan="4"><button type="button" class="btn btn-primary" onclick="confirmOrder()">Confirm</button></td>
+				
             </tr>
+			
         </table>
 		
         <!--<div>

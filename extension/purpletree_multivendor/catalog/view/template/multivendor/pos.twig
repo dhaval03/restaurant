@@ -238,23 +238,94 @@ function getCategorieProducts(category_id){
 							html += '<div class="col-md-6 product_img" onclick="getProductData('+value['product_id']+','+value['options'].length+'); this.onclick=null;"><img src="'+value['thumb']+'" alt="" width="60" height="60" style="padding-top: 10px"; title=""><br>'+value['name']+'</div>';
 							$('#appended').empty();
 							$.ajax({
-								url: 'index.php?route=checkout/cart.add&language={{ language }}',
+								url: 'index.php?route=extension/purpletree_multivendor/multivendor/pos|cartClear&language={{ language }}',
 								type: 'post',
-								data: 'product_id='+value['product_id']+'&quantity=4',
 								dataType: 'json',
-								contentType: 'application/x-www-form-urlencoded',
-								cache: false,
-								processData: false,
-								beforeSend: function() {
-									//$('#button-cart').button('loading');
-								},
-								complete: function() {
-									//$('#button-cart').button('reset');
-								},
 								success: function(json) {
-									console.log(json);
 									if(json['success']){
-										$('#appended').load('index.php?route=extension/purpletree_multivendor/multivendor/pos.getcart&language={{ language }}');
+										$.ajax({
+											url: 'index.php?route=checkout/cart.add&language={{ language }}',
+											type: 'post',
+											data: 'product_id='+value['product_id']+'&quantity=4',
+											dataType: 'json',
+											contentType: 'application/x-www-form-urlencoded',
+											cache: false,
+											processData: false,
+											beforeSend: function() {
+												//$('#button-cart').button('loading');
+											},
+											complete: function() {
+												//$('#button-cart').button('reset');
+											},
+											success: function(json) {
+												console.log(json);
+												if(json['success']){
+													$('#appended').load('index.php?route=extension/purpletree_multivendor/multivendor/pos.getcart&language={{ language }}');
+													
+													$.ajax({
+														url: 'index.php?route=checkout/payment_method.getMethods&language={{ language }}',
+														dataType: 'json',
+														success: function(json) {
+															//alert(JSON.stringify(json['payment_methods']));
+															if (json['payment_methods']) {
+																$('#modal-payment').remove();
+
+																html = '<div id="modal-payment" class="modal">';
+																html += '  <div class="modal-dialog modal-dialog-centered">';
+																html += '    <div class="modal-content">';
+																html += '      <div class="modal-header">';
+																html += '        <h5 class="modal-title"><i class="fa fa-credit-card"></i> {{ text_payment_method|escape('js') }}</h5>';
+																html += '        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>';
+																html += '      </div>';
+																html += '      <div class="modal-body">';
+																html += '        <form id="form-payment-method">';
+																html += '          <p>{{ text_payment|escape('js') }}</p>';
+
+																for (i in json['payment_methods']) {
+																	html += '<p><strong>' + json['payment_methods'][i]['name'] + '</strong></p>';
+
+																	if (!json['payment_methods'][i]['error']) {
+																		for (j in json['payment_methods'][i]['option']) {
+																			html += '<div class="form-check">';
+
+																			var code = i + '-' + j.replaceAll('_', '-');
+
+																			html += '<input type="radio" name="payment_method" value="' + json['payment_methods'][i]['option'][j]['code'] + '" id="input-payment-method-' + code + '"';
+
+																			if (json['payment_methods'][i]['option'][j]['code'] == $('#input-payment-code').val()) {
+																				html += ' checked';
+																			}
+
+																			html += '/>';
+																			html += '  <label for="input-payment-method-' + code + '">' + json['payment_methods'][i]['option'][j]['name'] + '</label>';
+																			html += '</div>';
+																		}
+																	} else {
+																		html += '<div class="alert alert-danger">' + json['payment_methods'][i]['error'] + '</div>';
+																	}
+																}
+
+																html += '          <div class="text-end">';
+																html += '            <button type="submit" id="button-payment-method" class="btn btn-primary">{{ button_continue|escape('js') }}</button>';
+																html += '          </div>';
+																html += '        </form>';
+																html += '      </div>';
+																html += '    </div>';
+																html += '  </div>';
+																html += '</div>';
+
+																$('body').append(html);
+
+																$('#modal-payment').modal('show');
+															}
+														},
+														error: function(xhr, ajaxOptions, thrownError) {
+															console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+														}
+													});
+												}					
+											}
+										});
 									}					
 								}
 							});

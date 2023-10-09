@@ -72,6 +72,9 @@ class PaymentMethod extends \Opencart\System\Engine\Controller {
 				}
 
 				// Validate shipping method
+				//echo "<pre>";
+				//print_r($this->session->data['shipping_method']);
+//echo $this->session->data['shipping_method'];exit;
 				if (!isset($this->session->data['shipping_method'])) {
 					$json['error'] = $this->language->get('error_shipping_method');
 				}
