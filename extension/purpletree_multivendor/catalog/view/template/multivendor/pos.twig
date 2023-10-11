@@ -121,6 +121,7 @@
 </style>
 <script>
 $( document ).ready(function() {
+	$('.btn_confirm').remove();
 	$('#myimageDiv').hide();
 	$('.categories').removeClass("active");
 	$(".ul_categories").each(function(){
@@ -129,6 +130,8 @@ $( document ).ready(function() {
 	active_category = $('.ul_categories li.active').data('id');
 	if(active_category > 0){getCategorieProducts(active_category);}
 	$('.getcategorie').val(active_category);
+	
+	// Start Search Products //
 	$("#search_products").on('change',function(e){		
 		var categorie = $('.getcategorie').val();
 		if(categorie > 0){
@@ -157,7 +160,7 @@ $( document ).ready(function() {
 			alert('Categories must be seletced!');
 		}
 	});
-	
+	// End Search Products //
 });
 
 //Start ConfirmOrder Button //
@@ -205,6 +208,7 @@ function confirmOrder(){
 }
 // End ConfirmOrder Button //
 
+// Start Button enable/disabled //
 function getOrderType(name){
 	$('#myimageDiv').show();
 	if(name == 'DINING'){
@@ -215,8 +219,12 @@ function getOrderType(name){
 		$("#myicon").addClass('myimage');
 	}
 }
+// End Button enable/disabled //
+
+// Start Fatch Products //
 var $products = {};
-function getCategorieProducts(category_id){  			
+function getCategorieProducts(category_id){  	
+		
 	$("#categorie_products").empty();
 	if(category_id > 0){
 		$('.categories').removeClass("pts-btn btn-primary active");
@@ -251,78 +259,10 @@ function getCategorieProducts(category_id){
 											contentType: 'application/x-www-form-urlencoded',
 											cache: false,
 											processData: false,
-											beforeSend: function() {
-												//$('#button-cart').button('loading');
-											},
-											complete: function() {
-												//$('#button-cart').button('reset');
-											},
 											success: function(json) {
-												console.log(json);
 												if(json['success']){
 													$('#appended').load('index.php?route=extension/purpletree_multivendor/multivendor/pos.getcart&language={{ language }}');
-													
-													$.ajax({
-														url: 'index.php?route=checkout/payment_method.getMethods&language={{ language }}',
-														dataType: 'json',
-														success: function(json) {
-															//alert(JSON.stringify(json['payment_methods']));
-															if (json['payment_methods']) {
-																$('#modal-payment').remove();
-
-																html = '<div id="modal-payment" class="modal">';
-																html += '  <div class="modal-dialog modal-dialog-centered">';
-																html += '    <div class="modal-content">';
-																html += '      <div class="modal-header">';
-																html += '        <h5 class="modal-title"><i class="fa fa-credit-card"></i> {{ text_payment_method|escape('js') }}</h5>';
-																html += '        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>';
-																html += '      </div>';
-																html += '      <div class="modal-body">';
-																html += '        <form id="form-payment-method">';
-																html += '          <p>{{ text_payment|escape('js') }}</p>';
-
-																for (i in json['payment_methods']) {
-																	html += '<p><strong>' + json['payment_methods'][i]['name'] + '</strong></p>';
-
-																	if (!json['payment_methods'][i]['error']) {
-																		for (j in json['payment_methods'][i]['option']) {
-																			html += '<div class="form-check">';
-
-																			var code = i + '-' + j.replaceAll('_', '-');
-
-																			html += '<input type="radio" name="payment_method" value="' + json['payment_methods'][i]['option'][j]['code'] + '" id="input-payment-method-' + code + '"';
-
-																			if (json['payment_methods'][i]['option'][j]['code'] == $('#input-payment-code').val()) {
-																				html += ' checked';
-																			}
-
-																			html += '/>';
-																			html += '  <label for="input-payment-method-' + code + '">' + json['payment_methods'][i]['option'][j]['name'] + '</label>';
-																			html += '</div>';
-																		}
-																	} else {
-																		html += '<div class="alert alert-danger">' + json['payment_methods'][i]['error'] + '</div>';
-																	}
-																}
-
-																html += '          <div class="text-end">';
-																html += '            <button type="submit" id="button-payment-method" class="btn btn-primary">{{ button_continue|escape('js') }}</button>';
-																html += '          </div>';
-																html += '        </form>';
-																html += '      </div>';
-																html += '    </div>';
-																html += '  </div>';
-																html += '</div>';
-
-																$('body').append(html);
-
-																$('#modal-payment').modal('show');
-															}
-														},
-														error: function(xhr, ajaxOptions, thrownError) {
-															console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-														}
-													});
+													getPaymentMethods();
 												}					
 											}
 										});
@@ -332,11 +272,15 @@ function getCategorieProducts(category_id){
 						});
 					}
 					$("#categorie_products").append(html);
+					
 				}	
 			}
 		}); 
 	}
 }
+// End Fatch Products //
+
+// Start Option Products //
 function getProductData(product_id,options_length){
 	if(product_id > 0){
 		if(options_length>0){
@@ -382,20 +326,12 @@ function getProductData(product_id,options_length){
 						contentType: 'application/x-www-form-urlencoded',
 						cache: false,
 						processData: false,
-						/*beforeSend: function() {
-							//$('#button-cart').button('loading');
-						},
-						complete: function() {
-							//$('#button-cart').button('reset');
-						},*/
 						success: function(json) {
 							if(json['success']){
 								$('#appended').load('index.php?route=extension/purpletree_multivendor/multivendor/pos.getcart&language={{ language }}');
 								$('.jxsuccess').html(html);
 								$('#exampleModal').modal('toggle');
-								
-							}
-							
+							}							
 						},
 						error: function(xhr, ajaxOptions, thrownError) {
 							console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
@@ -434,5 +370,38 @@ function getProductData(product_id,options_length){
 		}
 	}
 }
+// End Option Products //
+
+//Start order confirm //
+function getPaymentMethods(){
+	$.ajax({
+		url: 'index.php?route=checkout/payment_method.getMethods&language={{ language }}',
+		dataType: 'json',
+		success: function(json) {
+			$('#paymentmethods').remove();
+			if (json['payment_methods']) {
+				html1 = '<td colspan="4">';
+				for (i in json['payment_methods']) {
+					if (!json['payment_methods'][i]['error']) {
+						for (j in json['payment_methods'][i]['option']) {
+							var code = i + '-' + j.replaceAll('_', '-');
+							html1 += '<input type="radio" name="payment_method" value="' + json['payment_methods'][i]['option'][j]['code'] + '" id="input-payment-method-' + code + '"';
+							if (json['payment_methods'][i]['option'][j]['code'] == $('#input-payment-code').val()) {
+								html1 += ' checked';
+							}
+							html1 += '/>';
+							html1 += '  <label for="input-payment-method-' + code + '">' + json['payment_methods'][i]['option'][j]['name'] + '</label><br>';
+						}
+					} else {
+						html1 += '<div class="alert alert-danger">' + json['payment_methods'][i]['error'] + '</div>';
+					}
+				}
+				html1 += '</td>';
+				$('#paymentmethods').append(html1);
+			}
+		}
+	});
+}
+//End order confirm //
 </script>
 {{ footer }}
