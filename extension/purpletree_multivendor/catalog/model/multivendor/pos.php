@@ -311,10 +311,10 @@ class Pos extends \Opencart\System\Engine\Model {
 		$method_data = [];
 
 		$this->load->model('setting/extension');
-
+echo "yes";exit;
 		$results = $this->model_setting_extension->getExtensionsByType('payment');
-
-		foreach ($results as $result) {
+		print_r($results);
+		/*foreach ($results as $result) {
 			if ($this->config->get('payment_' . $result['code'] . '_status')) {
 				$this->load->model('extension/' . $result['extension'] . '/payment/' . $result['code']);
 
@@ -334,7 +334,7 @@ class Pos extends \Opencart\System\Engine\Model {
 
 		array_multisort($sort_order, SORT_ASC, $method_data);
 
-		return $method_data;
+		return $method_data;*/
 	}
 
 }
