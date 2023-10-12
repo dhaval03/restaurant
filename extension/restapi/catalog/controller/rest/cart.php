@@ -496,7 +496,6 @@ class Cart extends \RestController{
 
     private function updateCartQuantity($post)
     {
-
         if (isset($post['quantity']) && isset($post['key'])) {
 
             $this->cart->update($post['key'], (int)$post['quantity']);
@@ -506,6 +505,23 @@ class Cart extends \RestController{
             unset($this->session->data['payment_method']);
             unset($this->session->data['payment_methods']);
             unset($this->session->data['reward']);
+			
+			// Totals
+            $this->load->model('setting/extension');
+
+            $totals = array();
+            $taxes = $this->cart->getTaxes();
+            $total = 0;
+
+            // Because __call can not keep var references so we put them into an array.
+            $this->load->model('checkout/cart');
+
+			($this->model_checkout_cart->getTotals)($totals, $taxes, $total);
+
+            $this->json["data"]['total'] = sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total, $this->currency->getRestCurrencyCode()));
+            $this->json["data"]['total_product_count'] = $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0);
+            $this->json["data"]['total_price'] = $this->currency->format($total, $this->currency->getRestCurrencyCode());
+			
         } else {
             $this->json['error'][] = "Quantity and key parameters are required";
             $this->statusCode = 400;
