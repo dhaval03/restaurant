@@ -134,7 +134,7 @@ class Cart extends \RestController{
 
                     $option_data[] = array(
                         'name' => $option['name'],
-                        'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value)
+                        'value' => (strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value)
                     );
                 }
 
@@ -248,57 +248,9 @@ class Cart extends \RestController{
 
             if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
 
-                $total_data = array(
-                    'totals' => &$totals,
-                    'taxes' => &$taxes,
-                    'total' => &$total
-                );
+                $this->load->model('checkout/cart');
 
-              /*  $sort_order = array();
-
-                $results = $this->model_setting_extension->getExtensionsByType('total');
-
-                foreach ($results as $key => $value) {
-                    $sort_order[$key] = $this->config->get('total_' . $value['code'] . '_sort_order');
-                }
-
-                array_multisort($sort_order, SORT_ASC, $results);
-
-                foreach ($results as $result) {
-                    if ($this->config->get('total_' . $result['code'] . '_status')) {
-                        $this->load->model('extension/total/' . $result['code']);
-                        $this->{'model_extension_total_' . $result['code']}->getTotal($total_data);
-                    }
-                }*/
-				$data['modules'] = [];
-
-				$extensions = $this->model_setting_extension->getExtensionsByType('total');
-
-				foreach ($extensions as $extension) {
-					 $result = $this->load->controller('extension/' . $extension['extension'] . '/total/' . $extension['code']);
-
-					if (!$result instanceof \Exception) {
-						$data['modules'][] = $result;
-					}
-				}
-
-                $sort_order = array();
-
-                foreach ($totals as $key => $value) {
-                    $sort_order[$key] = $value['sort_order'];
-                }
-
-                array_multisort($sort_order, SORT_ASC, $totals);
-
-                $data['totals'] = array();
-
-                foreach ($totals as $t) {
-                    $data['totals'][] = array(
-                        'title' => $t['title'],
-                        'text' => $this->currency->format($t['value'], $this->currency->getRestCurrencyCode()),
-                        'value' => $t['value']
-                    );
-                }
+				($this->model_checkout_cart->getTotals)($totals, $taxes, $total);
             }
 
             $data['total'] = sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total, $this->currency->getRestCurrencyCode()));
@@ -511,39 +463,9 @@ class Cart extends \RestController{
             $total = 0;
 
             // Because __call can not keep var references so we put them into an array.
-            $total_data = array(
-                'totals' => &$totals,
-                'taxes' => &$taxes,
-                'total' => &$total
-            );
+            $this->load->model('checkout/cart');
 
-
-            if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
-                $sort_order = array();
-
-                $results = $this->model_setting_extension->getExtensions('total');
-
-                foreach ($results as $key => $value) {
-                    $sort_order[$key] = $this->config->get('total_' . $value['code'] . '_sort_order');
-                }
-
-                array_multisort($sort_order, SORT_ASC, $results);
-
-                foreach ($results as $result) {
-                    if ($this->config->get('total_' . $result['code'] . '_status')) {
-                        $this->load->model('extension/total/' . $result['code']);
-                        $this->{'model_extension_total_' . $result['code']}->getTotal($total_data);
-                    }
-                }
-
-                $sort_order = array();
-
-                foreach ($totals as $key => $value) {
-                    $sort_order[$key] = $value['sort_order'];
-                }
-
-                array_multisort($sort_order, SORT_ASC, $totals);
-            }
+			($this->model_checkout_cart->getTotals)($totals, $taxes, $total);
 
             $this->json["data"]['total'] = sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total, $this->currency->getRestCurrencyCode()));
             $this->json["data"]['total_product_count'] = $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0);
@@ -875,7 +797,7 @@ class Cart extends \RestController{
 
         $country_info = $this->model_localisation_country->getCountry($post['country_id']);
 
-        if ($country_info && $country_info['postcode_required'] && (utf8_strlen(trim($post['postcode'])) < 2 || utf8_strlen(trim($post['postcode'])) > 10)) {
+        if ($country_info && $country_info['postcode_required'] && (strlen(trim($post['postcode'])) < 2 || strlen(trim($post['postcode'])) > 10)) {
             $this->json['error'][] = $this->language->get('error_postcode');
         }
 
