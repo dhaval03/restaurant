@@ -789,9 +789,6 @@ class Pos extends \Opencart\System\Engine\Controller {
 				}
 
 				// Validate shipping method
-				//echo "<pre>";
-				//print_r($this->session->data['shipping_method']);
-//echo $this->session->data['shipping_method'];exit;
 				if (!isset($this->session->data['shipping_method'])) {
 					$json['error'] = $this->language->get('error_shipping_method');
 				}
@@ -811,7 +808,7 @@ class Pos extends \Opencart\System\Engine\Controller {
 			$this->load->model('checkout/payment_method');
 
 			$payment_methods = $this->model_checkout_payment_method->getMethods($payment_address);
-
+			
 			if ($payment_methods) {
 				$json['payment_methods'] = $this->session->data['payment_methods'] = $payment_methods;
 			} else {

@@ -1,5 +1,3 @@
-
-
 <div class="dropdown d-grid">
   <!--<button type="button" data-bs-toggle="dropdown" class="btn btn-lg btn-inverse btn-block dropdown-toggle"><i class="fa-solid fa-cart-shopping"></i> {{ text_items }}</button>-->
     {% if products or vouchers %}
@@ -61,13 +59,14 @@
 			  {% if total.title == 'Total' %}
               <tr>
                 <td class="text-start" colspan="2"><strong>{{ total.title }}</strong></td>
-                <td class="text-end"><strong>{{ total.text }}</strong></td>
+                <td class="text-end" onload="getPaymentMethods();"><strong>{{ total.text }}</strong></td>
 				<td class="text-end"></td>
               </tr>
 			  {% endif %}
             {% endfor %}
-			<tr id="paymentmethods">
-                
+			<tr onload="paymentmethods();">
+                <td >
+                </td>
             </tr>
 			<tr class="btn_confirm">
                 <td class="text-center"  colspan="4"><button type="button" class="btn btn-primary" onclick="confirmOrder()">Confirm</button></td>
@@ -96,4 +95,8 @@
     {% endif %}
   </ul>
 </div>
+
+
+<script>
+</script>
 

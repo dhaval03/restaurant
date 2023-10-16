@@ -311,9 +311,9 @@ class Pos extends \Opencart\System\Engine\Model {
 		$method_data = [];
 
 		$this->load->model('setting/extension');
-echo "yes";exit;
+
 		$results = $this->model_setting_extension->getExtensionsByType('payment');
-		print_r($results);
+
 		/*foreach ($results as $result) {
 			if ($this->config->get('payment_' . $result['code'] . '_status')) {
 				$this->load->model('extension/' . $result['extension'] . '/payment/' . $result['code']);

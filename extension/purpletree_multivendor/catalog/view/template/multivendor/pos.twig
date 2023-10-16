@@ -193,7 +193,6 @@ function confirmOrder(){
 									//$('#button-cart').button('reset');
 								},
 								success: function(json) {
-									console.log(json);
 									if(json['success']){
 										$('#appended').load('index.php?route=extension/purpletree_multivendor/multivendor/pos.getcart&language={{ language }}');
 									}					
@@ -223,8 +222,7 @@ function getOrderType(name){
 
 // Start Fatch Products //
 var $products = {};
-function getCategorieProducts(category_id){  	
-		
+function getCategorieProducts(category_id){		
 	$("#categorie_products").empty();
 	if(category_id > 0){
 		$('.categories').removeClass("pts-btn btn-primary active");
@@ -245,35 +243,10 @@ function getCategorieProducts(category_id){
 							$products[value['product_id']] = value;
 							html += '<div class="col-md-6 product_img" onclick="getProductData('+value['product_id']+','+value['options'].length+')"><img src="'+value['thumb']+'" alt="" width="60" height="60" style="padding-top: 10px"; title=""><br>'+value['name']+'</div>';
 							$('#appended').empty();
-							/*$.ajax({
-								url: 'index.php?route=extension/purpletree_multivendor/multivendor/pos|cartClear&language={{ language }}',
-								type: 'post',
-								dataType: 'json',
-								success: function(json) {
-									if(json['success']){
-										$.ajax({
-											url: 'index.php?route=checkout/cart.add&language={{ language }}',
-											type: 'post',
-											data: 'product_id='+value['product_id']+'&quantity=4',
-											dataType: 'json',
-											contentType: 'application/x-www-form-urlencoded',
-											cache: false,
-											processData: false,
-											success: function(json) {
-												if(json['success']){
-													$('#appended').load('index.php?route=extension/purpletree_multivendor/multivendor/pos.getcart&language={{ language }}');
-													getPaymentMethods();
-												}					
-											}
-										});
-									}					
-								}
-							});*/
 						});
 					}
 					$("#categorie_products").append(html);
 					getCart();
-					
 				}	
 			}
 		}); 
@@ -283,13 +256,13 @@ function getCategorieProducts(category_id){
 
 function getCart(){
 	$('#appended').load('index.php?route=extension/purpletree_multivendor/multivendor/pos.getcart&language={{ language }}');
-	getPaymentMethods();
 }
 
 function addProductToCart(product_id,product_option_value_id,quantity){
+	alert(JSON.stringify(product_option_value_id));
 	options = '';
 	if(product_option_value_id){
-		options = '&product_option_value_id='+product_option_value_id;
+		options = '&option='+JSON.stringify(product_option_value_id);
 	}
 	$.ajax({
 		url: 'index.php?route=checkout/cart.add&language={{ language }}',
@@ -306,6 +279,7 @@ function addProductToCart(product_id,product_option_value_id,quantity){
 				$('#exampleModal').modal('hide');
 			}else{
 				//Display Errors
+				alert('Product Option Value');
 			}							
 		},
 		error: function(xhr, ajaxOptions, thrownError) {
@@ -410,13 +384,12 @@ function getProductData(product_id,options_length){
 // End Option Products //
 
 //Start order confirm  //
-function getPaymentMethods(){
-	console.log("Load : getPaymentMethods");
+function getPaymentMethods(){alert();
 	$.ajax({
 		url: 'index.php?route=extension/purpletree_multivendor/multivendor/pos.getMethods&language={{ language }}',
 		dataType: 'json',
 		success: function(json) {
-			$('#paymentmethods').remove();
+			$('.paymentmethods').remove();
 			if (json['payment_methods']) {
 				html1 = '<td colspan="4">';
 				for (i in json['payment_methods']) {
@@ -435,7 +408,8 @@ function getPaymentMethods(){
 					}
 				}
 				html1 += '</td>';
-				$('#paymentmethods').append(html1);
+				//alert(html1);
+				$('.paymentmethods').html(html1);
 			}
 		}
 	});
