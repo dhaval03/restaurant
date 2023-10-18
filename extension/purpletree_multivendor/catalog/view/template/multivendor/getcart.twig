@@ -59,15 +59,12 @@
 			  {% if total.title == 'Total' %}
               <tr>
                 <td class="text-start" colspan="2"><strong>{{ total.title }}</strong></td>
-                <td class="text-end" onload="getPaymentMethods();"><strong>{{ total.text }}</strong></td>
+                <td class="text-end"><strong>{{ total.text }}</strong></td>
 				<td class="text-end"></td>
               </tr>
 			  {% endif %}
             {% endfor %}
-			<tr onload="paymentmethods();">
-                <td >
-                </td>
-            </tr>
+			<tr class="paymentmethods" ></tr>
 			<tr class="btn_confirm">
                 <td class="text-center"  colspan="4"><button type="button" class="btn btn-primary" onclick="confirmOrder()">Confirm</button></td>
             </tr>
@@ -95,8 +92,39 @@
     {% endif %}
   </ul>
 </div>
-
-
 <script>
+
+getPaymentMethods();
+
+function getPaymentMethods(){
+	$.ajax({
+		url: 'index.php?route=extension/purpletree_multivendor/multivendor/pos.getMethods&language={{ language }}',
+		dataType: 'json',
+		success: function(json) {
+			$('.paymentmethods').html('');
+			if (json['payment_methods']) {
+				html1 = '<td colspan="4">';
+				for (i in json['payment_methods']) {
+					if (!json['payment_methods'][i]['error']) {
+						for (j in json['payment_methods'][i]['option']) {
+							var code = i + '-' + j.replaceAll('_', '-');
+							html1 += '<input type="radio" name="payment_method" value="' + json['payment_methods'][i]['option'][j]['code'] + '" id="input-payment-method-' + code + '"';
+							if (json['payment_methods'][i]['option'][j]['code'] == $('#input-payment-code').val()) {
+								html1 += ' checked';
+							}
+							html1 += '/>';
+							html1 += '  <label for="input-payment-method-' + code + '">' + json['payment_methods'][i]['option'][j]['name'] + '</label><br>';
+						}
+					} else {
+						html1 += '<div class="alert alert-danger">' + json['payment_methods'][i]['error'] + '</div>';
+					}
+				}
+				html1 += '</td>';
+				//alert(html1);
+				$('.paymentmethods').html(html1);
+			}
+		}
+	});
+}
 </script>
 

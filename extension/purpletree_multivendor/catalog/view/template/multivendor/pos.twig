@@ -258,11 +258,12 @@ function getCart(){
 	$('#appended').load('index.php?route=extension/purpletree_multivendor/multivendor/pos.getcart&language={{ language }}');
 }
 
-function addProductToCart(product_id,product_option_value_id,quantity){
-	alert(JSON.stringify(product_option_value_id));
+function addProductToCart(product_id,option,quantity){
 	options = '';
-	if(product_option_value_id){
-		options = '&option='+JSON.stringify(product_option_value_id);
+	if(option){
+		for(option_id in option){
+			options += '&option['+option_id+']='+option[option_id];
+		}
 	}
 	$.ajax({
 		url: 'index.php?route=checkout/cart.add&language={{ language }}',
@@ -279,6 +280,7 @@ function addProductToCart(product_id,product_option_value_id,quantity){
 				$('#exampleModal').modal('hide');
 			}else{
 				//Display Errors
+				console.log(json);
 				alert('Product Option Value');
 			}							
 		},
@@ -305,8 +307,8 @@ function getProductData(product_id,options_length){
 							$.each(json['product_options'],function(index, value){
 								$.each(value['product_option_value'],function(key, val){
 									html+='<div class="checkbox"><label>';
-									html+='<input type="checkbox" name="option[]" value="'+value['product_option_id']+'/'+val['product_option_value_id']+'"> '+val['name'];
-									html+='</label></div>';
+									html+='<input type="checkbox" name="option[]" value="'+val['product_option_value_id']+'"> '+val['name'];
+									html+='</label><input type="hidden" class="prod_option_'+val['product_option_value_id']+'" value="'+value['product_option_id']+'"></div>';
 								});
 							});
 						}
@@ -314,18 +316,13 @@ function getProductData(product_id,options_length){
 					}
 				}
 			});
-			$(".add").click(function(){
-				var chk_val = [];
+			$(".add").click(function(){	
+				var option = {};
 				$('input[type=checkbox]:checked').each(function(i){
-				  chk_val[i] = $(this).val();
+					var product_option = $('.prod_option_'+$(this).val()).val();
+					option[product_option] = $(this).val();
 				});
-				if(chk_val != ''){
-					var pro_options = {};
-					$(chk_val).each(function(key,value){
-						var arr = value.split('/');
-						pro_options[arr[0]] = arr[1];
-					});
-					var option = pro_options;
+				if(option != ''){
 					addProductToCart(product_id,option,1);
 					
 					/*$.ajax({
@@ -382,38 +379,5 @@ function getProductData(product_id,options_length){
 	}
 }
 // End Option Products //
-
-//Start order confirm  //
-function getPaymentMethods(){alert();
-	$.ajax({
-		url: 'index.php?route=extension/purpletree_multivendor/multivendor/pos.getMethods&language={{ language }}',
-		dataType: 'json',
-		success: function(json) {
-			$('.paymentmethods').remove();
-			if (json['payment_methods']) {
-				html1 = '<td colspan="4">';
-				for (i in json['payment_methods']) {
-					if (!json['payment_methods'][i]['error']) {
-						for (j in json['payment_methods'][i]['option']) {
-							var code = i + '-' + j.replaceAll('_', '-');
-							html1 += '<input type="radio" name="payment_method" value="' + json['payment_methods'][i]['option'][j]['code'] + '" id="input-payment-method-' + code + '"';
-							if (json['payment_methods'][i]['option'][j]['code'] == $('#input-payment-code').val()) {
-								html1 += ' checked';
-							}
-							html1 += '/>';
-							html1 += '  <label for="input-payment-method-' + code + '">' + json['payment_methods'][i]['option'][j]['name'] + '</label><br>';
-						}
-					} else {
-						html1 += '<div class="alert alert-danger">' + json['payment_methods'][i]['error'] + '</div>';
-					}
-				}
-				html1 += '</td>';
-				//alert(html1);
-				$('.paymentmethods').html(html1);
-			}
-		}
-	});
-}
-//End order confirm //
 </script>
 {{ footer }}
