@@ -16,12 +16,9 @@ require_once(DIR_EXTENSION . 'restapi/system/engine/restcontroller.php');
 
 class Register extends \RestController
 {
-
-    public function register()
+	public function register()
     {
-
-        $this->checkPlugin();
-
+		$this->checkPlugin();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             //add customer
             $post = $this->getPost();
@@ -33,17 +30,15 @@ class Register extends \RestController
 
         $this->sendResponse();
     }
-
-
-    public function registerCustomer($data)
+	public function registerCustomer($data)
     {
 			//echo'ff';exit;
         $this->language->load('checkout/checkout');
         $this->language->load('checkout/cart');
         $this->load->model('account/customer');
 
-
-        // Validate if customer is logged in.
+//echo $this->customer->isLogged();exit;
+        //Validate if customer is logged in.
         if ($this->customer->isLogged()) {
             $this->json['error'][] = "User is logged.";
             $this->statusCode = 400;
@@ -54,7 +49,7 @@ class Register extends \RestController
             // Validate minimum quantity requirments.
             $products = $this->cart->getProducts();
 
-            foreach ($products as $product) {
+            foreach ($products as $product) {//echo "yes";exit;
                 $product_total = 0;
 
                 foreach ($products as $product_2) {
@@ -186,7 +181,7 @@ class Register extends \RestController
                     // Default Payment Address
                     $this->load->model('account/address');
 
-                    $this->session->data['payment_address'] = $this->model_account_address->getAddress($this->customer->getAddressId());
+                    $this->session->data['payment_address'] = $this->model_account_address->getAddress($this->customer->getAddressId(),$this->customer->isLogged());
 
                     if (!empty($data['shipping_address'])) {
                         $this->session->data['shipping_address'] = $this->model_account_address->getAddress($this->customer->getAddressId());
