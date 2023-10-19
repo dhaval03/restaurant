@@ -162,7 +162,7 @@ class Pos extends \Opencart\System\Engine\Controller {
 				}
 				$json['rt_products'][] = array(
 					'product_id' => $result['product_id'],
-					'name'       => strip_tags(html_entity_decode($result['model']." - ".$result['name'], ENT_QUOTES, 'UTF-8')),
+					'name'       => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
 					'thumb'=>$thumb	
 				);
 			}				
@@ -240,7 +240,7 @@ class Pos extends \Opencart\System\Engine\Controller {
 				$json['rt_products'][] = array(
 					'product_id' => $result['product_id'],
 					'options' => $options,
-					'name'       => strip_tags(html_entity_decode($result['model']." - ".$result['name'], ENT_QUOTES, 'UTF-8')),
+					'name'       => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
 					'thumb'=>$thumb	
 				);
 			}				
@@ -257,7 +257,6 @@ class Pos extends \Opencart\System\Engine\Controller {
 				$options = array();
 				
 				$product_options = $this->model_catalog_product->getOptions($this->request->post['product_id']);
-				//print_r($product_options);exit;
 				if(!empty($product_options)){
 					foreach ($product_options as $product_option) {
 						$product_option_value_data = [];
@@ -288,6 +287,7 @@ class Pos extends \Opencart\System\Engine\Controller {
 							'required'             => $product_option['required']
 						];
 					}
+				//echo "<pre>";print_r($options);exit;
 					$json['success'] = true;
 					$json['product_options'] = $options;
 				}else{

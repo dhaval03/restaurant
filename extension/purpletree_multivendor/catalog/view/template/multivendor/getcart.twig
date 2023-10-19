@@ -93,9 +93,7 @@
   </ul>
 </div>
 <script>
-
 getPaymentMethods();
-
 function getPaymentMethods(){
 	$.ajax({
 		url: 'index.php?route=extension/purpletree_multivendor/multivendor/pos.getMethods&language={{ language }}',
@@ -120,7 +118,7 @@ function getPaymentMethods(){
 					}
 				}
 				html1 += '</td>';
-				//alert(html1);
+				alert(html1);
 				$('.paymentmethods').html(html1);
 			}
 		}

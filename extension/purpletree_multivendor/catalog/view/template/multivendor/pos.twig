@@ -87,7 +87,9 @@
 			<div class="form-group row  py-4">
 				<div class="col-sm-12 text-end">
 					<div id="product_options" style="height: 150px; overflow: auto;"></div>
-					<a onclick="$(this).parent().find(':checkbox').prop('checked', true);">Select all</a> / <a onclick="$(this).parent().find(':checkbox').prop('checked', false);">Unselect All</a>
+					<div style="margin-top:20px;">
+						<a onclick="$(this).parent().find(':checkbox').prop('checked', true);">Select all</a> / <a onclick="$(this).parent().find(':checkbox').prop('checked', false);">Unselect All</a>
+					</div>
 				</div>
 			</div>	
 		</div>
@@ -305,11 +307,13 @@ function getProductData(product_id,options_length){
 						html = '';
 						if(json['product_options']){
 							$.each(json['product_options'],function(index, value){
+								html += "<div><legend class='float-none'>"+value['name']+"</legend>";
 								$.each(value['product_option_value'],function(key, val){
 									html+='<div class="checkbox"><label>';
 									html+='<input type="checkbox" name="option[]" value="'+val['product_option_value_id']+'"> '+val['name'];
 									html+='</label><input type="hidden" class="prod_option_'+val['product_option_value_id']+'" value="'+value['product_option_id']+'"></div>';
 								});
+								html += "</div>";
 							});
 						}
 						$("#product_options").append(html);
@@ -324,57 +328,12 @@ function getProductData(product_id,options_length){
 				});
 				if(option != ''){
 					addProductToCart(product_id,option,1);
-					
-					/*$.ajax({
-						url: 'index.php?route=checkout/cart.add&language={{ language }}',
-						type: 'post',
-						data: 'product_option_value_id='+option+'&product_id='+product_id+'&quantity=4',
-						dataType: 'json',
-						contentType: 'application/x-www-form-urlencoded',
-						cache: false,
-						processData: false,
-						success: function(json) {
-							if(json['success']){
-								$('#appended').load('index.php?route=extension/purpletree_multivendor/multivendor/pos.getcart&language={{ language }}');
-								$('.jxsuccess').html(html);
-								$('#exampleModal').modal('toggle');
-							}							
-						},
-						error: function(xhr, ajaxOptions, thrownError) {
-							console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-						}
-					});*/
 				}else{
 					alert('Please must be select product option value!');
 				}
-			});
-				
+			});				
 		}else{
 			addProductToCart(product_id,false,1);
-			/*$.ajax({
-				url: 'index.php?route=checkout/cart.add&language={{ language }}',
-				type: 'post',
-				data: 'product_id='+product_id+'&quantity=1',
-				dataType: 'json',
-				contentType: 'application/x-www-form-urlencoded',
-				cache: false,
-				processData: false,
-				beforeSend: function() {
-					//$('#button-cart').button('loading');
-				},
-				complete: function() {
-					//$('#button-cart').button('reset');
-				},
-				success: function(json) {
-					console.log(json);
-					if(json['success']){
-						$('#appended').load('index.php?route=extension/purpletree_multivendor/multivendor/pos.getcart&language={{ language }}');
-					}					
-				},
-				error: function(xhr, ajaxOptions, thrownError) {
-					console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-				}
-			});*/
 		}
 	}
 }
