@@ -287,7 +287,7 @@ abstract class RestController extends \Opencart\System\Engine\Controller
             $this->tax->setShippingAddress($this->config->get('config_country_id'), $this->config->get('config_zone_id'));
         }
 
-        if (isset($this->session->data['payment_address'])) {
+        if (isset($this->session->data['payment_address']['country_id'])) {
             $this->tax->setPaymentAddress($this->session->data['payment_address']['country_id'], $this->session->data['payment_address']['zone_id']);
         } elseif ($this->config->get('config_tax_default') == 'payment') {
             $this->tax->setPaymentAddress($this->config->get('config_country_id'), $this->config->get('config_zone_id'));
