@@ -139,7 +139,7 @@ class Pos extends \Opencart\System\Engine\Controller {
 		}
 
 		$data['list'] = $this->url->link('common/cart.info', 'language=' . $this->config->get('config_language'));
-		$data['product_remove'] = $this->url->link('common/cart.removeProduct', 'language=' . $this->config->get('config_language'));
+		$data['product_remove'] = $this->url->link('extension/purpletree_multivendor/multivendor/pos.removeProduct', 'language=' . $this->config->get('config_language'));
 		$data['voucher_remove'] = $this->url->link('common/cart.removeVoucher', 'language=' . $this->config->get('config_language'));
 
 		$data['cart'] = $this->url->link('checkout/cart', 'language=' . $this->config->get('config_language'));
@@ -318,7 +318,8 @@ class Pos extends \Opencart\System\Engine\Controller {
 		if (!$json) {
 			$this->cart->remove($key);
 
-			$json['success'] = $this->language->get('text_remove');
+			$json['success'] = true;
+			$json['success_message'] = $this->language->get('text_remove');
 
 			unset($this->session->data['shipping_method']);
 			unset($this->session->data['shipping_methods']);

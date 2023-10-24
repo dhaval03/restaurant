@@ -1,17 +1,14 @@
 <div class="dropdown d-grid">
-  <!--<button type="button" data-bs-toggle="dropdown" class="btn btn-lg btn-inverse btn-block dropdown-toggle"><i class="fa-solid fa-cart-shopping"></i> {{ text_items }}</button>-->
     {% if products or vouchers %}
         <table class="table table-sm table-striped table-bordered">
-		 <tr>
-			  <td class="text-start"><strong>{{column_name}}</strong></td>
-			  <td class="text-start"><strong>{{column_quantity}}</strong></td>
-			  <td class="text-start"><strong>{{column_total}}</strong></td>
-		  </tr>
-          {% for product in products %}
-		  
+			<tr>
+				<td class="text-start"><strong>{{column_name}}</strong></td>
+				<td class="text-start"><strong>{{column_quantity}}</strong></td>
+				<td class="text-start"><strong>{{column_total}}</strong></td>
+			</tr>
+			{% for product in products %}
             <tr>
-              <!--<td class="text-center">{% if product.thumb %}<a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-thumbnail"/></a>{% endif %}</td>-->
-              <td class="text-start"><a href="{{ product.href }}">{{ product.name }}</a>
+				<td class="text-start"><a href="{{ product.href }}">{{ product.name }}</a>
                 {% if product.option %}
                   {% for option in product.option %}
                     <br/>
@@ -26,71 +23,37 @@
                   <br/>
                   <small> - {{ text_subscription }}: {{ product.subscription }}</small>
                 {% endif %}
-              </td>
-              <td class="text-end">x {{ product.quantity }}</td>
-              <td class="text-end">{{ product.total }}</td>
-			  
-              <td class="text-end">
-                <form action="{{ product_remove }}" method="post">
-                  <input type="hidden" name="key" value="{{ product.cart_id }}">
-                  <button type="submit" data-bs-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa-solid fa-circle-xmark"></i></button>
-                </form>
-              </td>
+				</td>
+				<td class="text-end">x {{ product.quantity }}</td>
+				<td class="text-end">{{ product.total }}</td>
+				<td class="text-end"><button type="button" data-bs-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger" onclick="ProductRemove({{ product.cart_id }})"><i class="fa-solid fa-circle-xmark"></i></button></td>
             </tr>			
-          {% endfor %}
+			{% endfor %}
 
-          {% for voucher in vouchers %}
+			{% for voucher in vouchers %}
             <tr>
-              <!--<td class="text-center"></td>-->
-              <td class="text-start">{{ voucher.description }}</td>
-              <td class="text-end">x&nbsp;1</td>
-              <td class="text-end">{{ voucher.amount }}</td>
-			  
-              <!--<td class="text-end">
-                <form action="{{ voucher_remove }}" method="post" data-oc-toggle="ajax" data-oc-load="{{ list }}" data-oc-target="#header-cart">
-                  <input type="hidden" name="key" value="{{ voucher.key }}"/>
-                  <button type="submit" data-bs-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa-solid fa-circle-xmark"></i></button>
-                </form>
-              </td>-->
+				<td class="text-start">{{ voucher.description }}</td>
+				<td class="text-end">x&nbsp;1</td>
+				<td class="text-end">{{ voucher.amount }}</td>
             </tr>
-          {% endfor %}
+			{% endfor %}
 			
 			{% for total in totals %}
 			  {% if total.title == 'Total' %}
-              <tr>
-                <td class="text-start" colspan="2"><strong>{{ total.title }}</strong></td>
-                <td class="text-end"><strong>{{ total.text }}</strong></td>
-				<td class="text-end"></td>
-              </tr>
-			  {% endif %}
+				<tr>
+					<td class="text-start" colspan="2"><strong>{{ total.title }}</strong></td>
+					<td class="text-end"><strong>{{ total.text }}</strong></td>
+					<td class="text-end"></td>
+				</tr>
+				{% endif %}
             {% endfor %}
 			<tr class="paymentmethods" ></tr>
 			<tr class="btn_confirm">
                 <td class="text-center"  colspan="4"><button type="button" class="btn btn-primary" onclick="confirmOrder()">Confirm</button></td>
             </tr>
-			
         </table>
-		
-        <!--<div>
-          <table class="table table-sm table-bordered">
-            {% for total in totals %}
-			  {% if total.title == 'Total' %}
-              <tr>
-                <td class="text-end"><strong>{{ total.title }}</strong></td>
-                <td class="text-end">{{ total.text }}</td>
-              </tr>
-			  {% endif %}
-            {% endfor %}
-          </table>
-         
-		 <p class="text-end"><a href="{{ cart }}"><strong><i class="fa-solid fa-cart-shopping"></i> {{ text_cart }}</strong></a>&nbsp;&nbsp;&nbsp;<a href="{{ checkout }}"><strong><i class="fa-solid fa-share"></i> {{ text_checkout }}</strong></a></p>
-        </div>-->
-    {% else %}
-      <!--<li>
-        <p class="text-center">{{ text_no_results }}</p>
-      </li>-->
     {% endif %}
-  </ul>
+	</ul>
 </div>
 <script>
 getPaymentMethods();
@@ -118,11 +81,26 @@ function getPaymentMethods(){
 					}
 				}
 				html1 += '</td>';
-				alert(html1);
 				$('.paymentmethods').html(html1);
 			}
 		}
 	});
+}
+function ProductRemove(cart_id){
+	if(cart_id > 0){
+		$.ajax({
+			url: 'index.php?route=extension/purpletree_multivendor/multivendor/pos.removeProduct&language={{ language }}',
+			type: 'post',
+			data: 'key='+cart_id,
+			dataType: 'json',
+			success: function (json) {
+				if(json['success']){
+					alert(json['success_message']);
+					location.reload();
+				}
+			}
+		});
+	}
 }
 </script>
 

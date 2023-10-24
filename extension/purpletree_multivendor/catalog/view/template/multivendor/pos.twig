@@ -88,7 +88,7 @@
 				<div class="col-sm-12 text-end">
 					<div id="product_options" style="height: 150px; overflow: auto;"></div>
 					<div style="margin-top:20px;">
-						<a onclick="$(this).parent().find(':checkbox').prop('checked', true);">Select all</a> / <a onclick="$(this).parent().find(':checkbox').prop('checked', false);">Unselect All</a>
+						<a onclick="$('input[type=checkbox]').prop('checked', true);">Select all</a> / <a onclick="$('input[type=checkbox]').prop('checked', false);">Unselect All</a>
 					</div>
 				</div>
 			</div>	
@@ -96,7 +96,6 @@
 		<div class="modal-footer">
 			<div class="form-group row  py-4">
 				<div class="col-sm-12 text-center">
-					<!--<button type="button" id="addButton" class="btn btn-primary" data-dismiss="modal">Add</button>-->
 					<button type="button" class="btn btn-primary add">Add</button>
 				</div>
 			</div>	
@@ -140,7 +139,7 @@ $( document ).ready(function() {
 			$product = $(this).val();
 			if($product != ''){
 				$.ajax({
-					url: 'index.php?route=extension/purpletree_multivendor/multivendor/pos|getCategorieProducts&language={{ language }}',
+					url: 'index.php?route=extension/purpletree_multivendor/multivendor/pos.getCategorieProducts&language={{ language }}',
 					type: 'post',
 					data: 'category_id='+categorie+'&product='+$product,
 					dataType: 'json',
@@ -168,9 +167,8 @@ $( document ).ready(function() {
 //Start ConfirmOrder Button //
 function confirmOrder(){
 	$.ajax({
-			url: 'index.php?route=extension/purpletree_multivendor/multivendor/pos|confirm&language={{ language }}',
+			url: 'index.php?route=extension/purpletree_multivendor/multivendor/pos.confirm&language={{ language }}',
 			type: 'post',
-			//data: 'category_id='+category_id+'&product='+$product,
 			dataType: 'json',
 			success: function (json) {
 				if(json['success']){
@@ -188,12 +186,6 @@ function confirmOrder(){
 								contentType: 'application/x-www-form-urlencoded',
 								cache: false,
 								processData: false,
-								beforeSend: function() {
-									//$('#button-cart').button('loading');
-								},
-								complete: function() {
-									//$('#button-cart').button('reset');
-								},
 								success: function(json) {
 									if(json['success']){
 										$('#appended').load('index.php?route=extension/purpletree_multivendor/multivendor/pos.getcart&language={{ language }}');
@@ -316,6 +308,7 @@ function getProductData(product_id,options_length){
 								html += "</div>";
 							});
 						}
+						$('#product_options').html('');
 						$("#product_options").append(html);
 					}
 				}
