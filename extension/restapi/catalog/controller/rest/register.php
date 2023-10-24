@@ -32,13 +32,11 @@ class Register extends \RestController
     }
 	public function registerCustomer($data)
     {
-			//echo'ff';exit;
         $this->language->load('checkout/checkout');
         $this->language->load('checkout/cart');
 		$this->language->load('checkout/register');
         $this->load->model('account/customer');
 
-//echo $this->customer->isLogged();exit;
         //Validate if customer is logged in.
         if ($this->customer->isLogged()) {
             $this->json['error'][] = "User is logged.";
@@ -50,7 +48,7 @@ class Register extends \RestController
             // Validate minimum quantity requirments.
             $products = $this->cart->getProducts();
 
-            foreach ($products as $product) {//echo "yes";exit;
+            foreach ($products as $product) {
                 $product_total = 0;
 
                 foreach ($products as $product_2) {
