@@ -279,4 +279,10 @@ class Customer extends \Opencart\System\Engine\Model {
 	public function deleteLoginAttempts(string $email): void {
 		$this->db->query("DELETE FROM `" . DB_PREFIX . "customer_login` WHERE LCASE(`email`) = '" . $this->db->escape(oc_strtolower($email)) . "'");
 	}
+	
+	public function getCustomerByEmailorPhone($email) {
+		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE LOWER(email) = '" . $this->db->escape($email) . "'");
+
+		return $query->row;
+	}
 }

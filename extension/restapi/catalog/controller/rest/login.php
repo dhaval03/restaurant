@@ -36,7 +36,7 @@ class Login extends \RestController
             if ($this->customer->isLogged()) {
                 $this->json['error'][] = "User is logged.";
                 $this->statusCode = 400;
-            } else {
+            } else { 
                 if (!$this->customer->login($post['email'], $post['password'])) {
                     $this->json['error'][] = $this->language->get('error_login');
                     $this->statusCode = 403;
@@ -80,8 +80,8 @@ class Login extends \RestController
                 unset($customer_info['salt']);
 
                 $customer_info['address_id'] = $this->customer->getAddressId();
-
-
+			
+			
                 $this->load->model('account/custom_field');
 
                 $customer_info['custom_fields'] = $this->model_account_custom_field->getCustomFields($this->config->get('config_customer_group_id'));
@@ -311,8 +311,8 @@ class Login extends \RestController
 		if ( $_SERVER['REQUEST_METHOD'] === 'POST' ){
 			
             $post = $this->getPost();
-
             $this->language->load('checkout/checkout');
+			$this->language->load('account/login');
 
                 if (!$this->customer->login($post['email'], '',true)) {
                     $this->json['error'][] = $this->language->get('error_login');
@@ -339,11 +339,11 @@ class Login extends \RestController
                 $this->load->model('account/address');
 
                 if ($this->config->get('config_tax_customer') == 'payment') {
-                    $this->session->data['payment_address'] = $this->model_account_address->getAddress($this->customer->getAddressId());
+                    $this->session->data['payment_address'] = $this->model_account_address->getAddress($this->customer->isLogged(),$this->customer->getAddressId());
                 }
 
                 if ($this->config->get('config_tax_customer') == 'shipping') {
-                    $this->session->data['shipping_address'] = $this->model_account_address->getAddress($this->customer->getAddressId());
+                    $this->session->data['shipping_address'] = $this->model_account_address->getAddress($this->customer->isLogged(),$this->customer->getAddressId());
                 }
 
                 unset($customer_info['password']);
@@ -352,15 +352,13 @@ class Login extends \RestController
 
                 $customer_info['address_id'] = $this->customer->getAddressId();
 
-
                 $this->load->model('account/custom_field');
 
                 $customer_info['custom_fields'] = $this->model_account_custom_field->getCustomFields($this->config->get('config_customer_group_id'));
-
                 if ($this->opencartVersion < 2100) {
-                    $customer_info['account_custom_field'] = unserialize($customer_info['custom_field']);
+                    $customer_info['account_custom_field'] = unserialize($customer_info['custom_fields']);
                 } else {
-                    $customer_info['account_custom_field'] = json_decode($customer_info['custom_field'], true);
+                    $customer_info['account_custom_field'] = json_encode($customer_info['custom_fields'], true);
                 }
 
                 unset($customer_info['custom_field']);
@@ -368,8 +366,9 @@ class Login extends \RestController
 
                 unset($customer_info['custom_field']);
                 unset($customer_info['cart']);
-
-                $this->registry->set('cart', new Cart\Cart($this->registry));
+				
+               //$this->registry->set('cart', new Cart\Cart($this->registry));
+			   $this->registry->set('cart', new \Opencart\System\Library\Cart\Cart($this->registry));
 
                 $wishlist = array();
 
