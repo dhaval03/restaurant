@@ -623,7 +623,7 @@ class Order extends \Opencart\System\Engine\Controller {
 			}
 		
 			/**************************************** For seller total*******************************/
-			
+			if(isset($seller_final_total)){
 			foreach($seller_final_total as $key=>$value) {
 				if(!isset($seller_total_tax[$key])){
 					$seller_total_tax[$key]=0;
@@ -643,8 +643,10 @@ class Order extends \Opencart\System\Engine\Controller {
 					);
 				}
 			}
+			}
 				
 			/**************************************** For seller sub-total*******************************/
+			if(isset($seller_sub_total)){
 			foreach($seller_sub_total as $key=>$value) {
 				if ($value > 0) {
 					$tax_detail[$key][] = array(
@@ -655,7 +657,7 @@ class Order extends \Opencart\System\Engine\Controller {
 					);
 				}
 			}
-
+			}
 		if (isset($tax_detail)) {
 			foreach ($tax_detail as $key=>$value) {
 				foreach($value as $data_1){
