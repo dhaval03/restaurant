@@ -34,3 +34,21 @@ Line: 227
 File: C:\wamp\www\tutor\system\engine\proxy.php
 Line: 83
 
+2023-10-26 05:18:12 - PHP Warning:  Undefined array key "fax" in C:\wamp64\www\restaurant\extension\restapi\catalog\controller\feed\restapi.php on line 1576
+2023-10-26 05:18:12 - PHP Warning:  Undefined array key "fax" in C:\wamp64\www\restaurant\extension\restapi\catalog\controller\feed\restapi.php on line 1576
+2023-10-26 05:18:12 - PHP Warning:  Undefined array key "fax" in C:\wamp64\www\restaurant\extension\restapi\catalog\controller\feed\restapi.php on line 1576
+2023-10-26 05:18:12 - PHP Warning:  Undefined array key "fax" in C:\wamp64\www\restaurant\extension\restapi\catalog\controller\feed\restapi.php on line 1576
+2023-10-26 05:18:42 - PHP Warning:  Undefined array key "fax" in C:\wamp64\www\restaurant\extension\restapi\catalog\controller\feed\restapi.php on line 1574
+2023-10-26 05:18:42 - PHP Warning:  Undefined array key "fax" in C:\wamp64\www\restaurant\extension\restapi\catalog\controller\feed\restapi.php on line 1574
+2023-10-26 05:18:42 - PHP Warning:  Undefined array key "fax" in C:\wamp64\www\restaurant\extension\restapi\catalog\controller\feed\restapi.php on line 1574
+2023-10-26 05:18:42 - PHP Warning:  Undefined array key "fax" in C:\wamp64\www\restaurant\extension\restapi\catalog\controller\feed\restapi.php on line 1574
+2023-10-26 05:49:46 - PHP Warning:  Undefined array key "email" in C:\wamp64\www\restaurant\extension\restapi\catalog\controller\rest\login.php on line 157
+2023-10-26 05:49:46 - TypeError:  Opencart\Catalog\Model\Account\Customer::getCustomerByEmail(): Argument #1 ($email) must be of type string, null given in C:\wamp64\www\restaurant\catalog\model\account\customer.php on line 193
+2023-10-26 05:56:36 - PHP Warning:  require_once(C:\wamp64\www\restaurant/system/engine/restcontroller.php): Failed to open stream: No such file or directory in C:\wamp64\www\restaurant\extension\restapi\catalog\controller\rest\order.php on line 15
+2023-10-26 05:56:36 - Error:  Failed opening required 'C:\wamp64\www\restaurant/system/engine/restcontroller.php' (include_path='.;C:\php\pear') in C:\wamp64\www\restaurant\extension\restapi\catalog\controller\rest\order.php on line 15
+2023-10-26 05:57:06 - PHP Warning:  require_once(C:\wamp64\www\restaurant/system/engine/restcontroller.php): Failed to open stream: No such file or directory in C:\wamp64\www\restaurant\extension\restapi\catalog\controller\rest\order.php on line 15
+2023-10-26 05:57:06 - Error:  Failed opening required 'C:\wamp64\www\restaurant/system/engine/restcontroller.php' (include_path='.;C:\php\pear') in C:\wamp64\www\restaurant\extension\restapi\catalog\controller\rest\order.php on line 15
+2023-11-01 06:31:40 - PHP Warning:  Undefined variable $seller_final_total in C:\wamp64\www\restaurant\extension\purpletree_multivendor\catalog\controller\multivendor\events\checkout\order.php on line 627
+2023-11-01 06:31:40 - PHP Warning:  foreach() argument must be of type array|object, null given in C:\wamp64\www\restaurant\extension\purpletree_multivendor\catalog\controller\multivendor\events\checkout\order.php on line 627
+2023-11-01 06:31:40 - PHP Warning:  Undefined variable $seller_sub_total in C:\wamp64\www\restaurant\extension\purpletree_multivendor\catalog\controller\multivendor\events\checkout\order.php on line 648
+2023-11-01 06:31:40 - PHP Warning:  foreach() argument must be of type array|object, null given in C:\wamp64\www\restaurant\extension\purpletree_multivendor\catalog\controller\multivendor\events\checkout\order.php on line 648
