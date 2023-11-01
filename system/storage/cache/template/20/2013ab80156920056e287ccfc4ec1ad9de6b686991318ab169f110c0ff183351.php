@@ -210,6 +210,6 @@ class __TwigTemplate_47febeb8444b2a91f5716e7fae69a3654a62ba038ddedcf8a966369aaee
 
     public function getSourceContext()
     {
-        return new Source("", "admin2023/view/template/extension/module.twig", "C:\\wamp64\\www\\restaurant\\admin2023\\view\\template\\extension\\module.twig");
+        return new Source("", "admin2023/view/template/extension/module.twig", "C:\\wamp\\www\\tutor\\admin2023\\view\\template\\extension\\module.twig");
     }
 }
