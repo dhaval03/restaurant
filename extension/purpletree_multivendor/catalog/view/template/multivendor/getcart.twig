@@ -49,7 +49,7 @@
             {% endfor %}
 			<tr class="paymentmethods" ></tr>
 			<tr class="btn_confirm">
-                <td class="text-center"  colspan="4"><button type="button" class="btn btn-primary" onclick="confirmOrder()">Confirm</button></td>
+                <td class="text-center" colspan="4"><button type="button" class="btn btn-primary" onclick="confirmOrder()" disabled>Confirm</button></td>
             </tr>
         </table>
     {% endif %}
@@ -69,11 +69,7 @@ function getPaymentMethods(){
 					if (!json['payment_methods'][i]['error']) {
 						for (j in json['payment_methods'][i]['option']) {
 							var code = i + '-' + j.replaceAll('_', '-');
-							html1 += '<input type="radio" name="payment_method" value="' + json['payment_methods'][i]['option'][j]['code'] + '" id="input-payment-method-' + code + '"';
-							if (json['payment_methods'][i]['option'][j]['code'] == $('#input-payment-code').val()) {
-								html1 += ' checked';
-							}
-							html1 += '/>';
+							html1 += '<input type="radio" name="payment_method" value="' + json['payment_methods'][i]['option'][j]['code'] + '" id="input-payment-method-' + code + '" class="payment_methods" />';
 							html1 += '  <label for="input-payment-method-' + code + '">' + json['payment_methods'][i]['option'][j]['name'] + '</label><br>';
 						}
 					} else {

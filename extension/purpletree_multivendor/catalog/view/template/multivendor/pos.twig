@@ -167,37 +167,37 @@ $( document ).ready(function() {
 //Start ConfirmOrder Button //
 function confirmOrder(){
 	$.ajax({
-			url: 'index.php?route=extension/purpletree_multivendor/multivendor/pos.confirm&language={{ language }}',
-			type: 'post',
-			dataType: 'json',
-			success: function (json) {
-				if(json['success']){
-					html = '';
-					if(json['rt_products']){
-						$.each(json['rt_products'],function(index, value){
-							$products[value['product_id']] = value;
-							html += '<div class="col-md-6 product_img" onclick="getProductData('+value['product_id']+','+value['options'].length+'); this.onclick=null;"><img src="'+value['thumb']+'" alt="" width="60" height="60" style="padding-top: 10px"; title=""><br>'+value['name']+'</div>';
-							$('#appended').empty();
-							$.ajax({
-								url: 'index.php?route=checkout/cart.add&language={{ language }}',
-								type: 'post',
-								data: 'product_id='+value['product_id']+'&quantity=4',
-								dataType: 'json',
-								contentType: 'application/x-www-form-urlencoded',
-								cache: false,
-								processData: false,
-								success: function(json) {
-									if(json['success']){
-										$('#appended').load('index.php?route=extension/purpletree_multivendor/multivendor/pos.getcart&language={{ language }}');
-									}					
-								}
-							});
+		url: 'index.php?route=extension/purpletree_multivendor/multivendor/pos.confirm&language={{ language }}',
+		type: 'post',
+		dataType: 'json',
+		success: function (json) {
+			if(json['success']){
+				html = '';
+				if(json['rt_products']){
+					$.each(json['rt_products'],function(index, value){
+						$products[value['product_id']] = value;
+						html += '<div class="col-md-6 product_img" onclick="getProductData('+value['product_id']+','+value['options'].length+'); this.onclick=null;"><img src="'+value['thumb']+'" alt="" width="60" height="60" style="padding-top: 10px"; title=""><br>'+value['name']+'</div>';
+						$('#appended').empty();
+						$.ajax({
+							url: 'index.php?route=checkout/cart.add&language={{ language }}',
+							type: 'post',
+							data: 'product_id='+value['product_id']+'&quantity=4',
+							dataType: 'json',
+							contentType: 'application/x-www-form-urlencoded',
+							cache: false,
+							processData: false,
+							success: function(json) {
+								if(json['success']){
+									$('#appended').load('index.php?route=extension/purpletree_multivendor/multivendor/pos.getcart&language={{ language }}');
+								}					
+							}
 						});
-					}
-					$("#categorie_products").append(html);
-				}	
-			}
-		}); 
+					});
+				}
+				$("#categorie_products").append(html);
+			}	
+		}
+	}); 
 }
 // End ConfirmOrder Button //
 
