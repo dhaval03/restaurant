@@ -1,4 +1,29 @@
-<div class="dropdown d-grid">
+
+<div class="order_section">
+    <div class="order_item_container">
+        <div id="no-order" class="no-order active p-4 p-sm-4 p-md-4 p-lg-5">
+            <div class="banner_img">
+                <img src="http://127.0.0.1/restaurant/extension/purpletree_multivendor/image/img_noorder.png" style="width:75%;">
+                </div>
+                <h3 >You've no <br>order in process from <br>Counter Desk.</h3>
+                <h5 style="color:tan;">Click on any item or Add Order Button <br>to create order</h5><br>
+				<div class="btn_box">
+                    <div class="row">
+                        <div class="col-6 col-sm-6">
+                            <button type="button" class="btn btn-primary btn-lg" id="add_btn">Add Order</button>
+						</div>
+                        <div class="col-6 col-sm-6 col-md-6  px-1 px-md-2">
+                                <button type="button" class="btn btn-primary btn-lg order-status">Order Status</button>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="dropdown d-grid" id="add_order">
     {% if products or vouchers %}
         <table class="table table-sm table-striped table-bordered">
 			<tr>
@@ -45,17 +70,53 @@
 					<td class="text-end"><strong>{{ total.text }}</strong></td>
 					<td class="text-end"></td>
 				</tr>
+				<tr>
+					<td class="text-start" colspan="3"><button type="button" class="btn btn-primary btn-lg Cancel" id="cancel_order">Cancel</button></td>
+					<td class="text-end"><button type="button" class="btn btn-primary btn-lg "id="place_btn" >Place Order</button></td>
+				</tr>
+				
 				{% endif %}
             {% endfor %}
-			<tr class="paymentmethods" ></tr>
-			<tr class="btn_confirm">
-                <td class="text-center" colspan="4"><button type="button" class="btn btn-primary" onclick="confirmOrder()" disabled>Confirm</button></td>
-            </tr>
+			
         </table>
     {% endif %}
 	</ul>
 </div>
+
+
+
+<div class="dropdown d-grid "id="place_order">
+ <table class="table table-sm table-striped table-bordered">
+			<tr >
+				<td  class="paymentmethods">
+				</td>
+			</tr>
+			<tr>
+				<td class="text-start" colspan="2"><button type="button" class="btn btn-primary btn-lg Cancel" id="cancel_order">Cancel</button></td>
+				<td class="text-end"><button type="button" class="btn btn-primary btn-lg" >Submit</button></td>
+			</tr>
+			
+        </table>
+    
+</div>
+
+
+
 <script>
+ $('#add_order').hide();
+ $('#place_order').hide();
+$("#add_btn").click(function(){
+  $('#add_order').show();
+  $('.order_section').hide();
+});
+$("#place_btn").click(function(){
+  $('#add_order').hide();
+  $('#place_order').show();
+});
+$("#cancel_order").on("click", function() {
+            $("#no-order").toggleClass("active");
+            $("#item_list").removeClass("active");
+        });
 getPaymentMethods();
 function getPaymentMethods(){
 	$.ajax({
@@ -69,7 +130,8 @@ function getPaymentMethods(){
 					if (!json['payment_methods'][i]['error']) {
 						for (j in json['payment_methods'][i]['option']) {
 							var code = i + '-' + j.replaceAll('_', '-');
-							html1 += '<input type="radio" name="payment_method" value="' + json['payment_methods'][i]['option'][j]['code'] + '" id="input-payment-method-' + code + '" class="payment_methods" />';
+							//alert(code);
+							html1 += '<input type="radio" name="payment_method" value="' + json['payment_methods'][i]['option'][j]['code'] + '" id="input-payment-method-' + code + '" class="payment_methods" onclick="paymentMethods()" />';
 							html1 += '  <label for="input-payment-method-' + code + '">' + json['payment_methods'][i]['option'][j]['name'] + '</label><br>';
 						}
 					} else {
@@ -98,5 +160,10 @@ function ProductRemove(cart_id){
 		});
 	}
 }
+function paymentMethods(){
+	$('.btnconfirm').removeAttr('disabled');
+}
+
 </script>
+
 

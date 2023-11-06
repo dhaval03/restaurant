@@ -23,24 +23,7 @@
 					<table class="pts-table pts-table-bordered pts-table-hover">
 						<thead>
 							<tr>
-								<td class="pts-col-sm-6">
-									<div class="pts-col-sm-4">
-									<ul class="pts-nav ul_categories">
-											<b style="font-size: 24px !important;">Categories</b><br><br>
-										{% for vendor_categorie in vendor_categories %}
-											<li class="categories categorie_{{ vendor_categorie.category_id }}" data-id="{{ vendor_categorie.category_id }}"><a onclick="getCategorieProducts({{ vendor_categorie.category_id }})">{{ vendor_categorie.name }}</a></li>
-										{% endfor %}
-									</ul>
-									</div>
-									<div class="pts-col-sm-8">
-										<div class="input-group">
-											<input type="text" class="form-control" placeholder="Search" id="search_products">
-											<input type="hidden" value="" class="getcategorie">	
-										</div>
-									</div>
-									<div id="categorie_products"></div>
-								</td>
-								<td class="pts-col-sm-6">
+							<td class="pts-col-sm-6">
 									<div class="pts-col-sm-12 pts-btn-group"  data-toggle="buttons">
 									{% if ordertypes %}
 										{% for ordertype in ordertypes %}
@@ -60,7 +43,25 @@
 									<div id="appended">
 									</div>
 								</td>
-							</tr>
+
+								<td class="pts-col-sm-6">
+									<div class="pts-col-sm-4">
+									<ul class="pts-nav ul_categories">
+											<b style="font-size: 24px !important;">Categories</b><br><br>
+										{% for vendor_categorie in vendor_categories %}
+											<li class="categories categorie_{{ vendor_categorie.category_id }}" data-id="{{ vendor_categorie.category_id }}"><a onclick="getCategorieProducts({{ vendor_categorie.category_id }})">{{ vendor_categorie.name }}</a></li>
+										{% endfor %}
+									</ul>
+									</div>
+									<div class="pts-col-sm-8">
+										<div class="input-group">
+											<input type="text" class="form-control" placeholder="Search" id="search_products">
+											<input type="hidden" value="" class="getcategorie">	
+										</div>
+									</div>
+									<div id="categorie_products"></div>
+								</td>
+								</tr>
 						</thead>
 					</table>
 				</div>
