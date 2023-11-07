@@ -10,7 +10,7 @@
 				<div class="btn_box">
                     <div class="row">
                         <div class="col-6 col-sm-6">
-                            <button type="button" class="btn btn-primary btn-lg" id="add_btn">Add Order</button>
+                            <button type="button" class="btn btn-primary btn-lg Add_order" id="add_order">Add Order</button>
 						</div>
                         <div class="col-6 col-sm-6 col-md-6  px-1 px-md-2">
                                 <button type="button" class="btn btn-primary btn-lg order-status">Order Status</button>
@@ -23,7 +23,7 @@
 
 
 
-<div class="dropdown d-grid" id="add_order">
+<div class="dropdown d-grid item_list" id="item_list">
     {% if products or vouchers %}
         <table class="table table-sm table-striped table-bordered">
 			<tr>
@@ -72,7 +72,7 @@
 				</tr>
 				<tr>
 					<td class="text-start" colspan="3"><button type="button" class="btn btn-primary btn-lg Cancel" id="cancel_order">Cancel</button></td>
-					<td class="text-end"><button type="button" class="btn btn-primary btn-lg "id="place_btn" >Place Order</button></td>
+					<td class="text-end"><button type="button" class="btn btn-primary btn-lg place_order"id="place-order" >Place Order</button></td>
 				</tr>
 				
 				{% endif %}
@@ -80,19 +80,19 @@
 			
         </table>
     {% endif %}
-	</ul>
+	
 </div>
 
 
 
-<div class="dropdown d-grid "id="place_order">
+<div class="dropdown d-grid amount_to_Pay" id="amount_to_Pay">
  <table class="table table-sm table-striped table-bordered">
 			<tr >
 				<td  class="paymentmethods">
 				</td>
 			</tr>
 			<tr>
-				<td class="text-start" colspan="2"><button type="button" class="btn btn-primary btn-lg Cancel" id="cancel_order">Cancel</button></td>
+				<td class="text-start" colspan="2"><button type="button" class="btn btn-primary btn-lg Cancel" id="edit_order">Cancel</button></td>
 				<td class="text-end"><button type="button" class="btn btn-primary btn-lg" >Submit</button></td>
 			</tr>
 			
@@ -100,23 +100,78 @@
     
 </div>
 
+<style>
+.no-order{
+	display: none;
+}
+.no-order.active{
+  display: block;
+}
+.item_list {
+     display: none;
+ }
 
-
+.item_list.active {
+     display: block;
+ }
+.amount_to_Pay {
+	display: none;
+}
+.amount_to_Pay.active {
+	display: block;
+}
+</style>
 <script>
- $('#add_order').hide();
- $('#place_order').hide();
-$("#add_btn").click(function(){
-  $('#add_order').show();
-  $('.order_section').hide();
-});
-$("#place_btn").click(function(){
-  $('#add_order').hide();
-  $('#place_order').show();
-});
-$("#cancel_order").on("click", function() {
+        $("#cancel_order").on("click", function() {
             $("#no-order").toggleClass("active");
             $("#item_list").removeClass("active");
         });
+        $("#add_order").on("click", function() {
+            $("#item_list").toggleClass("active");
+            $("#no-order").removeClass("active");
+        });
+        $("#place-order").on("click", function() {
+            $("#amount_to_Pay").toggleClass("active");
+            $("#item_list").removeClass("active");
+        });
+        $("#edit_order").on("click", function() {
+            $("#item_list").toggleClass("active");
+            $("#amount_to_Pay").removeClass("active");
+        });
+        $("#submit").on("click", function() {
+            $("#no-order").toggleClass("active");
+            $("#amount_to_Pay").removeClass("active");
+        });
+    </script>
+<script>
+ /*$('#item_list').hide();
+ $('#place_order').hide();
+ 
+$("#add_order").click(function(){
+  $('#item_list').show();
+  $('#no-order').hide();
+});
+
+$("#place-order").click(function(){
+  $('#item_list').hide();
+  $('#place_order').show();
+  $('#item_list').show();
+});
+
+$("#cancel_order").click(function() {
+    $("#no-order").show();
+    $("#item_list").hide();
+});
+
+$("#edit_order").click(function() {
+   $("#item_list").show();
+    $(".remove_btn").hide();
+    $("#amount_to_Pay").hide();
+});*/
+
+
+
+
 getPaymentMethods();
 function getPaymentMethods(){
 	$.ajax({
