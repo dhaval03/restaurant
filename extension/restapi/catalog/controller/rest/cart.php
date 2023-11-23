@@ -718,8 +718,6 @@ class Cart extends \RestController{
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $post = $this->getPost();
-			echo "<pre>";
-			print_r($post);exit;
             $this->addItemsToCart($post);
         } else {
             $this->statusCode = 405;
