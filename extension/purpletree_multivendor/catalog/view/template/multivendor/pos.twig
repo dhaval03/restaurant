@@ -56,8 +56,13 @@
 					</ul>
 				</div>-->
 				<div class="pts-col-sm-12"><br>
-					<input type="text" class="form-control" placeholder="Search" id="search_products">
-					<input type="hidden" value="" class="getcategorie">
+					<div class="pts-form-group pts-input-group pts-input-group-sm ptssortcss">
+						<label class="pts-input-group-addon" style="background-color:white"><i class="fa fa-search"></i></label>
+						<input type="text" class="form-control" placeholder="Search" id="search_products" style="border-radius:0px">
+						<input type="hidden" value="" class="getcategorie">
+						<label class="pts-input-group-addon" style="background-color:#204d74"><a onclick="productSearch()" style="color:#fff">Search</a>
+						</label>
+					</div>
 				</div>
 				<div id="categorie_products"></div>
 			</div>
@@ -150,36 +155,41 @@ $( document ).ready(function() {
 	
 	// Start Search Products //
 	$("#search_products").on('change',function(e){		
-		var categorie = $('.getcategorie').val();
-		if(categorie > 0){
-			$product = $(this).val();
-			if($product != ''){
-				$.ajax({
-					url: 'index.php?route=extension/purpletree_multivendor/multivendor/pos.getCategorieProducts&language={{ language }}',
-					type: 'post',
-					data: 'category_id='+categorie+'&product='+$product,
-					dataType: 'json',
-					success: function (json) {
-						if(json['success']){
-							$("#categorie_products").empty();
-							html = '';
-							if(json['rt_products']){
-								$.each(json['rt_products'],function(index, value){
-									html += '<div class="col-md-4 product_img" onclick="getProductData('+value['product_id']+')"><img src="'+value['thumb']+'" alt="" width="100" height="100" style="padding-top: 10px"; title=""><br>'+value['name']+'</div>';
-								});
-							}
-							$("#categorie_products").append(html);
-						}	
-					}
-				}); 
-			}
-		}else{
-			alert('Categories must be seletced!');
-		}
+		getSearchProducts();
 	});
 	// End Search Products //
 });
-
+function productSearch(){
+	getSearchProducts();
+}
+function getSearchProducts(){
+	var categorie = $('.getcategorie').val();
+	if(categorie > 0){
+		$product = $('#search_products').val();
+		if($product != ''){
+			$.ajax({
+				url: 'index.php?route=extension/purpletree_multivendor/multivendor/pos.getCategorieProducts&language={{ language }}',
+				type: 'post',
+				data: 'category_id='+categorie+'&product='+$product,
+				dataType: 'json',
+				success: function (json) {
+					if(json['success']){
+						$("#categorie_products").empty();
+						html = '';
+						if(json['rt_products']){
+							$.each(json['rt_products'],function(index, value){
+								html += '<div class="col-md-4 product_img" onclick="getProductData('+value['product_id']+')"><img src="'+value['thumb']+'" alt="" width="100" height="100" style="padding-top: 10px"; title=""><br>'+value['name']+'</div>';
+							});
+						}
+						$("#categorie_products").append(html);
+					}	
+				}
+			}); 
+		}
+	}else{
+		alert('Categories must be seletced!');
+	}
+}
 //Start ConfirmOrder Button //
 function confirmOrder(){
 	$.ajax({
