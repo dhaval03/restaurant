@@ -334,9 +334,9 @@ class Cart extends \RestController{
 
                 $this->cart->add($data['product_id'], $data['quantity'], $option, $recurring_id);
 
-                $this->json["data"]['product']['product_id'] = $product_info['product_id'];
-                $this->json["data"]['product']['name'] = isset($product_info['name']) ? $product_info['name'] : "";
-                $this->json["data"]['product']['quantity'] = $quantity;
+                $this->json["data"]['product'][$product_info['product_id']]['product_id'] = $product_info['product_id'];
+                $this->json["data"]['product'][$product_info['product_id']]['name'] = isset($product_info['name']) ? $product_info['name'] : "";
+                $this->json["data"]['product'][$product_info['product_id']]['quantity'] = $quantity;
 
                 unset($this->session->data['shipping_method']);
                 unset($this->session->data['shipping_methods']);
@@ -718,6 +718,8 @@ class Cart extends \RestController{
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $post = $this->getPost();
+			echo "<pre>";
+			print_r($post);exit;
             $this->addItemsToCart($post);
         } else {
             $this->statusCode = 405;
