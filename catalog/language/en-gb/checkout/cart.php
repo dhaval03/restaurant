@@ -37,3 +37,4 @@ $_['error_minimum']              = 'Minimum order amount for %s is %s!';
 $_['error_required']             = '%s required!';
 $_['error_product']              = 'Warning: Product could not be found!';
 $_['error_subscription']         = 'Please select a subscription plan!';
+$_['error_payment']         = 'Payment address required!';

@@ -12,7 +12,7 @@
  * @documentations https://opencart-api.com/opencart-rest-api-documentations/
  */
 namespace Opencart\Catalog\Controller\Extension\RestApi\Rest;
-require_once(DIR_SYSTEM . 'engine/restcontroller.php');
+require_once(DIR_EXTENSION . 'restapi/system/engine/restcontroller.php');
 
 class PaymentAddress extends \RestController
 {
@@ -20,19 +20,19 @@ class PaymentAddress extends \RestController
     public function validate($post)
     {
 
-        if (!isset($post['firstname']) || (utf8_strlen(trim($post['firstname'])) < 1) || (utf8_strlen(trim($post['firstname'])) > 32)) {
+        if (!isset($post['firstname']) || (strlen(trim($post['firstname'])) < 1) || (strlen(trim($post['firstname'])) > 32)) {
             $this->json['error'][] = $this->language->get('error_firstname');
         }
 
-        if (!isset($post['lastname']) || (utf8_strlen(trim($post['lastname'])) < 1) || (utf8_strlen(trim($post['lastname'])) > 32)) {
+        if (!isset($post['lastname']) || (strlen(trim($post['lastname'])) < 1) || (strlen(trim($post['lastname'])) > 32)) {
             $this->json['error'][] = $this->language->get('error_lastname');
         }
 
-        if (!isset($post['address_1']) || (utf8_strlen(trim($post['address_1'])) < 3) || (utf8_strlen(trim($post['address_1'])) > 128)) {
+        if (!isset($post['address_1']) || (strlen(trim($post['address_1'])) < 3) || (strlen(trim($post['address_1'])) > 128)) {
             $this->json['error'][] = $this->language->get('error_address_1');
         }
 
-        if (!isset($post['city']) || (utf8_strlen($post['city']) < 2) || (utf8_strlen($post['city']) > 32)) {
+        if (!isset($post['city']) || (strlen($post['city']) < 2) || (strlen($post['city']) > 32)) {
             $this->json['error'][] = $this->language->get('error_city');
         }
 
@@ -42,7 +42,7 @@ class PaymentAddress extends \RestController
 
             $country_info = $this->model_localisation_country->getCountry($post['country_id']);
 
-            if ($country_info && $country_info['postcode_required'] && (utf8_strlen(trim($post['postcode'])) < 2 || utf8_strlen(trim($post['postcode'])) > 10)) {
+            if ($country_info && $country_info['postcode_required'] && (strlen(trim($post['postcode'])) < 2 || strlen(trim($post['postcode'])) > 10)) {
                 $this->json['error'][] = $this->language->get('error_postcode');
             }
 
@@ -195,19 +195,19 @@ class PaymentAddress extends \RestController
 
                 }
             } else {
-                if (!isset($post['firstname']) || (utf8_strlen(trim($post['firstname'])) < 1) || (utf8_strlen(trim($post['firstname'])) > 32)) {
+                if (!isset($post['firstname']) || (strlen(trim($post['firstname'])) < 1) || (strlen(trim($post['firstname'])) > 32)) {
                     $this->json['error'][] = $this->language->get('error_firstname');
                 }
 
-                if (!isset($post['lastname']) || (utf8_strlen(trim($post['lastname'])) < 1) || (utf8_strlen(trim($post['lastname'])) > 32)) {
+                if (!isset($post['lastname']) || (strlen(trim($post['lastname'])) < 1) || (strlen(trim($post['lastname'])) > 32)) {
                     $this->json['error'][] = $this->language->get('error_lastname');
                 }
 
-                if (!isset($post['address_1']) || (utf8_strlen(trim($post['address_1'])) < 3) || (utf8_strlen(trim($post['address_1'])) > 128)) {
+                if (!isset($post['address_1']) || (strlen(trim($post['address_1'])) < 3) || (strlen(trim($post['address_1'])) > 128)) {
                     $this->json['error'][] = $this->language->get('error_address_1');
                 }
 
-                if (!isset($post['city']) || (utf8_strlen($post['city']) < 2) || (utf8_strlen($post['city']) > 32)) {
+                if (!isset($post['city']) || (strlen($post['city']) < 2) || (strlen($post['city']) > 32)) {
                     $this->json['error'][] = $this->language->get('error_city');
                 }
 
@@ -216,7 +216,7 @@ class PaymentAddress extends \RestController
 
                     $country_info = $this->model_localisation_country->getCountry($post['country_id']);
 
-                    if ($country_info && $country_info['postcode_required'] && (utf8_strlen(trim($post['postcode'])) < 2 || utf8_strlen(trim($post['postcode'])) > 10)) {
+                    if ($country_info && $country_info['postcode_required'] && (strlen(trim($post['postcode'])) < 2 || strlen(trim($post['postcode'])) > 10)) {
                         $this->json['error'][] = $this->language->get('error_postcode');
                     }
 
@@ -259,7 +259,7 @@ class PaymentAddress extends \RestController
 
                     $address_id = $this->model_account_address->addAddress($this->customer->getId(), $post);
 
-                    $this->session->data['payment_address'] = $this->model_account_address->getAddress($address_id);
+                    $this->session->data['payment_address'] = $this->model_account_address->getAddress($this->customer->getId(),$address_id);
 
                     unset($this->session->data['payment_method']);
                     unset($this->session->data['payment_methods']);
