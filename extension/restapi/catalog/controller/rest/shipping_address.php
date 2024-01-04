@@ -12,7 +12,7 @@
  * @documentations https://opencart-api.com/opencart-rest-api-documentations/
  */
 namespace Opencart\Catalog\Controller\Extension\RestApi\Rest;
-require_once(DIR_SYSTEM . 'engine/restcontroller.php');
+require_once(DIR_EXTENSION . 'restapi/system/engine/restcontroller.php');
 
 class ShippingAddress extends \RestController
 {
@@ -20,7 +20,7 @@ class ShippingAddress extends \RestController
 
     public function shippingaddress()
     {
-
+		
         $this->checkPlugin();
 
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -135,31 +135,31 @@ class ShippingAddress extends \RestController
 
                     if (empty($post['address_id'])) {
                         $this->json['error'][] = $this->language->get('error_address');
-                    } elseif (!in_array($post['address_id'], array_keys($this->model_account_address->getAddresses()))) {
+                    } elseif (!in_array($post['address_id'], array_keys($this->model_account_address->getAddresses($this->customer->getId())))) {
                         $this->json['error'][] = $this->language->get('error_address');
                     }
 
                     if (empty($this->json['error'])) {
                         $this->session->data['shipping_address_id'] = $post['address_id'];
-                        $this->session->data['shipping_address'] = $this->model_account_address->getAddress($post['address_id']);
+                        $this->session->data['shipping_address'] = $this->model_account_address->getAddress($this->customer->getId(),$post['address_id']);
 
                         unset($this->session->data['shipping_method']);
                         unset($this->session->data['shipping_methods']);
                     }
                 } else {
-                    if (!isset($post['firstname']) || (utf8_strlen($post['firstname']) < 1) || (utf8_strlen($post['firstname']) > 32)) {
+                    if (!isset($post['firstname']) || (strlen($post['firstname']) < 1) || (strlen($post['firstname']) > 32)) {
                         $this->json['error'][] = $this->language->get('error_firstname');
                     }
 
-                    if (!isset($post['lastname']) || (utf8_strlen($post['lastname']) < 1) || (utf8_strlen($post['lastname']) > 32)) {
+                    if (!isset($post['lastname']) || (strlen($post['lastname']) < 1) || (strlen($post['lastname']) > 32)) {
                         $this->json['error'][] = $this->language->get('error_lastname');
                     }
 
-                    if (!isset($post['address_1']) || (utf8_strlen($post['address_1']) < 3) || (utf8_strlen($post['address_1']) > 128)) {
+                    if (!isset($post['address_1']) || (strlen($post['address_1']) < 3) || (strlen($post['address_1']) > 128)) {
                         $this->json['error'][] = $this->language->get('error_address_1');
                     }
 
-                    if (!isset($post['city']) || (utf8_strlen($post['city']) < 2) || (utf8_strlen($post['city']) > 128)) {
+                    if (!isset($post['city']) || (strlen($post['city']) < 2) || (strlen($post['city']) > 128)) {
                         $this->json['error'][] = $this->language->get('error_city');
                     }
 
@@ -169,7 +169,7 @@ class ShippingAddress extends \RestController
 
                         $country_info = $this->model_localisation_country->getCountry($post['country_id']);
 
-                        if ($country_info && $country_info['postcode_required'] && (utf8_strlen($post['postcode']) < 2) || (utf8_strlen($post['postcode']) > 10)) {
+                        if ($country_info && $country_info['postcode_required'] && (strlen($post['postcode']) < 2) || (strlen($post['postcode']) > 10)) {
                             $this->json['error'][] = $this->language->get('error_postcode');
                         }
 
@@ -208,7 +208,7 @@ class ShippingAddress extends \RestController
                         }
 
                         $address_id = $this->model_account_address->addAddress($this->customer->getId(), $post);
-                        $this->session->data['shipping_address'] = $this->model_account_address->getAddress($address_id);
+                        $this->session->data['shipping_address'] = $this->model_account_address->getAddress($this->customer->getId(),$address_id);
 
                         unset($this->session->data['shipping_method']);
                         unset($this->session->data['shipping_methods']);
